@@ -9,6 +9,11 @@ services:
             - ./client:/usr/src/app
         ports:
             - "8080:8080"
+    mosquitto:
+        image: eclipse-mosquitto:latest
+        ports:
+            - "1883:1883"
+            - "9001:9001"
     # Configuration for our seed cassandra node. The node is call DC1N1
     # .i.e Node 1 in Data center 1.
     DC1N1:
