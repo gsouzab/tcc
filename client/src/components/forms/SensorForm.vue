@@ -2,63 +2,40 @@
 <v-dialog v-model="show">
   <v-card>
     <v-card-title
-      class="grey lighten-4 py-4 title"
-    >
-      Create contact
+      class="grey lighten-4 py-4 title">
+      Adicionar Sensor
     </v-card-title>
     <v-container grid-list-sm class="pa-4">
       <v-layout row wrap>
-        <v-flex xs12 align-center justify-space-between>
-          <v-layout align-center>
-            <v-avatar size="40px" class="mr-3">
-              <img
-                src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                alt=""
-              >
-            </v-avatar>
-            <v-text-field
-              placeholder="Name"
-            ></v-text-field>
-          </v-layout>
+        <v-flex xs12>
+        <v-text-field
+          prepend-icon="settings_input_antenna"
+          placeholder="Nome">
+        </v-text-field>
         </v-flex>
         <v-flex xs6>
           <v-text-field
-            prepend-icon="business"
-            placeholder="Company"
+            prepend-icon="add_location"
+            placeholder="Latitude"
           ></v-text-field>
         </v-flex>
         <v-flex xs6>
           <v-text-field
-            placeholder="Job title"
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12>
-          <v-text-field
-            prepend-icon="mail"
-            placeholder="Email"
-          ></v-text-field>
-        </v-flex>
-        <v-flex xs12>
-          <v-text-field
-            type="tel"
-            prepend-icon="phone"
-            placeholder="(000) 000 - 0000"
-            mask="phone"
+            placeholder="Longitude"
           ></v-text-field>
         </v-flex>
         <v-flex xs12>
           <v-text-field
             prepend-icon="notes"
-            placeholder="Notes"
+            placeholder="Descrição"
           ></v-text-field>
         </v-flex>
       </v-layout>
     </v-container>
     <v-card-actions>
-      <v-btn flat color="primary">More</v-btn>
       <v-spacer></v-spacer>
-      <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-      <v-btn flat @click="dialog = false">Save</v-btn>
+      <v-btn flat @click="show = false">Cancelar</v-btn>
+      <v-btn flat color="primary" @click="this.saveSensor">Salvar</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
@@ -66,18 +43,23 @@
 
 <script>
 export default {
-  props: ['visible'],
+  props: ["visible"],
   computed: {
     show: {
-      get () {
-        return this.visible
+      get() {
+        return this.visible;
       },
-      set (value) {
+      set(value) {
         if (!value) {
-          this.$emit('close')
+          this.$emit("close");
         }
       }
     }
+  },
+  methods: {
+    saveSensor: () => {
+      this.show = false;
+    }
   }
-}
+};
 </script>

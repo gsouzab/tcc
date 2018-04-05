@@ -1,5 +1,7 @@
 <template>
   <v-container fluid grid-list-md>
+    <SensorForm :visible="showSensorForm" @close="showSensorForm=false" />
+
     <gmap-map
       :center="center"
       :zoom="15"
@@ -32,7 +34,8 @@
         fab
         dark
         small
-        color="green">
+        color="green"
+        @click="showSensorForm=true">
         <v-icon>settings_input_antenna</v-icon>
       </v-btn>
       <v-btn
@@ -55,7 +58,7 @@ export default {
       center: { lat: -22.8617784, lng: -43.2296038 },
       markers: [],
       sensors: [],
-      dialog: false
+      showSensorForm: false
     };
   },
   methods: {
