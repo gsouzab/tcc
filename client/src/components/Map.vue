@@ -55,9 +55,13 @@ export default {
       center: { lat: -22.8617784, lng: -43.2296038 },
       markers: [],
       sensors: [],
+      dialog: false
     };
   },
   methods: {
+    addSensor: () => {
+      SensorForm
+    },
     getSensors: () => {
       return [];
     },
