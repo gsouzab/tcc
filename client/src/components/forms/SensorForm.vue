@@ -10,24 +10,37 @@
         <v-flex xs12>
         <v-text-field
           prepend-icon="settings_input_antenna"
-          placeholder="Nome">
+          v-model="name"
+          label="Nome"
+          :rules="[() => name.length > 0 || 'Este campo é obrigatório']"
+          required>
         </v-text-field>
         </v-flex>
         <v-flex xs6>
           <v-text-field
             prepend-icon="add_location"
-            placeholder="Latitude"
+            v-model="latitude"
+            label="Latitude"
+            :rules="[() => latitude.length > 0 || 'Este campo é obrigatório']"
+            required
           ></v-text-field>
         </v-flex>
         <v-flex xs6>
           <v-text-field
-            placeholder="Longitude"
+            v-model="longitude"
+            label="Longitude"
+            :rules="[() => longitude.length > 0 || 'Este campo é obrigatório']"
+            required
           ></v-text-field>
         </v-flex>
         <v-flex xs12>
           <v-text-field
             prepend-icon="notes"
-            placeholder="Descrição"
+            v-model="description"
+            label="Descrição"
+            :rules="[() => description.length > 0 || 'Este campo é obrigatório']"
+            multi-line
+            required
           ></v-text-field>
         </v-flex>
       </v-layout>
@@ -35,7 +48,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn flat @click="show = false">Cancelar</v-btn>
-      <v-btn flat color="primary" @click="this.saveSensor">Salvar</v-btn>
+      <v-btn flat color="primary" @click="saveSensor()">Salvar</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
@@ -44,6 +57,14 @@
 <script>
 export default {
   props: ["visible"],
+  data: function() {
+    return {
+      name: '',
+      latitude: '',
+      longitude: '',
+      description: '',
+    }
+  },
   computed: {
     show: {
       get() {
@@ -51,14 +72,22 @@ export default {
       },
       set(value) {
         if (!value) {
+          // this.clearData();
           this.$emit("close");
         }
       }
     }
   },
   methods: {
-    saveSensor: () => {
+    saveSensor: function() {
+      this.clearData();
       this.show = false;
+    },
+    clearData: function() {
+      this.name = '';
+      this.latitude = '';
+      this.longitude = '';
+      this.description = '';
     }
   }
 };
