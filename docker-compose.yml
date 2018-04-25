@@ -13,36 +13,26 @@ services:
         ports:
             - "1883:1883"
             - "9001:9001"
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+    influxdb:
+        image: influxdb:alpine
+        ports: 
+            - "8086:8086"
+        volumes:
+            - ./influxdb-data:/var/lib/influxdb
+        environment:
+            - INFLUXDB_DB=probes
+            - INFLUXDB_USER=influx
+            - INFLUXDB_USER_PASSWORD=123456
     data-collector:
         image: streamsets/datacollector
         ports:
             - "18630:18630"
-    riak-coordinator:
-        image: basho/riak-ts
-        ports:
-        - "8087:8087"
-        - "8098:8098"
-        environment:
-        - CLUSTER_NAME=riakts
-        labels:
-        - "com.basho.riak.cluster.name=riakts"
-        volumes:
-        - schemas:/etc/riak/schemas
-    riak-member:
-        image: basho/riak-ts
-        ports:
-        - "8087"
-        - "8098"
-        labels:
-        - "com.basho.riak.cluster.name=riakts"
         links:
-        - riak-coordinator
-        depends_on:
-        - riak-coordinator
-        environment:
-        - CLUSTER_NAME=riakts
-        - COORDINATOR_NODE=riak-coordinator
-
+            - influxdb
     portainer:
         image: portainer/portainer
         command: --templates http://templates/templates.json
