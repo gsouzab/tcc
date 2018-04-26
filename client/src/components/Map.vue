@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
-    <SensorForm :visible="showSensorForm" @close="showSensorForm=false" />
+    <SensorForm :visible="showSensorForm" @close="showSensorForm=false" @onSave="addSensor" />
 
     <gmap-map
       :center="center"
@@ -9,10 +9,10 @@
 
       <gmap-marker
         :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
+        v-for="(s, index) in sensors"
+        :position="{lat: s.latitude, lon: s.longitude}"
         :clickable="true"
-        @click="center=m.position">
+        @click="center={lat: s.latitude, lon: s.longitude}">
 
       </gmap-marker>
 
@@ -62,8 +62,9 @@ export default {
     };
   },
   methods: {
-    addSensor: () => {
-      SensorForm
+    addSensor: function(sensorData) {
+      console.log(sensorData);
+      this.sensors.push(sensorData);
     },
     getSensors: () => {
       return [];

@@ -12,7 +12,20 @@
           prepend-icon="settings_input_antenna"
           v-model="name"
           label="Nome"
-          :rules="[() => name.length > 0 || 'Este campo é obrigatório']"
+          :error-messages="errors.collect('name')"
+          v-validate="'required'"
+          data-vv-name="name"
+          required>
+        </v-text-field>
+        </v-flex>
+        <v-flex xs12>
+        <v-text-field
+          prepend-icon="settings_input_antenna"
+          v-model="mac"
+          label="MAC"
+          :error-messages="errors.collect('mac')"
+          v-validate="{ required: true, regex: /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/ }"
+          data-vv-name="mac"
           required>
         </v-text-field>
         </v-flex>
@@ -60,6 +73,7 @@ export default {
   data: function() {
     return {
       name: '',
+      mac: '',
       latitude: '',
       longitude: '',
       description: '',
@@ -80,14 +94,24 @@ export default {
   },
   methods: {
     saveSensor: function() {
+      let formData = {
+        name:         this.name,
+        mac:          this.mac,
+        latitude:     this.latitude,
+        longitude:    this.longitude,
+        description:  this.description
+      };
+
+      this.$emit("onSave", formData);
       this.clearData();
       this.show = false;
     },
     clearData: function() {
-      this.name = '';
-      this.latitude = '';
-      this.longitude = '';
-      this.description = '';
+      this.name         = '';
+      this.latitude     = '';
+      this.mac          = '';
+      this.longitude    = '';
+      this.description  = '';
     }
   }
 };
