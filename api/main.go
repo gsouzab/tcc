@@ -24,7 +24,7 @@ type Sensor struct {
 
 //Response eh a estrutura que armazena a resposta de uma requisicao.
 type Response struct {
-	Sucess bool        `json:"sucess,omitempty"`
+	Sucess string      `json:"sucess,omitempty"`
 	Msg    string      `json:"msg,omitempty"`
 	Error  string      `json:"error,omitempty"`
 	Data   interface{} `json:"data,omitempty"`
@@ -44,12 +44,12 @@ func RedisInit(indexDatabase int) *redis.Client {
 //RedisGetAllSensors eh o metodo que retorna todos os sensores armazenados no Redis
 func RedisGetAllSensors() Response {
 	var response Response
-	response.Sucess = true
+	response.Sucess = "true"
 	var sensors []Sensor
 
 	keys, err := client.Keys("*").Result()
 	if err != nil {
-		response.Sucess = false
+		response.Sucess = "false"
 		response.Error = err.Error()
 		return response
 	}
@@ -57,7 +57,7 @@ func RedisGetAllSensors() Response {
 	for _, key := range keys {
 		m, err := client.HGetAll(key).Result()
 		if err != nil {
-			response.Sucess = false
+			response.Sucess = "false"
 			response.Error = err.Error()
 			return response
 		}
@@ -88,10 +88,45 @@ func RedisGetAllSensors() Response {
 	return response
 }
 
+//RedisGetSensor eh o metodo que retorna um sensor especifico armazenado no Redis
+func RedisGetSensor(key string) Response {
+	var response Response
+	response.Sucess = "true"
+	var sensor Sensor
+
+	m, err := client.HGetAll(key).Result()
+	if err != nil {
+		response.Sucess = "false"
+		response.Error = err.Error()
+		return response
+	}
+
+	for k, v := range m {
+		switch k {
+		case "Name":
+			sensor.Name = v
+		case "Latitude":
+			sensor.Latitude = v
+		case "Longitude":
+			sensor.Longitude = v
+		case "Description":
+			sensor.Description = v
+		case "Mac":
+			sensor.Mac = v
+		default:
+		}
+	}
+
+	response.Msg = "Consulta realizada com sucesso!"
+	response.Data = sensor
+
+	return response
+}
+
 //RedisSetSensor eh o metodo que insere um sensor no Redis
 func RedisSetSensor(sensor Sensor) Response {
 	var response Response
-	response.Sucess = true
+	response.Sucess = "true"
 
 	ok, err := client.HMSet(sensor.Mac, map[string]interface{}{
 		"Name":        sensor.Name,
@@ -102,7 +137,7 @@ func RedisSetSensor(sensor Sensor) Response {
 	}).Result()
 
 	if err != nil {
-		response.Sucess = false
+		response.Sucess = "false"
 		response.Error = err.Error()
 		return response
 	}
@@ -116,12 +151,12 @@ func RedisSetSensor(sensor Sensor) Response {
 //RedisDeleteSensor eh o metodo que deleta um sensor do Redis
 func RedisDeleteSensor(sensorID string) Response {
 	var response Response
-	response.Sucess = true
+	response.Sucess = "true"
 
 	status, err := client.Del(sensorID).Result()
 
 	if err != nil {
-		response.Sucess = false
+		response.Sucess = "false"
 		response.Error = err.Error()
 		return response
 	}
@@ -138,6 +173,17 @@ func RedisDeleteSensor(sensorID string) Response {
 //GetSensors retorna todos os sensores
 func GetSensors(w http.ResponseWriter, r *http.Request) {
 	response := RedisGetAllSensors()
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+//GetSensor retorna um sensor especifico
+func GetSensor(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sensorID := params["id"]
+
+	response := RedisGetSensor(sensorID)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
@@ -171,6 +217,7 @@ func main() {
 	RedisInit(0)
 
 	router.HandleFunc("/sensors", GetSensors).Methods("GET")
+	router.HandleFunc("/sensor/{id}", GetSensor).Methods("GET")
 	router.HandleFunc("/sensors", CreateSensor).Methods("POST")
 	router.HandleFunc("/sensor/{id}", DeleteSensor).Methods("DELETE")
 	log.Fatal(http.ListenAndServe(":8000", router))
