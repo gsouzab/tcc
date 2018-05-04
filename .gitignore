@@ -9,3 +9,4 @@ selenium-debug.log
 
 /influxdb-data
 /portainer-data
+/redis*
