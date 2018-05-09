@@ -5,6 +5,7 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -34,7 +35,7 @@ type Response struct {
 //RedisInit eh o metodo que inicializa a conexao com o cliente Redis
 func RedisInit(indexDatabase int) *redis.Client {
 	client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     "redis:6379",
 		Password: "",            // no password set
 		DB:       indexDatabase, // use default DB
 	})
@@ -206,10 +207,18 @@ func main() {
 
 	srv := &http.Server{
 		Handler: router,
-		Addr:    "127.0.0.1:8000",
+		Addr:    "0.0.0.0:8000",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 1 * time.Second,
 		ReadTimeout:  1 * time.Second,
+	}
+
+	// print env
+	env := os.Getenv("APP_ENV")
+	if env == "production" {
+		log.Println("Running api server in production mode. Port: 8000")
+	} else {
+		log.Println("Running api server in dev mode. Port: 8000")
 	}
 
 	log.Fatal(srv.ListenAndServe())

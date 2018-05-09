@@ -1,7 +1,16 @@
 # Please note we are using Docker Compose version 3
 version: '3'
 services:
-    # api: 
+    api: 
+        build: ./api
+        volumes:
+            - ./api:/go/src/github.com/gsouzab/tcc/api
+        ports: 
+            - "8000:8000"
+        links: 
+            - redis
+        environment:
+            - APP_ENV=development
     client:
         build: ./client
         volumes:
