@@ -1,11 +1,16 @@
 <template>
   <v-container fluid grid-list-md>
-    <SensorForm :visible="showSensorForm" @close="showSensorForm=false" @onSave="addSensor" />
+    <SensorForm :visible="showSensorForm"
+                :initLat="currLat"
+                :initLng="currLng"
+                @close="showSensorForm=false"
+                @onSave="addSensor" />
 
     <gmap-map
       :center="center"
       :zoom="15"
-      style="width: 100%; height: calc(100% - 64px); position: absolute; left:0;">
+      @rightclick="this.showMenu"
+      class="map">
 
       <gmap-marker
         :key="index"
@@ -58,21 +63,29 @@ export default {
       center: { lat: -22.8617784, lng: -43.2296038 },
       markers: [],
       sensors: [],
+      currLat: null,
+      currLng: null,
       showSensorForm: false
     };
   },
   methods: {
-    addSensor: function(sensorData) {
+    addSensor(sensorData) {
       console.log(sensorData);
       this.sensors.push(sensorData);
     },
-    getSensors: () => {
+    showMenu(event) {
+      this.currLat = event.latLng.lat();
+      this.currLng = event.latLng.lng();
+
+      this.showSensorForm = true;
+    },
+    getSensors() {
       return [];
     },
-    getLastProbes: () => {
+    getLastProbes() {
       return [];
     },
-    connectWS: () => {
+    connectWS() {
       /**
        * Method to connect to the WS instance
        */
@@ -85,6 +98,13 @@ export default {
 </script>
 
 <style scoped>
+.map {
+  width: 100%;
+  height: calc(100% - 64px);
+  position: absolute;
+  left:0;
+}
+
 .speed-dial {
   position: absolute;
   right: 48px;
