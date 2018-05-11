@@ -74,6 +74,9 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+
 export default {
   props: ["visible", "initLat", "initLng"],
   watch: {
@@ -127,6 +130,8 @@ export default {
           description:  this.description
         };
 
+        let response = await axios.post('http://0.0.0.0:8000/sensors', formData);
+        console.log(response);
         this.$emit("onSave", formData);
         this.clearData();
         this.show = false;

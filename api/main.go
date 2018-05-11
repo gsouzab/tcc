@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -194,6 +195,10 @@ func DeleteSensor(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+}
+
 func main() {
 	flag.Parse()
 
@@ -206,7 +211,7 @@ func main() {
 	router.HandleFunc("/sensors/{id}", DeleteSensor).Methods("DELETE")
 
 	srv := &http.Server{
-		Handler: router,
+		Handler: handlers.CORS()(router),
 		Addr:    "0.0.0.0:8000",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 1 * time.Second,
