@@ -130,7 +130,7 @@ export default {
           description:  this.description
         };
 
-        let response = await axios.post('http://0.0.0.0:8000/sensors', formData);
+        let response = await axios.post(`http://${window.location.hostname}:8000/sensors`, formData);
         console.log(response);
         this.$emit("onSave", formData);
         this.clearData();
