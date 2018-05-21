@@ -210,8 +210,12 @@ func main() {
 	router.HandleFunc("/sensors", CreateSensor).Methods("POST")
 	router.HandleFunc("/sensors/{id}", DeleteSensor).Methods("DELETE")
 
+	headers := handlers.AllowedHeaders([]string{"Content-Type", "X-Requested-With"})
+	origins := handlers.AllowedOrigins([]string{"*"})
+	methods := handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS", "DELETE"})
+
 	srv := &http.Server{
-		Handler: handlers.CORS()(router),
+		Handler: handlers.CORS(headers, origins, methods)(router),
 		Addr:    "0.0.0.0:8000",
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 1 * time.Second,
