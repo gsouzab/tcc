@@ -24,6 +24,7 @@
             v-model="mac"
             label="MAC"
             :error-messages="errors.collect('mac')"
+            mask="NN:NN:NN:NN:NN:NN"
             v-validate="{ required: true, regex: /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/ }"
             data-vv-name="mac"
             required>
@@ -119,21 +120,18 @@ export default {
     async saveSensor() {
 
       let valid = await this.$validator.validateAll();
-      console.log(valid);
 
       if (valid) {
         let formData = {
           name:         this.name,
           mac:          this.mac,
-          latitude:     this.latitude,
-          longitude:    this.longitude,
+          latitude:     this.latitude.toString(),
+          longitude:    this.longitude.toString(),
           description:  this.description
         };
 
         let response = await axios.post(`http://${window.location.hostname}:8000/sensors`, formData);
-        console.log(response);
         this.$emit("onSave", formData);
-        this.clearData();
         this.show = false;
       }
 
@@ -144,6 +142,7 @@ export default {
       this.mac          = '';
       this.longitude    = '';
       this.description  = '';
+      this.errors.clear();
     }
   }
 };

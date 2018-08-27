@@ -12,14 +12,21 @@
       @rightclick="this.showMenu"
       class="map">
 
-      <gmap-marker
-        :key="index"
-        v-for="(s, index) in sensors"
-        :position="{lat: s.latitude, lon: s.longitude}"
-        :clickable="true"
-        @click="center={lat: s.latitude, lon: s.longitude}">
+      <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+        <div v-html="infoContent"></div>
+      </gmap-info-window>
 
-      </gmap-marker>
+      <gmap-cluster :zoomOnClick="true">
+        <gmap-marker
+          :key="index"
+          v-for="(s, index) in sensors"
+          :icon="require('../assets/sensor.png')"
+          :position="{lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}"
+          :clickable="true"
+          @click="toggleInfoWindow(s, index)">
+
+        </gmap-marker>
+      </gmap-cluster>
 
     </gmap-map>
     <v-speed-dial
@@ -55,22 +62,37 @@
 </template>
 
 <script>
-import SensorForm from "@/components/forms/SensorForm";
+
+import axios from 'axios';
+import {loaded} from 'vue2-google-maps';
+import SensorForm from '@/components/forms/SensorForm';
 
 export default {
+  created() {
+    this.getSensors();
+  },
   data() {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
-      markers: [],
       sensors: [],
       currLat: null,
       currLng: null,
-      showSensorForm: false
+      showSensorForm: false,
+      googleMapsInitialized: false,
+      infoContent: '',
+      infoWindowPos: null,
+      infoWinOpen: false,
+      currentMidx: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      },
     };
   },
   methods: {
     addSensor(sensorData) {
-      console.log(sensorData);
       this.sensors.push(sensorData);
     },
     showMenu(event) {
@@ -79,8 +101,19 @@ export default {
 
       this.showSensorForm = true;
     },
-    getSensors() {
-      return [];
+    async getSensors() {
+      this.waitingSensors = true;
+
+      try {
+        let response = await axios.get(`http://${window.location.hostname}:8000/sensors`);
+        if (response.status == 200) {
+          this.sensors = response.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      this.waitingSensors = false;
     },
     getLastProbes() {
       return [];
@@ -89,7 +122,22 @@ export default {
       /**
        * Method to connect to the WS instance
        */
-    }
+    },
+    toggleInfoWindow: function(s, idx) {
+      let position = {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)};
+
+      this.center = position;
+      this.infoWindowPos = position;
+      this.infoContent = `${s.name}<br/>${s.description}`;
+      //check if its the same marker that was selected if yes toggle
+      if (this.currentMidx == idx) {
+        this.infoWinOpen = !this.infoWinOpen;
+      } else {
+        //if different marker set infowindow to open and reset current marker index
+        this.infoWinOpen = true;
+        this.currentMidx = idx;
+      }
+    },
   },
   components: {
     SensorForm
@@ -99,10 +147,10 @@ export default {
 
 <style scoped>
 .map {
-  width: 100%;
+  width: calc(100% - 80px);
   height: calc(100% - 64px);
   position: absolute;
-  left:0;
+  left:80px;
 }
 
 .speed-dial {
