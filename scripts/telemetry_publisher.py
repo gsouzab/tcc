@@ -18,7 +18,7 @@ def create_json_message():
     message['hum'] = random.randint(1,99)
     message['co2'] = random.randint(600,1200)
     message['sensor'] = random.choice(SENSORS)
-    message['createdAt'] = datetime.datetime.now().__str__()
+    message['createdAt'] = int(float(datetime.datetime.utcnow().strftime('%s.%f')) * 1000)
     
     return json.dumps(message)
 
@@ -39,5 +39,6 @@ client.loop_start()
 
 while True:
     jsonMessage = create_json_message()
+    # print jsonMessage
     client.publish('telemetry', jsonMessage, QOS)
     time.sleep(0.5)
