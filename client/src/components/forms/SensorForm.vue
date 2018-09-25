@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show">
+  <v-dialog v-model="show" persistent max-width="500px">
     <v-card>
       <v-card-title
         class="grey lighten-4 py-4 title">
@@ -30,27 +30,6 @@
             required>
           </v-text-field>
           </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              prepend-icon="add_location"
-              v-model="latitude"
-              data-vv-name="latitude"
-              label="Latitude"
-              :error-messages="errors.collect('latitude')"
-              v-validate="'required'"
-              required
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="longitude"
-              data-vv-name="longitude"
-              label="Longitude"
-              :error-messages="errors.collect('longitude')"
-              v-validate="'required'"
-              required
-            ></v-text-field>
-          </v-flex>
           <v-flex xs12>
             <v-text-field
               prepend-icon="notes"
@@ -79,13 +58,14 @@
 import axios from 'axios';
 
 export default {
-  props: ["visible", "initLat", "initLng"],
+  props: ["visible", "initData"],
   watch: {
-    initLat(lat, oldVal) { // watch it
-      this.latitude = lat;
-    },
-    initLng(lng, oldVal) { // watch it
-      this.longitude = lng;
+    initData(val, oldVal) { // watch it
+      this.name = val.name;
+      this.mac = val.mac;
+      this.latitude = val.latitude;
+      this.longitude = val.longitude;
+      this.description = val.description;
     }
   },
   data() {

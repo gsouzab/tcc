@@ -1,8 +1,8 @@
 <template>
   <v-container fluid grid-list-md>
     <SensorForm :visible="showSensorForm"
-                :initLat="currLat"
-                :initLng="currLng"
+                :initData="sensorData"
+                :isEdit="isEdit"
                 @close="showSensorForm=false"
                 @onSave="addSensor" />
 
@@ -10,7 +10,39 @@
       :center="center"
       :zoom="15"
       @rightclick="this.showMenu"
+      slot="activator"
       class="map">
+
+      <v-menu
+        v-model="showContextMenu"
+        :position-x="x"
+        :position-y="y"
+        absolute
+        offset-y
+      >
+        <v-list>
+          <v-list-tile
+            @click="showSensorForm = true"
+            v-if="!isSensorMenu"
+          >
+            <v-list-tile-title>Adicionar sensor aqui</v-list-tile-title>
+          </v-list-tile>
+
+          <v-list-tile
+            @click="showSensorForm = true"
+            v-if="isSensorMenu"
+          >
+            <v-list-tile-title>Editar sensor</v-list-tile-title>
+          </v-list-tile>
+
+          <v-list-tile
+            @click="showSensorForm = true"
+            v-if="isSensorMenu"
+          >
+            <v-list-tile-title>Remover sensor</v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
 
       <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
         <div v-html="infoContent"></div>
@@ -23,41 +55,13 @@
           :icon="require('../assets/sensor.png')"
           :position="{lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}"
           :clickable="true"
-          @click="toggleInfoWindow(s, index)">
+          @click="toggleInfoWindow(s, index)"
+          @rightclick="showSensorMenu($event, s, index)">
 
         </gmap-marker>
       </gmap-cluster>
 
     </gmap-map>
-    <v-speed-dial
-      :bottom=true
-      :right=true
-      :open-on-hover=true>
-      <v-btn
-        slot="activator"
-        color="blue darken-2"
-        dark
-        fab
-        hover>
-        <v-icon>add</v-icon>
-        <v-icon>close</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        small
-        color="green"
-        @click="showSensorForm=true">
-        <v-icon>settings_input_antenna</v-icon>
-      </v-btn>
-      <v-btn
-        fab
-        dark
-        small
-        color="indigo">
-        <v-icon>layers</v-icon>
-      </v-btn>
-    </v-speed-dial>
   </v-container>
 </template>
 
@@ -74,6 +78,11 @@ export default {
   data() {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
+      showContextMenu: false,
+      isSensorMenu: false,
+      sensorData: null,
+      x: 0,
+      y: 0,
       sensors: [],
       currLat: null,
       currLng: null,
@@ -95,11 +104,39 @@ export default {
     addSensor(sensorData) {
       this.sensors.push(sensorData);
     },
-    showMenu(event) {
-      this.currLat = event.latLng.lat();
-      this.currLng = event.latLng.lng();
+    openMenu(e) {
+      this.showContextMenu = false;
 
-      this.showSensorForm = true;
+      this.x = e.xa.clientX;
+      this.y = e.xa.clientY;
+      this.$nextTick(() => {
+        this.showContextMenu = true;
+      })
+    },
+    showSensorMenu(e, sensor, index) {
+      this.showContextMenu = false;
+      this.isSensorMenu = true;
+      console.log(e);
+
+      this.sensorData = null;
+      this.$nextTick(() => {
+        this.sensorData = sensor;
+      })
+
+      this.openMenu(e);
+      // this.sensors.push(sensorData);
+    },
+    showMenu(e) {
+      this.isSensorMenu = false;
+
+      this.sensorData = {
+        mac: '',
+        name: '',
+        description: '',
+        latitude: e.latLng.lat(),
+        longitude: e.latLng.lng()
+      }
+      this.openMenu(e);
     },
     async getSensors() {
       this.waitingSensors = true;
@@ -153,12 +190,4 @@ export default {
   left:80px;
 }
 
-.speed-dial {
-  position: absolute;
-  right: 48px;
-}
-
-.btn--floating {
-  position: relative;
-}
 </style>
