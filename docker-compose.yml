@@ -40,6 +40,8 @@ services:
         image: streamsets/datacollector
         ports:
             - "18630:18630"
+        volumes:
+            - ./sdc-data:/data
         links:
             - influxdb
     portainer:
