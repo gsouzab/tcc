@@ -8,8 +8,8 @@ ENV APP_ENV $app_env
 COPY ./ /go/src/github.com/gsouzab/tcc/api
 WORKDIR /go/src/github.com/gsouzab/tcc/api
 
-RUN go get ./
-RUN go build
+RUN go get
+RUN go build main.go websocket.go
 
 CMD if [ ${APP_ENV} = production ]; \
 	then \
