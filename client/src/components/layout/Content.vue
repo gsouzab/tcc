@@ -13,6 +13,9 @@ export default {
 </script>
 
 <style>
+.content {
+  padding: 46px 0px 0px 60px !important;
+}
 .container.fluid {
   padding: 0;
 }

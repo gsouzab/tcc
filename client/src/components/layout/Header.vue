@@ -25,3 +25,23 @@ export default {
   name: 'Header',
 };
 </script>
+
+<style >
+.toolbar__content {
+  height: 46px !important;
+}
+
+.input-group.input-group--solo {
+  height: 32px ;
+  min-height: 32px;
+}
+
+.input-group label {
+  height: 16px;
+  line-height: 16px;
+}
+
+.input-group.input-group--solo .input-group__input {
+  padding: 2px 16px;
+}
+</style>

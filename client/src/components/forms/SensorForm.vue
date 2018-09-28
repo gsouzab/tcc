@@ -25,6 +25,7 @@
             label="MAC"
             :error-messages="errors.collect('mac')"
             mask="NN:NN:NN:NN:NN:NN"
+            return-masked-value
             v-validate="{ required: true, regex: /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/ }"
             data-vv-name="mac"
             required>

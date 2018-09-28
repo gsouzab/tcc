@@ -29,14 +29,14 @@
           </v-list-tile>
 
           <v-list-tile
-            @click="showSensorForm = true"
+            @click="showSensorForm = true; isEdit = true;"
             v-if="isSensorMenu"
           >
             <v-list-tile-title>Editar sensor</v-list-tile-title>
           </v-list-tile>
 
           <v-list-tile
-            @click="showSensorForm = true"
+            @click="removeSensor()"
             v-if="isSensorMenu"
           >
             <v-list-tile-title>Remover sensor</v-list-tile-title>
@@ -74,12 +74,14 @@ import SensorForm from '@/components/forms/SensorForm';
 export default {
   created() {
     this.getSensors();
+    this.$options.sockets.onmessage = (data) => console.log(data.data);
   },
   data() {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
       showContextMenu: false,
       isSensorMenu: false,
+      isEdit: false,
       sensorData: null,
       x: 0,
       y: 0,
@@ -105,10 +107,12 @@ export default {
       this.sensors.push(sensorData);
     },
     openMenu(e) {
+
+      console.log(e.wa.clientX);
       this.showContextMenu = false;
 
-      this.x = e.xa.clientX;
-      this.y = e.xa.clientY;
+      this.x = e.wa.clientX;
+      this.y = e.wa.clientY;
       this.$nextTick(() => {
         this.showContextMenu = true;
       })
@@ -116,7 +120,6 @@ export default {
     showSensorMenu(e, sensor, index) {
       this.showContextMenu = false;
       this.isSensorMenu = true;
-      console.log(e);
 
       this.sensorData = null;
       this.$nextTick(() => {
@@ -124,9 +127,9 @@ export default {
       })
 
       this.openMenu(e);
-      // this.sensors.push(sensorData);
     },
     showMenu(e) {
+
       this.isSensorMenu = false;
 
       this.sensorData = {
@@ -137,6 +140,17 @@ export default {
         longitude: e.latLng.lng()
       }
       this.openMenu(e);
+    },
+    async removeSensor() {
+      let sensor = this.sensorData;
+      try {
+        let response = await axios.delete(`http://${window.location.hostname}:8000/sensors/${sensor.mac}`);
+        if (response.status == 200) {
+          this.sensors.splice(sensor, 1);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     async getSensors() {
       this.waitingSensors = true;
@@ -163,7 +177,6 @@ export default {
     toggleInfoWindow: function(s, idx) {
       let position = {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)};
 
-      this.center = position;
       this.infoWindowPos = position;
       this.infoContent = `${s.name}<br/>${s.description}`;
       //check if its the same marker that was selected if yes toggle
@@ -184,10 +197,10 @@ export default {
 
 <style scoped>
 .map {
-  width: calc(100% - 80px);
-  height: calc(100% - 64px);
+  width: calc(100% - 60px);
+  height: calc(100% - 46px);
   position: absolute;
-  left:80px;
+  left: 60px;
 }
 
 </style>
