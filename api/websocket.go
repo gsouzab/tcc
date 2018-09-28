@@ -8,11 +8,14 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var clients = make(map[*websocket.Conn]bool) // connected clients
-var broadcast = make(chan TelemetryMessage)  // broadcast channel
+var producers = make(map[*websocket.Conn]bool) // connected producer clients
+var consumers = make(map[*websocket.Conn]bool) // connected consumer clients
+var broadcast = make(chan TelemetryMessage)    // broadcast channel
 
 // Configure the upgrader
 var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
@@ -31,13 +34,14 @@ type TelemetryMessage struct {
 
 func WebsocketInit(router *mux.Router) {
 	// Configure websocket route
-	router.HandleFunc("/ws", handleConnections)
+	router.HandleFunc("/producer", handleProducerConnections)
+	router.HandleFunc("/consumer", handleConsumerConnections)
 
 	// Start listening for incoming chat messages
 	go handleMessages()
 }
 
-func handleConnections(w http.ResponseWriter, r *http.Request) {
+func handleProducerConnections(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -47,7 +51,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	defer ws.Close()
 
 	// Register our new client
-	clients[ws] = true
+	producers[ws] = true
 
 	for {
 		var msg TelemetryMessage
@@ -55,7 +59,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 		err := ws.ReadJSON(&msg)
 		if err != nil {
 			// log.Printf("error: %v", err)
-			delete(clients, ws)
+			delete(producers, ws)
 			break
 		}
 		// Send the newly received message to the broadcast channel
@@ -63,19 +67,30 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func handleConsumerConnections(w http.ResponseWriter, r *http.Request) {
+	// Upgrade initial GET request to a websocket
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Register our new client
+	consumers[ws] = true
+}
+
 func handleMessages() {
 	for {
 		// Grab the next message from the broadcast channel
 		msg := <-broadcast
 		// Send it out to every client that is currently connected
-		for client := range clients {
+		for client := range consumers {
 			err := client.WriteJSON(msg)
 			if err != nil {
 				// log.Printf("error: %v", err)
 				client.Close()
-				delete(clients, client)
+				delete(consumers, client)
 			}
-
+			log.Printf("message: %v", msg)
 		}
 	}
 }
