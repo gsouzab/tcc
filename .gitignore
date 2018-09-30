@@ -10,4 +10,4 @@ selenium-debug.log
 /influxdb-data
 /portainer-data
 /redis*
-/sdc/data/runInfo
+/sdc/data/runInfo/**/0/snapshots

@@ -1,0 +1,17 @@
+{
+  "pipelineId" : "4e61b9eb-b267-4ab5-ab1d-f0c884119984",
+  "rev" : "0",
+  "user" : "admin",
+  "status" : "RUNNING",
+  "message" : null,
+  "timeStamp" : 1538324237826,
+  "attributes" : {
+    "IS_REMOTE_PIPELINE" : false,
+    "RUNTIME_PARAMETERS" : null
+  },
+  "executionMode" : "STANDALONE",
+  "metrics" : null,
+  "retryAttempt" : 0,
+  "nextRetryTimeStamp" : 0,
+  "name" : "4e61b9eb-b267-4ab5-ab1d-f0c884119984"
+}

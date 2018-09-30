@@ -59,7 +59,7 @@
   } ],
   "dataRuleDefinitions" : [ ],
   "driftRuleDefinitions" : [ ],
-  "uuid" : "40218ea6-69e7-4910-b464-28f35fbf859a",
+  "uuid" : "173e9950-9020-4f7c-bc3e-64e3b3d54a28",
   "configuration" : [ {
     "name" : "emailIDs",
     "value" : [ ]
