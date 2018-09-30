@@ -1,15 +1,27 @@
+#FROM golang:alpine
+
+#RUN apk add --no-cache git
+
+#ARG app_env
+#ENV APP_ENV $app_env
+
+#COPY ./ /go/src/	
+#WORKDIR /go/src/github.com/gsouzab/tcc/api
+
+#RUN go get ./
+#RUN go build *.go
+
 FROM golang:alpine
 
 RUN apk add --no-cache git
-
 ARG app_env
 ENV APP_ENV $app_env
 
-COPY ./ /go/src/github.com/gsouzab/tcc/api
-WORKDIR /go/src/github.com/gsouzab/tcc/api
+WORKDIR /go/src/app
+COPY . .
 
-RUN go get ./
-RUN go build
+RUN go get -d -v ./...
+RUN go install -v ./...
 
 CMD if [ ${APP_ENV} = production ]; \
 	then \
