@@ -1,0 +1,63 @@
+{
+  "MQTTSubscriber_01" : {
+    "description" : "",
+    "label" : "Telemetry Subscriber",
+    "xPos" : 60,
+    "yPos" : 50,
+    "stageType" : "SOURCE"
+  },
+  "WebSocketClient_01" : {
+    "description" : "",
+    "label" : "WebSocket Client 1",
+    "xPos" : 1160,
+    "yPos" : 200,
+    "stageType" : "TARGET"
+  },
+  "InfluxDB_01" : {
+    "description" : "",
+    "label" : "Influx Data persistence",
+    "xPos" : 1160,
+    "yPos" : 50,
+    "stageType" : "TARGET"
+  },
+  "RedisLookupProcessor_01" : {
+    "description" : "Redis lookup for geopositioning data",
+    "label" : "GeoPosition lookpup",
+    "xPos" : 280,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  "StaticLookup_01" : {
+    "description" : "",
+    "label" : "Measurement field workaroud",
+    "xPos" : 500,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  "FieldRemover_01" : {
+    "description" : "Removes unnecessary fields from redis lookup",
+    "label" : "Redis field remover",
+    "xPos" : 940,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  ":pipeline:" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : "1",
+      "timeout" : 10000,
+      "writeToDestinations" : true,
+      "executeLifecycleEvents" : true,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "FieldRenamer_01" : {
+    "description" : "",
+    "label" : "Rename geoposition fields",
+    "xPos" : 720,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  }
+}

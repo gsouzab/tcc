@@ -1,0 +1,18 @@
+{
+  "pipelineId" : "cd213914-005a-4fc4-a6af-1c8a33075657",
+  "title" : "Probe Data",
+  "description" : "Probe's data ingestion pipeline",
+  "created" : 1538264282069,
+  "lastModified" : 1538264282275,
+  "creator" : "admin",
+  "lastModifier" : "admin",
+  "lastRev" : "0",
+  "uuid" : "40a2c532-8977-4f75-a55d-3645d3000634",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "name" : "cd213914-005a-4fc4-a6af-1c8a33075657",
+  "sdcVersion" : "3.1.3.0",
+  "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
+}
