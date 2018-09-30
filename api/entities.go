@@ -26,3 +26,14 @@ type Point struct {
 	Fields map[string]interface{} `json:"fields"`
 	Time   time.Time              `json:"time"`
 }
+
+// TelemetryMessage object
+type TelemetryMessage struct {
+	Sensor    string `json:"sensor"`
+	CO2       int    `json:"co2"`
+	Temp      int    `json:"temp"`
+	Hum       int    `json:"hum"`
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
+	CreatedAt int64  `json:"createdAt"`
+}

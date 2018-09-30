@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show">
+  <v-dialog v-model="show" persistent max-width="500px">
     <v-card>
       <v-card-title
         class="grey lighten-4 py-4 title">
@@ -24,31 +24,12 @@
             v-model="mac"
             label="MAC"
             :error-messages="errors.collect('mac')"
+            mask="NN:NN:NN:NN:NN:NN"
+            return-masked-value
             v-validate="{ required: true, regex: /^[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/ }"
             data-vv-name="mac"
             required>
           </v-text-field>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              prepend-icon="add_location"
-              v-model="latitude"
-              data-vv-name="latitude"
-              label="Latitude"
-              :error-messages="errors.collect('latitude')"
-              v-validate="'required'"
-              required
-            ></v-text-field>
-          </v-flex>
-          <v-flex xs6>
-            <v-text-field
-              v-model="longitude"
-              data-vv-name="longitude"
-              label="Longitude"
-              :error-messages="errors.collect('longitude')"
-              v-validate="'required'"
-              required
-            ></v-text-field>
           </v-flex>
           <v-flex xs12>
             <v-text-field
@@ -78,13 +59,14 @@
 import axios from 'axios';
 
 export default {
-  props: ["visible", "initLat", "initLng"],
+  props: ["visible", "initData"],
   watch: {
-    initLat(lat, oldVal) { // watch it
-      this.latitude = lat;
-    },
-    initLng(lng, oldVal) { // watch it
-      this.longitude = lng;
+    initData(val, oldVal) { // watch it
+      this.name = val.name;
+      this.mac = val.mac;
+      this.latitude = val.latitude;
+      this.longitude = val.longitude;
+      this.description = val.description;
     }
   },
   data() {
@@ -119,21 +101,18 @@ export default {
     async saveSensor() {
 
       let valid = await this.$validator.validateAll();
-      console.log(valid);
 
       if (valid) {
         let formData = {
           name:         this.name,
           mac:          this.mac,
-          latitude:     this.latitude,
-          longitude:    this.longitude,
+          latitude:     this.latitude.toString(),
+          longitude:    this.longitude.toString(),
           description:  this.description
         };
 
         let response = await axios.post(`http://${window.location.hostname}:8000/sensors`, formData);
-        console.log(response);
         this.$emit("onSave", formData);
-        this.clearData();
         this.show = false;
       }
 
@@ -144,6 +123,7 @@ export default {
       this.mac          = '';
       this.longitude    = '';
       this.description  = '';
+      this.errors.clear();
     }
   }
 };

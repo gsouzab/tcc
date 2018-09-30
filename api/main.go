@@ -21,6 +21,7 @@ func main() {
 	router := mux.NewRouter()
 	RedisInit(redisIndex)
 	InfluxInit()
+	WebsocketInit(router)
 
 	router.HandleFunc("/sensors", GetSensors).Methods("GET")
 	router.HandleFunc("/sensors/{id}", GetSensor).Methods("GET")

@@ -1,0 +1,522 @@
+{
+  "schemaVersion" : 5,
+  "version" : 8,
+  "pipelineId" : "cd213914-005a-4fc4-a6af-1c8a33075657",
+  "title" : "Probe Data",
+  "description" : "Probe's data ingestion pipeline",
+  "uuid" : "40a2c532-8977-4f75-a55d-3645d3000634",
+  "configuration" : [ {
+    "name" : "executionMode",
+    "value" : "STANDALONE"
+  }, {
+    "name" : "deliveryGuarantee",
+    "value" : "AT_LEAST_ONCE"
+  }, {
+    "name" : "startEventStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "stopEventStage",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
+  }, {
+    "name" : "shouldRetry",
+    "value" : true
+  }, {
+    "name" : "retryAttempts",
+    "value" : -1
+  }, {
+    "name" : "memoryLimit",
+    "value" : "${jvm:maxMemoryMB() * 0.85}"
+  }, {
+    "name" : "memoryLimitExceeded",
+    "value" : "LOG"
+  }, {
+    "name" : "notifyOnStates",
+    "value" : [ "RUN_ERROR", "STOPPED", "FINISHED" ]
+  }, {
+    "name" : "emailIDs",
+    "value" : [ ]
+  }, {
+    "name" : "constants",
+    "value" : [ ]
+  }, {
+    "name" : "badRecordsHandling",
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget::1"
+  }, {
+    "name" : "errorRecordPolicy",
+    "value" : "ORIGINAL_RECORD"
+  }, {
+    "name" : "workerCount",
+    "value" : 0
+  }, {
+    "name" : "clusterSlaveMemory",
+    "value" : 2048
+  }, {
+    "name" : "clusterSlaveJavaOpts",
+    "value" : "-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -Dlog4j.debug"
+  }, {
+    "name" : "clusterLauncherEnv",
+    "value" : [ ]
+  }, {
+    "name" : "mesosDispatcherURL",
+    "value" : null
+  }, {
+    "name" : "hdfsS3ConfDir",
+    "value" : null
+  }, {
+    "name" : "rateLimit",
+    "value" : 0
+  }, {
+    "name" : "maxRunners",
+    "value" : 0
+  }, {
+    "name" : "shouldCreateFailureSnapshot",
+    "value" : true
+  }, {
+    "name" : "webhookConfigs",
+    "value" : [ ]
+  }, {
+    "name" : "sparkConfigs",
+    "value" : [ ]
+  }, {
+    "name" : "statsAggregatorStage",
+    "value" : ""
+  } ],
+  "uiInfo" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : 10,
+      "timeout" : 10000,
+      "writeToDestinations" : false,
+      "executeLifecycleEvents" : false,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "stages" : [ {
+    "instanceName" : "MQTTSubscriber_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "commonConf.brokerUrl",
+      "value" : "tcp://mosquitto:1883"
+    }, {
+      "name" : "commonConf.clientId",
+      "value" : "${pipeline:id()}"
+    }, {
+      "name" : "commonConf.qos",
+      "value" : "AT_LEAST_ONCE"
+    }, {
+      "name" : "commonConf.persistenceMechanism",
+      "value" : "MEMORY"
+    }, {
+      "name" : "commonConf.dataDir",
+      "value" : "/tmp"
+    }, {
+      "name" : "commonConf.keepAlive",
+      "value" : 60
+    }, {
+      "name" : "commonConf.useAuth",
+      "value" : false
+    }, {
+      "name" : "commonConf.username",
+      "value" : null
+    }, {
+      "name" : "commonConf.password",
+      "value" : null
+    }, {
+      "name" : "commonConf.tlsConfig.tlsEnabled",
+      "value" : false
+    }, {
+      "name" : "commonConf.tlsConfig.trustStoreFilePath",
+      "value" : null
+    }, {
+      "name" : "commonConf.tlsConfig.trustStoreType",
+      "value" : "JKS"
+    }, {
+      "name" : "commonConf.tlsConfig.trustStorePassword",
+      "value" : null
+    }, {
+      "name" : "commonConf.tlsConfig.trustStoreAlgorithm",
+      "value" : "SunX509"
+    }, {
+      "name" : "commonConf.tlsConfig.useDefaultProtocols",
+      "value" : true
+    }, {
+      "name" : "commonConf.tlsConfig.protocols",
+      "value" : [ ]
+    }, {
+      "name" : "commonConf.tlsConfig.useDefaultCiperSuites",
+      "value" : true
+    }, {
+      "name" : "commonConf.tlsConfig.cipherSuites",
+      "value" : [ ]
+    }, {
+      "name" : "subscriberConf.topicFilters",
+      "value" : [ "probe" ]
+    }, {
+      "name" : "subscriberConf.dataFormat",
+      "value" : "JSON"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.compression",
+      "value" : "NONE"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.filePatternInArchive",
+      "value" : "*"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.charset",
+      "value" : "UTF-8"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.removeCtrlChars",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.textMaxLineLen",
+      "value" : 1024
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.useCustomDelimiter",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.customDelimiter",
+      "value" : "\\r\\n"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.includeCustomDelimiterInTheText",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.jsonMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvFileFormat",
+      "value" : "CSV"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvHeader",
+      "value" : "NO_HEADER"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvAllowExtraColumns",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvExtraColumnPrefix",
+      "value" : "_extra_"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvCustomDelimiter",
+      "value" : "|"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvCustomEscape",
+      "value" : "\\"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvCustomQuote",
+      "value" : "\""
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvEnableComments",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvCommentMarker",
+      "value" : "#"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvIgnoreEmptyLines",
+      "value" : true
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvRecordType",
+      "value" : "LIST_MAP"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.csvSkipStartLines",
+      "value" : 0
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.parseNull",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.nullConstant",
+      "value" : "\\\\N"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.xmlRecordElement",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.includeFieldXpathAttributes",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.xPathNamespaceContext",
+      "value" : [ ]
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.outputFieldAttributes",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.xmlMaxObjectLen",
+      "value" : 4096
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.logMode",
+      "value" : "COMMON_LOG_FORMAT"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.logMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.retainOriginalLine",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.customLogFormat",
+      "value" : "%h %l %u %t \"%r\" %>s %b"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.regex",
+      "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.fieldPathsToGroupName",
+      "value" : [ {
+        "fieldPath" : "/",
+        "group" : 1
+      } ]
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.grokPatternDefinition",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.grokPattern",
+      "value" : "%{COMMONAPACHELOG}"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.onParseError",
+      "value" : "ERROR"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.maxStackTraceLines",
+      "value" : 50
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.enableLog4jCustomLogFormat",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.log4jCustomLogFormat",
+      "value" : "%r [%t] %-5p %c %x - %m%n"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.avroSchemaSource",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.avroSchema",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.schemaRegistryUrls",
+      "value" : [ ]
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.schemaLookupMode",
+      "value" : "SUBJECT"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.subject",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.schemaId",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.protoDescriptorFile",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.messageType",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.isDelimited",
+      "value" : true
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.binaryMaxObjectLen",
+      "value" : 1024
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.datagramMode",
+      "value" : "SYSLOG"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.typesDbPath",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.convertTime",
+      "value" : false
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.excludeInterval",
+      "value" : true
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.authFilePath",
+      "value" : null
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.netflowOutputValuesMode",
+      "value" : "RAW_AND_INTERPRETED"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.maxTemplateCacheSize",
+      "value" : -1
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.templateCacheTimeoutMs",
+      "value" : -1
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.netflowOutputValuesModeDatagram",
+      "value" : "RAW_AND_INTERPRETED"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.maxTemplateCacheSizeDatagram",
+      "value" : -1
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.templateCacheTimeoutMsDatagram",
+      "value" : -1
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.wholeFileMaxObjectLen",
+      "value" : 8192
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.rateLimit",
+      "value" : "-1"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.verifyChecksum",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "DISCARD"
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Probe Subscriber",
+      "xPos" : 60,
+      "yPos" : 50,
+      "stageType" : "SOURCE"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "DevIdentity_01",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Dev Identity 1",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
+    "outputLanes" : [ "DevIdentity_01OutputLane15378116026420" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "PipelineFinisherExecutor_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_executor_finishpipeline_PipelineFinisherDExecutor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Pipeline Finisher Executor 1",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "EXECUTOR"
+    },
+    "inputLanes" : [ "DevIdentity_01OutputLane15378116026420" ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  } ],
+  "errorStage" : {
+    "instanceName" : "WritetoFile_ErrorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "directory",
+      "value" : "/data"
+    }, {
+      "name" : "uniquePrefix",
+      "value" : "sdc-telemetry-${sdc:id()}"
+    }, {
+      "name" : "rotationIntervalSecs",
+      "value" : "${1 * HOURS}"
+    }, {
+      "name" : "maxFileSizeMbs",
+      "value" : 512
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Error Records - Write to File",
+      "xPos" : 291,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  },
+  "info" : {
+    "pipelineId" : "ProbeDataf20217ba-3d2e-496c-863a-cbd5ef6b36cd",
+    "title" : "Probe Data",
+    "description" : "Probe's data ingestion pipeline",
+    "created" : 1537811298266,
+    "lastModified" : 1537815687626,
+    "creator" : "admin",
+    "lastModifier" : "admin",
+    "lastRev" : "0",
+    "uuid" : "dbee6b89-86d2-4616-8971-fd78ca1c5d37",
+    "valid" : true,
+    "metadata" : {
+      "labels" : [ ]
+    },
+    "name" : "ProbeDataf20217ba-3d2e-496c-863a-cbd5ef6b36cd",
+    "sdcVersion" : "3.1.3.0",
+    "sdcId" : "cd124bb2-5546-11e8-8128-e5d2497fb91e"
+  },
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "statsAggregatorStage" : null,
+  "startEventStages" : [ {
+    "instanceName" : "Discard_StartEventStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Start Event - Discard",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  } ],
+  "stopEventStages" : [ {
+    "instanceName" : "Discard_StopEventStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stop Event - Discard",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  } ],
+  "valid" : true,
+  "issues" : {
+    "pipelineIssues" : [ ],
+    "issueCount" : 0,
+    "stageIssues" : { }
+  },
+  "previewable" : true
+}

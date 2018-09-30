@@ -27,6 +27,10 @@ services:
         image: redis:alpine
         ports:
             - "6379:6379"
+        volumes:
+            - ./redis-data:/data
+        entrypoint: redis-server --appendonly yes
+        restart: always
     influxdb:
         image: influxdb:alpine
         ports: 
@@ -38,11 +42,14 @@ services:
             - INFLUXDB_USER=influx
             - INFLUXDB_USER_PASSWORD=123456
     data-collector:
-        image: streamsets/datacollector
+        build: ./sdc
         ports:
             - "18630:18630"
+        volumes:
+            - ./sdc/data:/data
         links:
             - influxdb
+            - redis
     portainer:
         image: portainer/portainer
         command: --templates http://templates/templates.json
