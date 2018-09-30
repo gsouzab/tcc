@@ -70,11 +70,12 @@
 import axios from 'axios';
 import {loaded} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
+import _ from 'lodash';
 
 export default {
   created() {
     this.getSensors();
-    this.$options.sockets.onmessage = (data) => console.log(data.data);
+    this.$options.sockets.onmessage = (data) => this.addTelemetryData(JSON.parse(data.data));
   },
   data() {
     return {
@@ -106,9 +107,15 @@ export default {
     addSensor(sensorData) {
       this.sensors.push(sensorData);
     },
-    openMenu(e) {
+    addTelemetryData(data) {
+      const i = _.findIndex(this.sensors, {mac: data.sensor});
+      this.sensors[i].telemetry = data;
 
-      console.log(e.wa.clientX);
+      if (this.infoWinOpen && this.infoWindowSensorMac == data.sensor) {
+        this.updateInfoContent(this.sensors[i]);
+      }
+    },
+    openMenu(e) {
       this.showContextMenu = false;
 
       this.x = e.wa.clientX;
@@ -174,11 +181,27 @@ export default {
        * Method to connect to the WS instance
        */
     },
+    updateInfoContent(sensor) {
+      this.infoContent = `
+        <h3>${sensor.name}</h3>
+        ${sensor.description}`;
+
+      if (sensor.telemetry) {
+        this.infoContent += `
+          <br>
+          Temperatura: ${sensor.telemetry.temp}º C <br>
+          CO2: ${sensor.telemetry.co2}<br>
+          Umidade: ${sensor.telemetry.hum}% <br><br>
+          Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString("pt-BR")}
+        `;
+      }
+    },
     toggleInfoWindow: function(s, idx) {
       let position = {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)};
 
       this.infoWindowPos = position;
-      this.infoContent = `${s.name}<br/>${s.description}`;
+      this.infoWindowSensorMac = s.mac;
+      this.updateInfoContent(s);
       //check if its the same marker that was selected if yes toggle
       if (this.currentMidx == idx) {
         this.infoWinOpen = !this.infoWinOpen;
