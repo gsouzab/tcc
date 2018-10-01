@@ -226,4 +226,8 @@ export default {
   left: 60px;
 }
 
+
+.container.fluid, .container {
+  padding: 0 !important;
+}
 </style>

@@ -1,8 +1,6 @@
 <template>
 <v-content>
-  <v-container fluid>
-    <router-view></router-view>
-  </v-container>
+  <router-view></router-view>
 </v-content>
 </template>
 
@@ -15,9 +13,6 @@ export default {
 <style>
 .content {
   padding: 46px 0px 0px 60px !important;
-}
-.container.fluid {
-  padding: 0;
 }
 </style>
 
