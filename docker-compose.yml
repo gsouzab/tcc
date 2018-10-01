@@ -4,7 +4,7 @@ services:
     api: 
         build: ./api
         volumes:
-            - ./api:/go/src/github.com/gsouzab/tcc/api
+            - ./api:/go/src/app
         ports: 
             - "8000:8000"
         links: 
