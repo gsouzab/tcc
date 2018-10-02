@@ -8,27 +8,22 @@
           </v-card-text>
         </v-card>
       </v-flex>
-
-      <v-flex lg6>
-        <v-card>
-          <v-card-title>Co2</v-card-title>
-          <v-card-text >6</v-card-text>
-        </v-card>
-      </v-flex>
     </v-layout>
 
     <v-layout row wrap>
       <v-flex lg6>
         <v-card>
-          <v-card-title>Umidade</v-card-title>
-          <v-card-text >6</v-card-text>
+          <v-card-text class="py-0">
+            <plotly-chart :chart="humidityChart"></plotly-chart>
+          </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex lg6>
         <v-card>
-          <v-card-title>Co2</v-card-title>
-          <v-card-text >6</v-card-text>
+          <v-card-text class="py-0">
+            <plotly-chart :chart="co2Chart"></plotly-chart>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -37,6 +32,10 @@
 
 <script>
 import PlotlyChart from './charts/PlotlyChart.vue'
+import axios from 'axios';
+import _ from 'lodash';
+
+var sensorsConfig = {};
 
 export default {
   name: 'Dashboard',
@@ -47,17 +46,7 @@ export default {
     return {
       temperatureChart: {
         uuid: "temp-chart",
-        traces: [
-          {
-            y: [],
-            x: [],
-            line: {
-              color: "#5e9e7e",
-              width: 2,
-              shape: "spline"
-            }
-          }
-        ],
+        traces: [],
         layout: {
           title:'Temperatura',
           xaxis: {
@@ -67,10 +56,45 @@ export default {
             title: 'ºC'
           }
         }
+      },
+      co2Chart: {
+        uuid: "co2-chart",
+        traces: [],
+        layout: {
+          title:'Co2',
+          xaxis: {
+            title: 'Data e hora'
+          },
+          yaxis: {
+            title: 'ºC'
+          }
+        }
+      },
+      humidityChart: {
+        uuid: "hum-chart",
+        traces: [],
+        layout: {
+          title:'Umidade',
+          xaxis: {
+            title: 'Data e hora'
+          },
+          yaxis: {
+            title: '%'
+          }
+        }
       }
     }
   },
-  mounted () {
+  async mounted() {
+    let sensors = await this.getSensors();
+
+    _.forEach(sensors, (value, key) => {
+      sensorsConfig[value.mac] = {index: key, color: '#5e9e7e'};
+      this.temperatureChart.traces.push({x: [], y: [], name: value.name});
+      this.co2Chart.traces.push({x: [], y: [], name: value.name});
+      this.humidityChart.traces.push({x: [], y: [], name: value.name});
+    });
+
     this.$options.sockets.onmessage = (data) => this.addTelemetryData(JSON.parse(data.data));
 
     // TODO: fetch initial data
@@ -79,11 +103,34 @@ export default {
     // }
   },
   methods: {
+    async getSensors() {
+      try {
+        let response = await axios.get(`http://${window.location.hostname}:8000/sensors`);
+        if (response.status == 200) {
+          return response.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      return [];
+    },
     addTelemetryData(data) {
-      console.log(data.temp);
-      this.temperatureChart.layout.datarevision = new Date().getTime();
-      this.temperatureChart.traces[0].y.push(data.temp);
-      this.temperatureChart.traces[0].x.push(new Date(data.createdAt));
+      let dateTime = new Date(data.createdAt);
+      let traceIndex = sensorsConfig[data.sensor].index;
+
+      this.co2Chart.traces[traceIndex].y.push(data.co2);
+      this.co2Chart.traces[traceIndex].x.push(dateTime);
+
+      this.temperatureChart.traces[traceIndex].y.push(data.temp);
+      this.temperatureChart.traces[traceIndex].x.push(dateTime);
+
+      this.humidityChart.traces[traceIndex].y.push(data.hum);
+      this.humidityChart.traces[traceIndex].x.push(dateTime);
+
+      this.temperatureChart.layout.datarevision = dateTime.getTime();
+      this.co2Chart.layout.datarevision = dateTime.getTime();
+      this.humidityChart.layout.datarevision = dateTime.getTime();
     },
     addData(i) {
       this.temperatureChart.layout.datarevision = new Date().getTime();
