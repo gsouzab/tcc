@@ -11,6 +11,6 @@ api/tmp
 
 /influxdb-data
 /portainer-data
-/redis*
+/redis-data
 /sdc/data/runInfo/**/0/snapshots
 
