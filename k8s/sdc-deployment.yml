@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sdc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sdc
+    spec:
+      containers:
+      - name: sdc
+        image: streamsets/datacollector
+        resources:
+          limits:
+            cpu: 100m
+            memory: 1Gi
+        ports:
+        - containerPort: 18630
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sdc
+  labels:
+    app: sdc
+spec:
+  selector:
+    app: sdc
+  ports:
+  - name: sdc
+    port: 18630
+    protocol: TCP
+    targetPort: 18630
+  type: LoadBalancer
