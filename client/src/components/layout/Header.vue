@@ -3,9 +3,12 @@
   color="grey darken-3"
   dark
   app
+  compact
   :clipped-left="$vuetify.breakpoint.lgAndUp"
   fixed >
 
+
+  <v-spacer></v-spacer>
   <v-text-field
     flat
     solo-inverted
@@ -13,7 +16,6 @@
     label="Search"
     class="hidden-sm-and-down">
   </v-text-field>
-  <v-spacer></v-spacer>
   <v-btn icon>
     <v-icon>notifications</v-icon>
   </v-btn>

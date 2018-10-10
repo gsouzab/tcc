@@ -1,10 +1,10 @@
 {
   "schemaVersion" : 5,
-  "version" : 8,
-  "pipelineId" : "cd213914-005a-4fc4-a6af-1c8a33075657",
+  "version" : 9,
+  "pipelineId" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
   "title" : "Probe Data",
   "description" : "Probe's data ingestion pipeline",
-  "uuid" : "40a2c532-8977-4f75-a55d-3645d3000634",
+  "uuid" : "5e655387-d104-46b3-b4c1-47fa15636d11",
   "configuration" : [ {
     "name" : "executionMode",
     "value" : "STANDALONE"
@@ -37,10 +37,13 @@
     "value" : [ ]
   }, {
     "name" : "constants",
-    "value" : [ ]
+    "value" : [ {
+      "key" : "measurement",
+      "value" : "probe_data"
+    } ]
   }, {
     "name" : "badRecordsHandling",
-    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget::1"
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1"
   }, {
     "name" : "errorRecordPolicy",
     "value" : "ORIGINAL_RECORD"
@@ -80,19 +83,26 @@
   }, {
     "name" : "statsAggregatorStage",
     "value" : ""
+  }, {
+    "name" : "edgeHttpUrl",
+    "value" : "http://localhost:18633"
+  }, {
+    "name" : "runnerIdleTIme",
+    "value" : 60
   } ],
   "uiInfo" : {
     "previewConfig" : {
       "previewSource" : "CONFIGURED_SOURCE",
-      "batchSize" : 10,
+      "batchSize" : "1",
       "timeout" : 10000,
-      "writeToDestinations" : false,
-      "executeLifecycleEvents" : false,
+      "writeToDestinations" : true,
+      "executeLifecycleEvents" : true,
       "showHeader" : false,
       "showFieldType" : true,
       "rememberMe" : false
     }
   },
+  "fragments" : [ ],
   "stages" : [ {
     "instanceName" : "MQTTSubscriber_01",
     "library" : "streamsets-datacollector-basic-lib",
@@ -372,37 +382,194 @@
     "eventLanes" : [ ],
     "services" : [ ]
   }, {
-    "instanceName" : "DevIdentity_01",
-    "library" : "streamsets-datacollector-dev-lib",
-    "stageName" : "com_streamsets_pipeline_stage_processor_identity_IdentityProcessor",
+    "instanceName" : "RedisLookupProcessor_01",
+    "library" : "streamsets-datacollector-redis-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor",
     "stageVersion" : "1",
     "configuration" : [ {
+      "name" : "conf.uri",
+      "value" : "redis://redis:6379"
+    }, {
+      "name" : "conf.connectionTimeout",
+      "value" : 60
+    }, {
+      "name" : "conf.mode",
+      "value" : "BATCH"
+    }, {
+      "name" : "conf.lookups",
+      "value" : [ {
+        "dataType" : "HASH",
+        "keyExpr" : "${record:value('/sensor')}",
+        "outputFieldPath" : "/location"
+      } ]
+    }, {
+      "name" : "conf.cache.enabled",
+      "value" : true
+    }, {
+      "name" : "conf.cache.maxSize",
+      "value" : -1
+    }, {
+      "name" : "conf.cache.evictionPolicyType",
+      "value" : "EXPIRE_AFTER_ACCESS"
+    }, {
+      "name" : "conf.cache.expirationTime",
+      "value" : 1
+    }, {
+      "name" : "conf.cache.timeUnit",
+      "value" : "SECONDS"
+    }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
     }, {
       "name" : "stageRequiredFields",
-      "value" : [ ]
+      "value" : [ "/sensor" ]
     }, {
       "name" : "stageRecordPreconditions",
       "value" : [ ]
     } ],
     "uiInfo" : {
-      "description" : "",
-      "label" : "Dev Identity 1",
+      "description" : "Redis lookup for geopositioning data",
+      "label" : "GeoPosition lookpup",
       "xPos" : 280,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
     "inputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
-    "outputLanes" : [ "DevIdentity_01OutputLane15378116026420" ],
+    "outputLanes" : [ "RedisLookupProcessor_01OutputLane15378160930590" ],
     "eventLanes" : [ ],
     "services" : [ ]
   }, {
-    "instanceName" : "PipelineFinisherExecutor_01",
+    "instanceName" : "StaticLookup_01",
     "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_executor_finishpipeline_PipelineFinisherDExecutor",
+    "stageName" : "com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor",
     "stageVersion" : "1",
     "configuration" : [ {
+      "name" : "conf.values",
+      "value" : [ {
+        "key" : "probe_data",
+        "value" : "probe_data"
+      } ]
+    }, {
+      "name" : "conf.mode",
+      "value" : "BATCH"
+    }, {
+      "name" : "conf.lookups",
+      "value" : [ {
+        "keyExpr" : "${measurement}",
+        "outputFieldPath" : "/measurement"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ "/sensor" ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Measurement field workaroud",
+      "xPos" : 500,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "RedisLookupProcessor_01OutputLane15378160930590" ],
+    "outputLanes" : [ "StaticLookup_01OutputLane15382695665450" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "FieldRenamer_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "renameMapping",
+      "value" : [ {
+        "fromFieldExpression" : "/location/Latitude",
+        "toFieldExpression" : "/latitude"
+      }, {
+        "fromFieldExpression" : "/location/Longitude",
+        "toFieldExpression" : "/longitude"
+      } ]
+    }, {
+      "name" : "errorHandler.nonExistingFromFieldHandling",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "errorHandler.existingToFieldHandling",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "errorHandler.multipleFromFieldsMatching",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ "/location" ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Rename geoposition fields",
+      "xPos" : 720,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "StaticLookup_01OutputLane15382695665450" ],
+    "outputLanes" : [ "FieldRenamer_01OutputLane15380780068990" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "FieldRemover_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "filterOperation",
+      "value" : "REMOVE"
+    }, {
+      "name" : "fields",
+      "value" : [ "/location" ]
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "Removes unnecessary fields from redis lookup",
+      "label" : "Redis field remover",
+      "xPos" : 940,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "FieldRenamer_01OutputLane15380780068990" ],
+    "outputLanes" : [ "FieldRemover_01OutputLane15379684389410" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "JavaScriptEvaluator_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "processingMode",
+      "value" : "BATCH"
+    }, {
+      "name" : "initScript",
+      "value" : "/**\n * Available Objects:\n * \n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters and long-lived resources.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n *                          to check if the field is typed field with value null\n *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n *                          Pass true to this function to create a list map (ordered map)\n */\nstate['connection'] = new Connection().open();"
+    }, {
+      "name" : "script",
+      "value" : "/**\n * Available constants: \n *   They are to assign a type to a field with a value null.\n *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n *\n * Available Objects:\n * \n *  records: an array of records to process, depending on the JavaScript processor\n *           processing mode it may have 1 record or all the records in the batch.\n *\n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *\n *  output.write(record): writes a record to processor output\n *\n *  error.write(record, message): sends a record to error\n *\n *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n *                            to check if the field is typed field with value null\n *  sdcFunctions.createRecord(String recordId): Creates a new record.\n *                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n *  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n *                            Pass true to this function to create a list map (ordered map)\n *\n *  sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                            Create new empty event with standard headers.\n *  sdcFunctions.toEvent(Record): Send event to event stream\n *                            Only events created with sdcFunctions.createEvent are supported.\n *  sdcFunctions.isPreview(): Determine if pipeline is in preview mode.\n *\n * Available Record Header Variables:n *\n *  record.attributes: a map of record header attributes.\n *\n *  record.<header name>: get the value of 'header name'.\n */\n\n// Sample JavaScript code\nfor(var i = 0; i < records.length; i++) {\n  try {\n    var rssi = records[i].rssi;    \n    var distance = Math.pow(10, (rssi) / (10 * 1.7));\n    records[i].distance = distance;\n    \n    records[i].rssi = 0;  \n\tlog.info(\"teste\");\n    // Write record to processor output\n    output.write(records[i]);\n  } catch (e) {\n    // Send record to error\n    error.write(records[i], e);\n  }\n}"
+    }, {
+      "name" : "destroyScript",
+      "value" : "/**\n * Available Objects:\n * \n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters and long-lived resources.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n *                          to check if the field is typed field with value null\n *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n *                          Pass true to this function to create a list map (ordered map)\n *   sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                          Create new empty event with standard headers.\n *   sdcFunctions.toEvent(Record): Send event to event stream\n *                          Only events created with sdcFunctions.createEvent are supported.\n */\n\nstate['connection'].close();"
+    }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
     }, {
@@ -414,38 +581,91 @@
     } ],
     "uiInfo" : {
       "description" : "",
-      "label" : "Pipeline Finisher Executor 1",
-      "xPos" : 500,
+      "label" : "Distance Calculator",
+      "xPos" : 1160,
       "yPos" : 50,
-      "stageType" : "EXECUTOR"
+      "stageType" : "PROCESSOR"
     },
-    "inputLanes" : [ "DevIdentity_01OutputLane15378116026420" ],
+    "inputLanes" : [ "FieldRemover_01OutputLane15379684389410" ],
+    "outputLanes" : [ "JavaScriptEvaluator_01OutputLane15383242847180" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "InfluxDB_01",
+    "library" : "streamsets-datacollector-influxdb_0_9-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ {
+      "name" : "conf.url",
+      "value" : "http://influxdb:8086"
+    }, {
+      "name" : "conf.username",
+      "value" : "influx"
+    }, {
+      "name" : "conf.password",
+      "value" : "123456"
+    }, {
+      "name" : "conf.dbName",
+      "value" : "probes"
+    }, {
+      "name" : "conf.autoCreate",
+      "value" : true
+    }, {
+      "name" : "conf.retentionPolicy",
+      "value" : null
+    }, {
+      "name" : "conf.consistencyLevel",
+      "value" : "QUORUM"
+    }, {
+      "name" : "conf.recordConverterType",
+      "value" : "CUSTOM"
+    }, {
+      "name" : "conf.fieldMapping.measurementField",
+      "value" : "/measurement"
+    }, {
+      "name" : "conf.fieldMapping.timeField",
+      "value" : "/createdAt"
+    }, {
+      "name" : "conf.fieldMapping.timeUnit",
+      "value" : "MILLISECONDS"
+    }, {
+      "name" : "conf.fieldMapping.tagFields",
+      "value" : [ "/sensor", "/longitude", "/latitude", "/srcMac" ]
+    }, {
+      "name" : "conf.fieldMapping.valueFields",
+      "value" : [ "/rssi", "/distance" ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Influx Data persistence",
+      "xPos" : 1380,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ "JavaScriptEvaluator_01OutputLane15383242847180" ],
     "outputLanes" : [ ],
     "eventLanes" : [ ],
     "services" : [ ]
   } ],
   "errorStage" : {
-    "instanceName" : "WritetoFile_ErrorStage",
+    "instanceName" : "Discard_ErrorStage",
     "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_destination_recordstolocalfilesystem_ToErrorLocalFSDTarget",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget",
     "stageVersion" : "1",
-    "configuration" : [ {
-      "name" : "directory",
-      "value" : "/data"
-    }, {
-      "name" : "uniquePrefix",
-      "value" : "sdc-telemetry-${sdc:id()}"
-    }, {
-      "name" : "rotationIntervalSecs",
-      "value" : "${1 * HOURS}"
-    }, {
-      "name" : "maxFileSizeMbs",
-      "value" : 512
-    } ],
+    "configuration" : [ ],
     "uiInfo" : {
       "description" : "",
-      "label" : "Error Records - Write to File",
-      "xPos" : 291,
+      "label" : "Error Records - Discard",
+      "xPos" : 1380,
       "yPos" : 50,
       "stageType" : "TARGET"
     },
@@ -455,22 +675,22 @@
     "services" : [ ]
   },
   "info" : {
-    "pipelineId" : "ProbeDataf20217ba-3d2e-496c-863a-cbd5ef6b36cd",
+    "pipelineId" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
     "title" : "Probe Data",
     "description" : "Probe's data ingestion pipeline",
-    "created" : 1537811298266,
-    "lastModified" : 1537815687626,
+    "created" : 1538322918437,
+    "lastModified" : 1538327724591,
     "creator" : "admin",
     "lastModifier" : "admin",
     "lastRev" : "0",
-    "uuid" : "dbee6b89-86d2-4616-8971-fd78ca1c5d37",
+    "uuid" : "3bc72399-4b75-496c-ada6-f226fa852d21",
     "valid" : true,
     "metadata" : {
       "labels" : [ ]
     },
-    "name" : "ProbeDataf20217ba-3d2e-496c-863a-cbd5ef6b36cd",
-    "sdcVersion" : "3.1.3.0",
-    "sdcId" : "cd124bb2-5546-11e8-8128-e5d2497fb91e"
+    "name" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
+    "sdcVersion" : "3.2.0.0",
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
   },
   "metadata" : {
     "labels" : [ ]
@@ -514,9 +734,9 @@
   } ],
   "valid" : true,
   "issues" : {
-    "pipelineIssues" : [ ],
     "issueCount" : 0,
-    "stageIssues" : { }
+    "stageIssues" : { },
+    "pipelineIssues" : [ ]
   },
   "previewable" : true
 }
