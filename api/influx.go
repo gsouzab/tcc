@@ -3,14 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
+	"strconv"
 
 	"github.com/influxdata/influxdb/client/v2"
 )
 
 const influxAddr = "http://influxdb:8086"
 const influxDbName = "probes"
-const measurement = "probe"
+const probeMeasurement = "probe"
+const telemetryMeasurement = "telemetry_data"
 const influxUsername = "influx"
 const influxPassword = "123456"
 const precision = "s"
@@ -96,22 +97,30 @@ func queryDB(clnt client.Client, cmd string) (res []client.Result, err error) {
 	return res, nil
 }
 
-func selectLastProbes() (res []client.Result, err error) {
-	q := fmt.Sprintf("SELECT * FROM %s LIMIT %d", measurement, 10)
+// InfluxQueryLastTelemetryLimit ...
+func InfluxQueryLastTelemetryLimit(limitString string) (res []client.Result, err error) {
+	limitInt, err := strconv.Atoi(limitString)
+	if err != nil {
+		limitInt = 10
+	}
+
+	q := fmt.Sprintf("SELECT * FROM %s LIMIT %d", telemetryMeasurement, limitInt)
 	res, err = queryDB(influxClient, q)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for i, row := range res[0].Series[0].Values {
-		t, err := time.Parse(time.RFC3339, row[0].(string))
-		if err != nil {
-			log.Fatal(err)
+	/*
+		for i, row := range res[0].Series[0].Values {
+			t, err := time.Parse(time.RFC3339, row[0].(string))
+			if err != nil {
+				log.Fatal(err)
+			}
+			val := row[1].(string)
+			log.Printf("[%2d] %s: %s\n", i, t.Format(time.Stamp), val)
 		}
-		val := row[1].(string)
-		log.Printf("[%2d] %s: %s\n", i, t.Format(time.Stamp), val)
-	}
+	*/
 
 	return res, nil
 }

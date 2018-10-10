@@ -69,8 +69,11 @@ func InsertProbe(w http.ResponseWriter, r *http.Request) {
 }
 
 // SelectProbes retorna um sensor especifico
-func SelectProbes(w http.ResponseWriter, r *http.Request) {
-	result, err := selectLastProbes()
+func SelectLastTelemetryLimit(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	limit := params["limit"]
+
+	result, err := InfluxQueryLastTelemetryLimit(limit)
 
 	var response Response
 	response.Success = err == nil
