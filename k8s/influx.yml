@@ -1,0 +1,57 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: influx
+  labels:
+    app: influx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influx
+  template:
+    metadata:
+      labels:
+        app: influx
+    spec:
+      containers:
+        # see https://hub.docker.com/_/influxdb/ for config options
+        - image: influxdb:1.4.2-alpine
+          name: influx
+          env:
+            - name: INFLUXDB_DB
+              value: tcc_data
+            - name: INFLUXDB_USER
+              value: tcc
+            - name: INFLUXDB_USER_PASSWORD
+              value: tcc_ufrj
+          ports:
+            - containerPort: 8086
+              name: influx
+          volumeMounts:
+            - name: influx-storage
+              mountPath: /var/lib/influxdb
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 8086
+            initialDelaySeconds: 40
+            timeoutSeconds: 4
+      volumes:
+        - name: influx-storage
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: influx
+  name: influx
+spec:
+  type: NodePort
+  ports:
+    - port: 8086
+      targetPort: 8086
+      protocol: TCP
+  selector:
+    app: influx

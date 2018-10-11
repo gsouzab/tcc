@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: mosquitto
 spec:
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -12,12 +12,14 @@ spec:
       containers:
       - name: mosquitto
         image: eclipse-mosquitto:latest
-        resources:
-          limits:
-            cpu: 100m
-            memory: 500Mi
         ports:
         - containerPort: 1883
+        volumeMounts:
+          - name: mosquitto-storage
+            mountPath: /mosquitto/data
+      volumes:
+      - name: mosquitto-storage
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

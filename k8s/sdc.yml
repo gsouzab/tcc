@@ -12,12 +12,18 @@ spec:
       containers:
       - name: sdc
         image: streamsets/datacollector
-        resources:
-          limits:
-            cpu: 100m
-            memory: 1Gi
         ports:
         - containerPort: 18630
+        volumeMounts:
+        - name: sdc-data-storage
+          mountPath: /data
+        - name: sdc-libs-storage
+          mountPath: /opt/streamsets-datacollector-3.5.0/streamsets-libs
+      volumes:
+      - name: sdc-data-storage
+        emptyDir: {}
+      - name: sdc-libs-storage
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
