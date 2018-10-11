@@ -8,11 +8,11 @@ import (
 	"github.com/influxdata/influxdb/client/v2"
 )
 
-const influxAddr = "http://influxdb:8086"
-const influxDbName = "probes"
+const influxAddr = "http://influx:8086"
+const influxDbName = "tcc_data"
 const measurement = "probe"
-const influxUsername = "influx"
-const influxPassword = "123456"
+const influxUsername = "tcc"
+const influxPassword = "tcc_ufrj"
 const precision = "s"
 
 var influxClient client.Client

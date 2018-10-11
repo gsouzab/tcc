@@ -17,6 +17,7 @@ spec:
       containers:
         - image: gcr.io/tcc-ufrj/api:v1
           name: api
+          imagePullPolicy: Always
           ports:
           - containerPort: 8000
             name: api

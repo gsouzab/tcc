@@ -1,16 +1,3 @@
-#FROM golang:alpine
-
-#RUN apk add --no-cache git
-
-#ARG app_env
-#ENV APP_ENV $app_env
-
-#COPY ./ /go/src/	
-#WORKDIR /go/src/github.com/gsouzab/tcc/api
-
-#RUN go get ./
-#RUN go build *.go
-
 FROM golang:alpine
 
 RUN apk add --no-cache git

@@ -31,16 +31,16 @@ services:
             - ./redis-data:/data
         entrypoint: redis-server --appendonly yes
         restart: always
-    influxdb:
+    influx:
         image: influxdb:alpine
         ports: 
             - "8086:8086"
         volumes:
             - ./influxdb-data:/var/lib/influxdb
         environment:
-            - INFLUXDB_DB=probes
-            - INFLUXDB_USER=influx
-            - INFLUXDB_USER_PASSWORD=123456
+            - INFLUXDB_DB=tcc_data
+            - INFLUXDB_USER=tcc
+            - INFLUXDB_USER_PASSWORD=tcc_ufrj
     data-collector:
         build: ./sdc
         ports:
