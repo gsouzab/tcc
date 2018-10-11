@@ -68,16 +68,23 @@ func InsertProbe(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// SelectProbes retorna um sensor especifico
-func SelectLastTelemetryLimit(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	limit := params["limit"]
+// QueryTelemetry retorna um sensor especifico
+func QueryTelemetry(w http.ResponseWriter, r *http.Request) {
 
-	result, err := InfluxQueryLastTelemetryLimit(limit)
-
+	var queryTelemetry TelemetryQuery
 	var response Response
-	response.Success = err == nil
-	response.Data = result
+
+	_ = json.NewDecoder(r.Body).Decode(&queryTelemetry)
+
+	res, error := InfluxQueryTelemetry(queryTelemetry)
+
+	if error != nil {
+		response.Success = false
+		response.Error = err.Error()
+	} else {
+		response.Success = true
+		response.Data = res[0].Series
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)

@@ -28,7 +28,7 @@ func main() {
 	router.HandleFunc("/sensors", CreateSensor).Methods("POST")
 	router.HandleFunc("/sensors/{id}", DeleteSensor).Methods("DELETE")
 	router.HandleFunc("/probes", InsertProbe).Methods("POST")
-	router.HandleFunc("/telemetry/{limit}", SelectLastTelemetryLimit).Methods("GET")
+	router.HandleFunc("/telemetry/query", QueryTelemetry).Methods("POST")
 
 	headers := handlers.AllowedHeaders([]string{"Content-Type", "X-Requested-With"})
 	origins := handlers.AllowedOrigins([]string{"*"})
