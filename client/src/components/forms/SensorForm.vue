@@ -111,7 +111,7 @@ export default {
           description:  this.description
         };
 
-        let response = await axios.post(`http://${window.location.hostname}:8000/sensors`, formData);
+        let response = await axios.post(`${process.env.API_HOST}/sensors`, formData);
         this.$emit("onSave", formData);
         this.show = false;
       }

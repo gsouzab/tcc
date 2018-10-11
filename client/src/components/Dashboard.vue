@@ -105,7 +105,7 @@ export default {
   methods: {
     async getSensors() {
       try {
-        let response = await axios.get(`http://${window.location.hostname}:8000/sensors`);
+        let response = await axios.get(`${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
           return response.data.data;
         }

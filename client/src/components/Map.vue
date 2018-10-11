@@ -151,7 +151,7 @@ export default {
     async removeSensor() {
       let sensor = this.sensorData;
       try {
-        let response = await axios.delete(`http://${window.location.hostname}:8000/sensors/${sensor.mac}`);
+        let response = await axios.delete(`${process.env.API_HOST}/sensors/${sensor.mac}`);
         if (response.status == 200) {
           this.sensors.splice(sensor, 1);
         }
@@ -163,7 +163,7 @@ export default {
       this.waitingSensors = true;
 
       try {
-        let response = await axios.get(`http://${window.location.hostname}:8000/sensors`);
+        let response = await axios.get(`${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
           this.sensors = response.data.data;
         }
