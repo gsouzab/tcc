@@ -37,3 +37,16 @@ type TelemetryMessage struct {
 	Longitude string `json:"longitude"`
 	CreatedAt int64  `json:"createdAt"`
 }
+
+// TelemetryQuery object
+type TelemetryQuery struct {
+	SelectFields       []string               `json:"selectFields,omitempty"`
+	SelectTags         []string               `json:"selectTags,omitempty"`
+	SelectMeanField    string                 `json:"selectMeanField,omitempty"`
+	SelectMeanInterval string                 `json:"selectMeanInterval,omitempty"`
+	Where              map[string]interface{} `json:"where,omitempty"`
+	WhereStartTime     string                 `json:"whereStartTime,omitempty"`
+	WhereEndTime       string                 `json:"whereEndTime,omitempty"`
+	WhereLastXMinutes  string                 `json:"whereLastXMinutes,omitempty"`
+	GroupByTag         string                 `json:"groupByTag,omitempty"`
+}

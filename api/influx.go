@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"reflect"
+	"strconv"
 	"time"
 
 	"github.com/influxdata/influxdb/client/v2"
@@ -96,21 +98,128 @@ func queryDB(clnt client.Client, cmd string) (res []client.Result, err error) {
 	return res, nil
 }
 
-func selectLastProbes() (res []client.Result, err error) {
-	q := fmt.Sprintf("SELECT * FROM %s LIMIT %d", measurement, 10)
-	res, err = queryDB(influxClient, q)
+// InfluxQueryTelemetry ...
+func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, err error) {
+
+	var query = "SELECT "
+
+	var selectByField = queryTelemetry.SelectFields != nil && len(queryTelemetry.SelectFields) > 0
+	var selectByTag = queryTelemetry.SelectTags != nil && len(queryTelemetry.SelectTags) > 0
+	var selectMean = queryTelemetry.SelectMeanField != ""
+	var hasSelect = selectByField || selectByTag || selectMean
+
+	var whereLastMinutes = queryTelemetry.WhereLastXMinutes != ""
+	var wherePeriod = queryTelemetry.WhereStartTime != "" && queryTelemetry.WhereEndTime != ""
+	var whereField = queryTelemetry.Where != nil && len(queryTelemetry.Where) > 0
+	var hasWhere = whereLastMinutes || wherePeriod || whereField
+
+	var groupByMeanTime = queryTelemetry.SelectMeanInterval != ""
+	var groupByTag = queryTelemetry.GroupByTag != ""
+	var hasGroupBy = groupByMeanTime || groupByTag
+
+	if hasSelect {
+		if selectMean {
+			query += "MEAN(" + queryTelemetry.SelectMeanField + ") "
+
+		} else {
+			if selectByField {
+				for i := 0; i < len(queryTelemetry.SelectFields); i++ {
+					query += queryTelemetry.SelectFields[i]
+					query += "::field"
+					if i < (len(queryTelemetry.SelectFields) - 1) {
+						query += ", "
+					}
+				}
+			}
+
+			if selectByTag {
+				if selectByField {
+					query += ", "
+				}
+
+				for i := 0; i < len(queryTelemetry.SelectTags); i++ {
+					query += queryTelemetry.SelectTags[i]
+					query += "::tag"
+					if i < (len(queryTelemetry.SelectTags) - 1) {
+						query += ", "
+					}
+				}
+			}
+		}
+
+	} else {
+		query += "* "
+	}
+
+	query += " FROM \"" + telemetryMeasurement + "\" "
+
+	if hasWhere {
+		query += "WHERE "
+
+		if whereField {
+			var mapCount int
+			for field, value := range queryTelemetry.Where {
+
+				query += "\"" + field + "\""
+				query += " = "
+
+				if reflect.TypeOf(value).String() == "string" {
+					query += "'" + value.(string) + "' "
+
+				} else if reflect.TypeOf(value).String() == "float64" {
+					query += strconv.Itoa(int((value.(float64)))) + " "
+				}
+
+				mapCount++
+
+				if mapCount < (len(queryTelemetry.Where)) {
+					query += "AND "
+				}
+			}
+
+			if whereLastMinutes || wherePeriod {
+				query += "AND "
+			}
+		}
+
+		if wherePeriod {
+			query += "time >= '" + queryTelemetry.WhereStartTime + "' AND "
+			query += "time <= '" + queryTelemetry.WhereEndTime + "' "
+
+		} else if whereLastMinutes {
+			now := time.Now()
+
+			minutesInt, error := strconv.Atoi(queryTelemetry.WhereLastXMinutes)
+			if error != nil {
+				fmt.Println(err)
+			}
+
+			nowSubtract := now.Add(time.Duration(-minutesInt) * time.Minute)
+			query += "time >= '" + nowSubtract.UTC().Format("2006-01-02T15:04:05Z0700") + "' AND "
+			query += "time <= '" + now.UTC().Format("2006-01-02T15:04:05Z0700") + "' "
+		}
+	}
+
+	if hasGroupBy {
+		query += "GROUP BY "
+
+		if groupByMeanTime {
+			query += "time(" + queryTelemetry.SelectMeanInterval + "m)"
+			if groupByTag {
+				query += ", "
+			}
+		}
+		if groupByTag {
+			query += queryTelemetry.GroupByTag
+		}
+	}
+
+	res, err = queryDB(influxClient, query)
+
+	fmt.Println(query)
 
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	for i, row := range res[0].Series[0].Values {
-		t, err := time.Parse(time.RFC3339, row[0].(string))
-		if err != nil {
-			log.Fatal(err)
-		}
-		val := row[1].(string)
-		log.Printf("[%2d] %s: %s\n", i, t.Format(time.Stamp), val)
 	}
 
 	return res, nil
