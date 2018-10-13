@@ -40,3 +40,4 @@ spec:
     protocol: TCP
     targetPort: 18630
   type: LoadBalancer
+  loadBalancerIP: 35.198.46.103
