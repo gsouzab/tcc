@@ -12,7 +12,7 @@ export default {
 
 <style>
 .content {
-  padding: 46px 0px 0px 60px !important;
+  padding: 0px 0px 0px 60px !important;
 }
 </style>
 

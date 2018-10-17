@@ -66,7 +66,7 @@ export default {
             title: 'Data e hora'
           },
           yaxis: {
-            title: 'ºC'
+            title: 'ppm'
           }
         }
       },
@@ -105,7 +105,7 @@ export default {
   methods: {
     async getSensors() {
       try {
-        let response = await axios.get(`${process.env.API_HOST}/sensors`);
+        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
           return response.data.data;
         }
@@ -116,6 +116,7 @@ export default {
       return [];
     },
     addTelemetryData(data) {
+      console.log(data);
       let dateTime = new Date(data.createdAt);
       let traceIndex = sensorsConfig[data.sensor].index;
 

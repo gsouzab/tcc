@@ -1,5 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
+
     <SensorForm :visible="showSensorForm"
                 :initData="sensorData"
                 :isEdit="isEdit"
@@ -8,7 +9,8 @@
 
     <gmap-map
       :center="center"
-      :zoom="15"
+      :zoom="zoom"
+      :options="{fullscreenControl: false, streetViewControl: false, mapTypeControl: false}"
       @rightclick="this.showMenu"
       slot="activator"
       class="map">
@@ -80,6 +82,7 @@ export default {
   data() {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
+      zoom: 15,
       showContextMenu: false,
       isSensorMenu: false,
       isEdit: false,
@@ -117,9 +120,9 @@ export default {
     },
     openMenu(e) {
       this.showContextMenu = false;
-
-      this.x = e.wa.clientX;
-      this.y = e.wa.clientY;
+      const mouseEvent = e.wa || e.ta;
+      this.x = mouseEvent.clientX;
+      this.y = mouseEvent.clientY;
       this.$nextTick(() => {
         this.showContextMenu = true;
       })
@@ -136,7 +139,6 @@ export default {
       this.openMenu(e);
     },
     showMenu(e) {
-
       this.isSensorMenu = false;
 
       this.sensorData = {
@@ -151,24 +153,24 @@ export default {
     async removeSensor() {
       let sensor = this.sensorData;
       try {
-        let response = await axios.delete(`${process.env.API_HOST}/sensors/${sensor.mac}`);
+        let response = await axios.delete(`http://${process.env.API_HOST}/sensors/${sensor.mac}`);
         if (response.status == 200) {
           this.sensors.splice(sensor, 1);
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     },
     async getSensors() {
       this.waitingSensors = true;
 
       try {
-        let response = await axios.get(`${process.env.API_HOST}/sensors`);
+        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
           this.sensors = response.data.data;
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
 
       this.waitingSensors = false;
@@ -184,48 +186,52 @@ export default {
     updateInfoContent(sensor) {
       this.infoContent = `
         <h3>${sensor.name}</h3>
-        ${sensor.description}`;
+        ${sensor.description} <br>`;
 
       if (sensor.telemetry) {
         this.infoContent += `
           <br>
           Temperatura: ${sensor.telemetry.temp}º C <br>
-          CO2: ${sensor.telemetry.co2}<br>
+          CO2: ${sensor.telemetry.co2} ppm<br>
           Umidade: ${sensor.telemetry.hum}% <br><br>
-          Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString("pt-BR")}
+          Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString('pt-BR')}
         `;
       }
     },
     toggleInfoWindow: function(s, idx) {
       let position = {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)};
 
-      this.infoWindowPos = position;
-      this.infoWindowSensorMac = s.mac;
       this.updateInfoContent(s);
-      //check if its the same marker that was selected if yes toggle
+      // check if its the same marker that was selected if yes toggle
       if (this.currentMidx == idx) {
         this.infoWinOpen = !this.infoWinOpen;
       } else {
-        //if different marker set infowindow to open and reset current marker index
+        // if different marker set infowindow to open and reset current marker index
         this.infoWinOpen = true;
         this.currentMidx = idx;
       }
+
+      this.$nextTick(() => {
+        this.center = position;
+        this.zoom = 16;
+        this.infoWindowPos = position;
+        this.infoWindowSensorMac = s.mac;
+      })
     },
   },
   components: {
     SensorForm
-  }
+  },
 };
 </script>
 
 <style scoped>
 .map {
   width: calc(100% - 60px);
-  height: calc(100% - 46px);
+  height: 100%;
   position: absolute;
   left: 60px;
 }
-
 
 .container.fluid, .container {
   padding: 0 !important;

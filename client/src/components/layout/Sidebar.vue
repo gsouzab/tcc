@@ -31,27 +31,25 @@
 </template>
 
 <script>
-  export default {
-    name: 'Sidebar',
-    data () {
-      return {
-        drawer: true,
-        items: [
-          { title: 'Map', icon: 'map', route: 'map' },
-          { title: 'Dashboard', icon: 'dashboard', route: 'dashboard' }
-        ]
-      }
+export default {
+  name: 'Sidebar',
+  data () {
+    return {
+      drawer: true,
+      items: [
+        { title: 'Map', icon: 'map', route: 'map' },
+        { title: 'Dashboard', icon: 'dashboard', route: 'dashboard' }
+      ]
     }
-  };
+  }
+};
 </script>
 
 <style >
-  .navigation-drawer {
-    margin-top: 46px !important;
-    max-height: calc(100% - 46px) !important;
-    width: 60px !important;
-  }
-  .navigation-drawer--mini-variant .list__tile__action, .navigation-drawer--mini-variant .list__tile__avatar {
-    min-width: 26px !important;
-  }
+.navigation-drawer {
+  width: 60px !important;
+}
+.navigation-drawer--mini-variant .list__tile__action, .navigation-drawer--mini-variant .list__tile__avatar {
+  min-width: 26px !important;
+}
 </style>
