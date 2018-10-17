@@ -1,5 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
+    <TimePicker></TimePicker>
     <v-layout row wrap>
       <v-flex lg12>
         <v-card>
@@ -32,6 +33,7 @@
 
 <script>
 import PlotlyChart from './charts/PlotlyChart.vue'
+import TimePicker from '@/components/TimePicker';
 import axios from 'axios';
 import _ from 'lodash';
 
@@ -40,7 +42,8 @@ var sensorsConfig = {};
 export default {
   name: 'Dashboard',
   components: {
-    PlotlyChart
+    PlotlyChart,
+    TimePicker
   },
   data () {
     return {
