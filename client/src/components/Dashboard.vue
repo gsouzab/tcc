@@ -4,7 +4,7 @@
     <v-layout row wrap>
       <v-flex lg12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0 px-0">
             <plotly-chart :chart="temperatureChart"></plotly-chart>
           </v-card-text>
         </v-card>
@@ -12,17 +12,17 @@
     </v-layout>
 
     <v-layout row wrap>
-      <v-flex lg6>
+      <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0 px-0">
             <plotly-chart :chart="humidityChart"></plotly-chart>
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex lg6>
+      <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0" px-0>
             <plotly-chart :chart="co2Chart"></plotly-chart>
           </v-card-text>
         </v-card>
@@ -69,7 +69,7 @@ export default {
             title: 'Data e hora'
           },
           yaxis: {
-            title: 'ºC'
+            title: 'ppm'
           }
         }
       },
@@ -108,7 +108,7 @@ export default {
   methods: {
     async getSensors() {
       try {
-        let response = await axios.get(`${process.env.API_HOST}/sensors`);
+        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
           return response.data.data;
         }

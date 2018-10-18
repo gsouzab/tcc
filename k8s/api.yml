@@ -30,6 +30,7 @@ metadata:
   name: api
 spec:
   type: LoadBalancer
+  loadBalancerIP: 35.198.46.103
   ports:
     - port: 8000
       targetPort: 8000
