@@ -1,6 +1,5 @@
 <template>
-  <v-container fluid grid-list-md>
-
+  <v-container fluid>
     <SensorForm :visible="showSensorForm"
                 :initData="sensorData"
                 :isEdit="isEdit"
@@ -226,11 +225,9 @@ export default {
 </script>
 
 <style scoped>
-.map {
-  width: calc(100% - 60px);
+.map, .container {
+  width: 100%;
   height: 100%;
-  position: absolute;
-  left: 60px;
 }
 
 .container.fluid, .container {

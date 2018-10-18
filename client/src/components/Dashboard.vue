@@ -3,7 +3,7 @@
     <v-layout row wrap>
       <v-flex lg12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0 px-0">
             <plotly-chart :chart="temperatureChart"></plotly-chart>
           </v-card-text>
         </v-card>
@@ -11,17 +11,17 @@
     </v-layout>
 
     <v-layout row wrap>
-      <v-flex lg6>
+      <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0 px-0">
             <plotly-chart :chart="humidityChart"></plotly-chart>
           </v-card-text>
         </v-card>
       </v-flex>
 
-      <v-flex lg6>
+      <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0">
+          <v-card-text class="py-0" px-0>
             <plotly-chart :chart="co2Chart"></plotly-chart>
           </v-card-text>
         </v-card>
@@ -116,7 +116,6 @@ export default {
       return [];
     },
     addTelemetryData(data) {
-      console.log(data);
       let dateTime = new Date(data.createdAt);
       let traceIndex = sensorsConfig[data.sensor].index;
 
