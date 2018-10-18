@@ -5,7 +5,7 @@ metadata:
   labels:
     app: api
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: api
@@ -15,7 +15,7 @@ spec:
         app: api
     spec:
       containers:
-        - image: gcr.io/tcc-ufrj/api:v1
+        - image: gcr.io/tcc-ufrj/api:v2
           name: api
           imagePullPolicy: Always
           ports:
