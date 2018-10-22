@@ -53,7 +53,7 @@ export default {
 </script>
 
 <style>
-.navigation-drawer > .list .list__tile {
-  padding: 0 6px !important;
+.v-navigation-drawer--mini-variant .v-list__tile__action, .v-navigation-drawer--mini-variant .v-list__tile__avatar {
+  min-width: 28px;
 }
 </style>

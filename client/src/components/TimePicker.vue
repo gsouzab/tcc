@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel v-model="panel">
     <v-expansion-panel-content>
       <div slot="header">
         <v-layout row align-center>
@@ -9,9 +9,69 @@
       <v-card>
         <v-card-text>
           <v-layout row justify-end>
-            <v-date-picker v-model="startDatePicker" no-title reactive locale="pt-br" :events="selectedStartRange"></v-date-picker>
+            <v-list>
+              <v-subheader>Acesso rápido</v-subheader>
+              <v-list-tile
+                v-for="(preset, index) in presets1"
+                :key="index"
+                @click="onPresetSelect(preset)"
+              >
+                <v-list-tile-content>
+                  {{ preset.title }}
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
 
-            <v-date-picker v-model="endDatePicker" no-title reactive locale="pt-br" :events="selectedEndRange" :min="minEndDate"></v-date-picker>
+            <v-list>
+              <v-subheader></v-subheader>
+              <v-list-tile
+                v-for="(preset, index) in presets2"
+                :key="index"
+                @click="onPresetSelect(preset)"
+              >
+                <v-list-tile-content>
+                  {{ preset.title }}
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <v-list>
+              <v-subheader></v-subheader>
+              <v-list-tile
+                v-for="(preset, index) in presets3"
+                :key="index"
+                @click="onPresetSelect(preset)"
+              >
+                <v-list-tile-content>
+                  {{ preset.title }}
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+
+            <div class="mr-3">
+              <v-text-field
+                v-model="startDateTime"
+                :label="'Data inicial'"
+                name="startDateTime"
+                class="date-textfield"
+                prepend-icon="event"
+                @change="onDateRangeChange"
+              />
+              <v-date-picker v-model="startDate" no-title reactive locale="pt-br" :max="endDate" @change="onDateRangeChange"></v-date-picker>
+            </div>
+
+            <div>
+              <v-text-field
+                v-model="endDateTime"
+                :label="'Data final'"
+                name="endDateTime"
+                class="date-textfield"
+                @change="onDateRangeChange"
+              />
+              <v-date-picker v-model="endDate" no-title reactive locale="pt-br" :min="startDate" @change="onDateRangeChange"></v-date-picker>
+            </div>
+
+            <v-btn color="success" large outline style="width: 44px; min-width: 44px;" @click="onDateRangeSelect"><v-icon>search</v-icon></v-btn>
           </v-layout>
 
         </v-card-text>
@@ -22,27 +82,168 @@
 
 
 <script>
+import * as moment from "moment";
+
 export default {
-  name: 'TimePicker',
+  name: "TimePicker",
+  props: ["startDateTime", "endDateTime"],
   data() {
     return {
-      selectedTimeText: 'últimos 15 minutos',
-      startDatePicker: null,
-      endDatePicker: null,
-      selectedStartTime: null,
-      selectedEndTime: null,
-      minEndDate: null
-    }
+      selectedTimeText: "últimos 15 minutos",
+      startDate: null,
+      endDate: null,
+      panel: [],
+      presets1: [
+        {
+          title: "Hoje",
+          startDate: () => moment().startOf("day"),
+          endDate: () => moment().endOf("day")
+        },
+        {
+          title: "Essa semana",
+          startDate: () => moment().startOf("week"),
+          endDate: () => moment().endOf("week")
+        },
+        {
+          title: "Esse mês",
+          startDate: () => moment().startOf("month"),
+          endDate: () => moment().endOf("month")
+        },
+        {
+          title: "Esse ano",
+          startDate: () => moment().startOf("year"),
+          endDate: () => moment().endOf("year")
+        },
+        {
+          title: "Desde o início da semana",
+          startDate: () => moment().startOf("week"),
+          endDate: () => moment()
+        },
+        {
+          title: "Desde o início do mês",
+          startDate: () => moment().startOf("month"),
+          endDate: () => moment()
+        }
+      ],
+      presets2: [
+        {
+          title: "Ontem",
+          startDate: () =>
+            moment()
+              .subtract(1, "days")
+              .startOf("day"),
+          endDate: () =>
+            moment()
+              .subtract(1, "days")
+              .endOf("day")
+        },
+        {
+          title: "Semana passada",
+          startDate: () =>
+            moment()
+              .subtract(1, "week")
+              .startOf("week"),
+          endDate: () =>
+            moment()
+              .subtract(1, "week")
+              .endOf("week")
+        },
+        {
+          title: "Mês passado",
+          startDate: () =>
+            moment()
+              .subtract(1, "month")
+              .startOf("month"),
+          endDate: () =>
+            moment()
+              .subtract(1, "month")
+              .endOf("month")
+        },
+        {
+          title: "Ano passado",
+          startDate: () =>
+            moment()
+              .subtract(1, "year")
+              .startOf("year"),
+          endDate: () =>
+            moment()
+              .subtract(1, "year")
+              .endOf("year")
+        },
+        {
+          title: "Últimos 7 dias",
+          startDate: () =>
+            moment()
+              .subtract(7, "days")
+              .startOf("day"),
+          endDate: () => moment().endOf("day")
+        },
+        {
+          title: "Últimos 30 dias",
+          startDate: () =>
+            moment()
+              .subtract(30, "days")
+              .startOf("day"),
+          endDate: () => moment().endOf("day")
+        }
+      ],
+      presets3: [
+        {
+          title: "Últimos 15 minutos",
+          startDate: () => moment().subtract(15, "minutes"),
+          endDate: () => moment()
+        },
+        {
+          title: "Últimos 30 minutos",
+          startDate: () => moment().subtract(30, "minutes"),
+          endDate: () => moment()
+        },
+        {
+          title: "Última hora",
+          startDate: () => moment().subtract(1, "hour"),
+          endDate: () => moment()
+        },
+        {
+          title: "Últimas 4 horas",
+          startDate: () => moment().subtract(4, "hours"),
+          endDate: () => moment()
+        },
+        {
+          title: "Últimas 12 horas",
+          startDate: () => moment().subtract(12, "hours"),
+          endDate: () => moment()
+        },
+        {
+          title: "Últimas 24 horas",
+          startDate: () => moment().subtract(24, "hours"),
+          endDate: () => moment()
+        }
+      ]
+    };
   },
   methods: {
-    selectedStartRange(date) {
-      const [,, day] = date.split('-')
-      return parseInt(day, 10) % 3 === 0
+    onPresetSelect(preset) {
+      this.selectedTimeText = preset.title;
+      this.startDateTime = preset.startDate().format("YYYY-MM-DD HH:mm:ss");
+      this.endDateTime = preset.endDate().format("YYYY-MM-DD HH:mm:ss");
+
+      this.startDate = preset.startDate().format("YYYY-MM-DD");
+      this.endDate = preset.endDate().format("YYYY-MM-DD");
     },
-    selectedEndRange(date) {
-      const [,, day] = date.split('-')
-      return parseInt(day, 10) % 3 === 0
+    onDateRangeChange(data) {
+      this.startDateTime = this.startDate ? this.startDate + " 00:00:00" : null;
+      this.endDateTime = this.endDate ? this.endDate + " 23:59:59" : null;
+      this.selectedTimeText = `${this.startDateTime} à ${this.endDateTime}`;
     },
+    onDateRangeSelect() {
+      this.panel = [];
+    }
   }
-}
+};
 </script>
+
+<style scoped>
+.date-textfield {
+  width: 290px;
+}
+</style>

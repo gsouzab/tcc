@@ -22,7 +22,7 @@ export default {
 
 <style>
 html {
-  overflow: auto;
+  overflow-y: auto;
 }
 </style>
 
