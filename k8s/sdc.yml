@@ -17,12 +17,12 @@ spec:
         volumeMounts:
         - name: sdc-data-storage
           mountPath: /data
-        - name: sdc-libs-storage
-          mountPath: /opt/streamsets-datacollector-3.5.0/streamsets-libs
+        lifecycle:
+          postStart:
+            exec:
+              command: ["${SDC_DIST}/bin/streamsets", "stagelibs", "-install=streamsets-datacollector-redis-lib,streamsets-datacollector-influxdb_0_9-lib"]
       volumes:
       - name: sdc-data-storage
-        emptyDir: {}
-      - name: sdc-libs-storage
         emptyDir: {}
 ---
 apiVersion: v1
