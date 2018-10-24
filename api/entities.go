@@ -30,9 +30,9 @@ type Point struct {
 // TelemetryMessage object
 type TelemetryMessage struct {
 	Sensor    string `json:"sensor"`
-	CO2       int    `json:"co2"`
-	Temp      int    `json:"temp"`
-	Hum       int    `json:"hum"`
+	CO2       string `json:"co2"`
+	Temp      string `json:"temp"`
+	Hum       string `json:"hum"`
 	Latitude  string `json:"latitude"`
 	Longitude string `json:"longitude"`
 	CreatedAt int64  `json:"createdAt"`

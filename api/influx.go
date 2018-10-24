@@ -12,6 +12,7 @@ import (
 
 const influxAddr = "http://influx:8086"
 const influxDbName = "tcc_data"
+const telemetryMeasurement = "telemetry_data"
 const measurement = "probe"
 const influxUsername = "tcc"
 const influxPassword = "tcc_ufrj"

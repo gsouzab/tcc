@@ -1,0 +1,25 @@
+# STEP 1 build executable binary
+FROM golang:alpine as builder
+
+RUN apk add --no-cache git
+ARG app_env
+ENV APP_ENV $app_env
+
+WORKDIR /go/src/app
+COPY . .
+
+#get dependancies
+#you can also use dep
+RUN go get -d -v
+#build the binary
+RUN go build -o /go/bin/api
+
+# STEP 2 build a small image
+FROM alpine
+RUN adduser -S -D -H -h /go/bin apiuser
+USER apiuser
+COPY --from=builder /go/bin/api /go/bin/api
+WORKDIR /go/bin
+CMD ["./api"]
+
+EXPOSE 8000
