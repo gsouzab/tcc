@@ -11,16 +11,12 @@ spec:
     spec:
       containers:
       - name: sdc
-        image: streamsets/datacollector
+        image: gcr.io/tcc-ufrj/sdc:v1
         ports:
         - containerPort: 18630
         volumeMounts:
         - name: sdc-data-storage
           mountPath: /data
-        lifecycle:
-          postStart:
-            exec:
-              command: ["${SDC_DIST}/bin/streamsets", "stagelibs", "-install=streamsets-datacollector-redis-lib,streamsets-datacollector-influxdb_0_9-lib"]
       volumes:
       - name: sdc-data-storage
         emptyDir: {}

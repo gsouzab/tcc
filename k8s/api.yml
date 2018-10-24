@@ -15,7 +15,7 @@ spec:
         app: api
     spec:
       containers:
-        - image: gcr.io/tcc-ufrj/api:v2
+        - image: gcr.io/tcc-ufrj/api:v5
           name: api
           imagePullPolicy: Always
           ports:
