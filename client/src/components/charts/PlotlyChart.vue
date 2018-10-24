@@ -8,7 +8,7 @@ import Plotly from 'plotly.js-dist';
 export default {
   props: ['chart'],
   mounted() {
-    Plotly.plot(this.$refs[this.chart.uuid], this.chart.traces, this.chart.layout);
+    Plotly.plot(this.$refs[this.chart.uuid], this.chart.traces, this.chart.layout, {responsive: true});
   },
   watch: {
     chart: {

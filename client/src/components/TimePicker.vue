@@ -1,9 +1,15 @@
 <template>
-  <v-expansion-panel v-model="panel">
+  <v-expansion-panel v-model="panel" expand>
     <v-expansion-panel-content>
       <div slot="header">
-        <v-layout row align-center>
-         <v-icon >schedule</v-icon> <span class="pl-2">{{selectedTimeText}}</span>
+        <v-layout row align-center justify-space-between>
+          <div>
+            <v-icon>schedule</v-icon> <span class="pl-2">{{selectedTimeText}}</span>
+          </div>
+
+          <div>
+            <v-btn small depressed v-on:click.stop="setRealTime" color="primary" :disabled="startDate === null && endDate === null">Tempo real</v-btn>
+          </div>
         </v-layout>
       </div>
       <v-card>
@@ -86,13 +92,14 @@ import * as moment from "moment";
 
 export default {
   name: "TimePicker",
-  props: ["startDateTime", "endDateTime"],
   data() {
     return {
-      selectedTimeText: "últimos 15 minutos",
+      selectedTimeText: "Agora",
       startDate: null,
       endDate: null,
-      panel: [],
+      startDateTime: null,
+      endDateTime: null,
+      panel: [false],
       presets1: [
         {
           title: "Hoje",
@@ -224,19 +231,36 @@ export default {
   methods: {
     onPresetSelect(preset) {
       this.selectedTimeText = preset.title;
-      this.startDateTime = preset.startDate().format("YYYY-MM-DD HH:mm:ss");
-      this.endDateTime = preset.endDate().format("YYYY-MM-DD HH:mm:ss");
+      this.startDateTime = preset.startDate().format("YYYY-MM-DD\\THH:mm:ss\\Z");
+      this.endDateTime = preset.endDate().format("YYYY-MM-DD\\THH:mm:ss\\Z");
 
       this.startDate = preset.startDate().format("YYYY-MM-DD");
       this.endDate = preset.endDate().format("YYYY-MM-DD");
+
+      this.onDateRangeSelect();
     },
     onDateRangeChange(data) {
       this.startDateTime = this.startDate ? this.startDate + " 00:00:00" : null;
       this.endDateTime = this.endDate ? this.endDate + " 23:59:59" : null;
-      this.selectedTimeText = `${this.startDateTime} à ${this.endDateTime}`;
+
+      if (this.endDate === null && this.startDate === null) {
+        this.selectedTimeText = 'Agora';
+      } else {
+        this.selectedTimeText = `${this.startDateTime} à ${this.endDateTime}`;
+      }
     },
     onDateRangeSelect() {
-      this.panel = [];
+      this.$nextTick(() => {
+        this.panel = [false];
+      });
+
+      this.$emit('change', this.startDateTime, this.endDateTime)
+    },
+    setRealTime() {
+      this.startDate = null;
+      this.endDate = null;
+      this.onDateRangeChange();
+      this.onDateRangeSelect();
     }
   }
 };

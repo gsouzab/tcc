@@ -15,7 +15,7 @@ spec:
         app: client
     spec:
       containers:
-        - image: gcr.io/tcc-ufrj/client:v1
+        - image: gcr.io/tcc-ufrj/client:v2
           name: client
           imagePullPolicy: Always
           ports:

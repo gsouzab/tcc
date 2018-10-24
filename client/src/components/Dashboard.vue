@@ -1,6 +1,6 @@
 <template>
   <v-container fluid grid-list-md>
-    <TimePicker></TimePicker>
+    <TimePicker @change="onDateRangeChange"></TimePicker>
     <v-layout row wrap>
       <v-flex lg12>
         <v-card>
@@ -47,6 +47,7 @@ export default {
   },
   data () {
     return {
+      sensors: [],
       temperatureChart: {
         uuid: "temp-chart",
         traces: [],
@@ -89,26 +90,10 @@ export default {
     }
   },
   async mounted() {
-    let sensors = await this.getSensors();
+    this.sensors = await this.getSensors();
 
-    _.forEach(sensors, (value, key) => {
-      sensorsConfig[value.mac] = {index: key, color: '#5e9e7e'};
-      this.temperatureChart.traces.push({x: [], y: [], name: value.name});
-      this.co2Chart.traces.push({x: [], y: [], name: value.name});
-      this.humidityChart.traces.push({x: [], y: [], name: value.name});
-    });
-
-    this.$options.sockets.onmessage = (data) => {
-      const measurements = data.data.split('\n');
-      for (let m of measurements) {
-        if (m !== "") this.addTelemetryData(JSON.parse(m))
-      }
-    };
-
-    // TODO: fetch initial data
-    // for (let i = 0; i < 100; i++) {
-    //   this.addData(i);
-    // }
+    this.initTraces(this.sensors);
+    this.addOnMessageListener()
   },
   methods: {
     async getSensors() {
@@ -122,6 +107,17 @@ export default {
       }
 
       return [];
+    },
+    initTraces(sensors) {
+      this.temperatureChart.traces = [];
+      this.co2Chart.traces = [];
+      this.humidityChart.traces = [];
+      _.forEach(sensors, (value, key) => {
+        sensorsConfig[value.mac] = {index: key, color: '#5e9e7e'};
+        this.temperatureChart.traces.push({x: [], y: [], name: value.name});
+        this.co2Chart.traces.push({x: [], y: [], name: value.name});
+        this.humidityChart.traces.push({x: [], y: [], name: value.name});
+      });
     },
     addTelemetryData(data) {
       let dateTime = new Date(data.createdAt);
@@ -144,6 +140,59 @@ export default {
       this.temperatureChart.layout.datarevision = new Date().getTime();
       this.temperatureChart.traces[0].y.push(Math.random());
       this.temperatureChart.traces[0].x.push(i);
+    },
+    addOnMessageListener() {
+      this.$options.sockets.onmessage = (data) => {
+        const measurements = data.data.split('\n');
+        for (let m of measurements) {
+          if (m !== "") this.addTelemetryData(JSON.parse(m))
+        }
+      };
+    },
+    async getTelemetryData(whereStartTime, whereEndTime, sensors, selectMeanField) {
+      try {
+        let response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
+          whereStartTime,
+          whereEndTime,
+          selectMeanField,
+          selectMeanInterval: "1",
+          GroupByTag: "sensor"
+        });
+        if (response.status == 200) {
+          return response.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      return [];
+    },
+    async onDateRangeChange(startDate, endDate) {
+
+      if (startDate === null && endDate === null) {
+        this.addOnMessageListener();
+        this.initTraces(this.sensors);
+      } else {
+        delete this.$options.sockets.onmessage;
+
+        this.initTraces(this.sensors);
+
+        const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, "temp");
+
+        _.forEach(temperatureData, (groupedData) => {
+          let traceIndex = sensorsConfig[groupedData.tags.sensor].index;
+
+          _.forEach(groupedData.values, (data) => {
+            if (data[1] !== null) {
+              this.temperatureChart.traces[traceIndex].x.push(new Date(data[0]))
+              this.temperatureChart.traces[traceIndex].y.push(data[1])
+            }
+
+          });
+
+          this.temperatureChart.layout.datarevision = new Date().getTime();
+        });
+      }
     }
   }
 };
