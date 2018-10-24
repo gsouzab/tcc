@@ -9,7 +9,7 @@ services:
             - "8000:8000"
         links: 
             - redis
-            - influxdb
+            - influx
         environment:
             - APP_ENV=development
     client:
@@ -48,19 +48,8 @@ services:
         volumes:
             - ./sdc/data:/data
         links:
-            - influxdb
+            - influx
             - redis
-    portainer:
-        image: portainer/portainer
-        command: --templates http://templates/templates.json
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-            - ./portainer-data:/data
-        # Enable you to access potainers web interface from your host machine
-        # using http://localhost:10001
-        ports:
-            - "10001:9000"
-
 volumes:
   schemas:
     external: false
