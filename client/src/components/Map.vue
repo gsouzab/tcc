@@ -74,9 +74,9 @@ import SensorForm from '@/components/forms/SensorForm';
 import _ from 'lodash';
 
 export default {
-  created() {
-    this.getSensors();
-    this.$options.sockets.onmessage = (data) => this.addTelemetryData(JSON.parse(data.data));
+  async created() {
+    await this.getSensors();
+    this.connectWS()
   },
   data() {
     return {
@@ -119,7 +119,7 @@ export default {
     },
     openMenu(e) {
       this.showContextMenu = false;
-      const mouseEvent = e.wa || e.ta;
+      const mouseEvent = e.wa || e.ta || e.xa;
       this.x = mouseEvent.clientX;
       this.y = mouseEvent.clientY;
       this.$nextTick(() => {
@@ -181,19 +181,27 @@ export default {
       /**
        * Method to connect to the WS instance
        */
+      this.$options.sockets.onmessage = (data) => {
+        const measurements = data.data.split('\n');
+        for (let m of measurements) {
+          if (m !== "") this.addTelemetryData(JSON.parse(m))
+        }
+
+      };
     },
     updateInfoContent(sensor) {
       this.infoContent = `
         <h3>${sensor.name}</h3>
-        ${sensor.description} <br>`;
+        <p style="white-space: pre;">${sensor.description}</p>`;
 
       if (sensor.telemetry) {
         this.infoContent += `
-          <br>
+          <p>
           Temperatura: ${sensor.telemetry.temp}º C <br>
           CO2: ${sensor.telemetry.co2} ppm<br>
           Umidade: ${sensor.telemetry.hum}% <br><br>
           Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString('pt-BR')}
+          </p>
         `;
       }
     },

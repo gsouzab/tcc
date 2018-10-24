@@ -62,11 +62,13 @@ export default {
   props: ["visible", "initData"],
   watch: {
     initData(val, oldVal) { // watch it
-      this.name = val.name;
-      this.mac = val.mac;
-      this.latitude = val.latitude;
-      this.longitude = val.longitude;
-      this.description = val.description;
+      if (val) {
+        this.name = val.name;
+        this.mac = val.mac;
+        this.latitude = val.latitude;
+        this.longitude = val.longitude;
+        this.description = val.description;
+      }
     }
   },
   data() {

@@ -98,7 +98,12 @@ export default {
       this.humidityChart.traces.push({x: [], y: [], name: value.name});
     });
 
-    this.$options.sockets.onmessage = (data) => this.addTelemetryData(JSON.parse(data.data));
+    this.$options.sockets.onmessage = (data) => {
+      const measurements = data.data.split('\n');
+      for (let m of measurements) {
+        if (m !== "") this.addTelemetryData(JSON.parse(m))
+      }
+    };
 
     // TODO: fetch initial data
     // for (let i = 0; i < 100; i++) {
