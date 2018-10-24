@@ -11,7 +11,7 @@ import VueNativeSock from 'vue-native-websocket';
 import Map from '@/components/Map';
 import Dashboard from '@/components/Dashboard';
 
-Vue.use(VueNativeSock, `ws://${process.env.API_HOST}/consumer`, {
+Vue.use(VueNativeSock, `ws://${process.env.API_HOST}/ws`, {
   reconnection: true, // (Boolean) whether to reconnect automatically (false)
   reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
   reconnectionDelay: 3000, // (Number) how long to initially wait before attempting a new (1000)
