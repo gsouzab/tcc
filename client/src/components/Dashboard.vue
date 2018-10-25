@@ -35,6 +35,7 @@
 import PlotlyChart from './charts/PlotlyChart.vue'
 import TimePicker from '@/components/TimePicker';
 import axios from 'axios';
+import * as moment from "moment-timezone";
 import _ from 'lodash';
 
 var sensorsConfig = {};
@@ -178,21 +179,33 @@ export default {
         this.initTraces(this.sensors);
 
         const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, "temp");
+        const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, "co2");
+        const humData = await this.getTelemetryData(startDate, endDate, this.sensors, "hum");
 
-        _.forEach(temperatureData, (groupedData) => {
+        this.fillTelemetryMeasurements(
+          {chart: "temperatureChart", data: temperatureData},
+          {chart: "co2Chart", data: co2Data},
+          {chart: "humidityChart", data: humData})
+      }
+    },
+    fillTelemetryMeasurements(...telemetryMeasurements) {
+
+      for (let measurement of telemetryMeasurements) {
+        _.forEach(measurement.data, (groupedData) => {
           let traceIndex = sensorsConfig[groupedData.tags.sensor].index;
 
           _.forEach(groupedData.values, (data) => {
             if (data[1] !== null) {
-              this.temperatureChart.traces[traceIndex].x.push(new Date(data[0]))
-              this.temperatureChart.traces[traceIndex].y.push(data[1])
+              this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
+              this[measurement.chart].traces[traceIndex].y.push(data[1])
             }
 
           });
 
-          this.temperatureChart.layout.datarevision = new Date().getTime();
+          this[measurement.chart].layout.datarevision = new Date().getTime();
         });
       }
+
     }
   }
 };
