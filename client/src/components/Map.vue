@@ -23,7 +23,7 @@
       >
         <v-list>
           <v-list-tile
-            @click="showSensorForm = true"
+            @click="showSensorForm = true;  isEdit = false;"
             v-if="!isSensorMenu"
           >
             <v-list-tile-title>Adicionar sensor aqui</v-list-tile-title>
@@ -107,7 +107,12 @@ export default {
   },
   methods: {
     addSensor(sensorData) {
-      this.sensors.push(sensorData);
+      if (this.isEdit) {
+        this.sensors[this.sensorData.index] = sensorData;
+        this.updateInfoContent(sensorData);
+      } else {
+        this.sensors.push(sensorData);
+      }
     },
     addTelemetryData(data) {
       const i = _.findIndex(this.sensors, {mac: data.sensor});
@@ -133,6 +138,7 @@ export default {
       this.sensorData = null;
       this.$nextTick(() => {
         this.sensorData = sensor;
+        this.sensorData.index = index;
       })
 
       this.openMenu(e);
@@ -154,7 +160,7 @@ export default {
       try {
         let response = await axios.delete(`http://${process.env.API_HOST}/sensors/${sensor.mac}`);
         if (response.status == 200) {
-          this.sensors.splice(sensor, 1);
+          this.sensors.splice(sensor.index, 1);
         }
       } catch (error) {
         console.error(error);
@@ -220,7 +226,6 @@ export default {
 
       this.$nextTick(() => {
         this.center = position;
-        this.zoom = 16;
         this.infoWindowPos = position;
         this.infoWindowSensorMac = s.mac;
       })
