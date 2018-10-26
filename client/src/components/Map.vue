@@ -45,9 +45,13 @@
         </v-list>
       </v-menu>
 
-      <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
-        <div v-html="infoContent"></div>
-      </gmap-info-window>
+      <gmap-circle
+        :key="key+index"
+        v-for="(m, key, index) in measurements"
+        :radius="m.radius"
+        :center="m.center"
+        :options="m.options">
+      </gmap-circle>
 
       <gmap-cluster :zoomOnClick="true">
         <gmap-marker
@@ -73,6 +77,43 @@ import {loaded} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
 import _ from 'lodash';
 
+const colorTemperaturePallete = {
+  0: "#0570b0",
+  1: "#0570b0",
+  2: "#0570b0",
+  3: "#238b45",
+  4: "#238b45",
+  5: "#238b45",
+  6: "#74c476",
+  7: "#74c476",
+  8: "#74c476",
+  9: "#ffff00",
+  10: "#ffff00",
+  11: "#ffff00",
+  12: "#fec44f",
+  13: "#fec44f",
+  14: "#fec44f",
+  15: "#ec7014",
+  16: "#ec7014",
+  17: "#ec7014",
+  18: "#e31a1c",
+  19: "#e31a1c",
+  20: "#e31a1c",
+  21: "#a50f15",
+  22: "#a50f15",
+  23: "#a50f15",
+  24: "#67000d",
+  25: "#67000d",
+  26: "#67000d",
+  27: "#67000d",
+  28: "#67000d",
+  29: "#67000d",
+  30: "#67000d",
+  31: "#67000d",
+};
+
+var sensorsConfig = {};
+
 export default {
   async created() {
     await this.getSensors();
@@ -82,6 +123,7 @@ export default {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
       zoom: 15,
+      measurements: {},
       showContextMenu: false,
       isSensorMenu: false,
       isEdit: false,
@@ -121,6 +163,22 @@ export default {
       if (this.infoWinOpen && this.infoWindowSensorMac == data.sensor) {
         this.updateInfoContent(this.sensors[i]);
       }
+
+      const m = {
+        radius: 30,
+        center: sensorsConfig[data.sensor].position,
+        options: {
+          strokeColor: colorTemperaturePallete[Math.round(data.temp)],
+          strokeOpacity: 0.8,
+          strokeWeight: 0,
+          fillColor: colorTemperaturePallete[Math.round(data.temp)],
+          fillOpacity: 0.55,
+        }
+      };
+
+      this.$nextTick(() => {
+        this.measurements[data.sensor] = m;
+      });
     },
     openMenu(e) {
       this.showContextMenu = false;
@@ -172,7 +230,12 @@ export default {
       try {
         let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
         if (response.status == 200) {
+
           this.sensors = response.data.data;
+
+          _.forEach(this.sensors, (s, index) => {
+            sensorsConfig[s.mac] = {position: {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}, index};
+          });
         }
       } catch (error) {
         console.error(error);
