@@ -8,7 +8,7 @@
           </div>
 
           <div>
-            <v-btn small depressed v-on:click.stop="setRealTime" color="primary" :disabled="startDate === null && endDate === null">Tempo real</v-btn>
+            <v-btn small depressed v-on:click.stop="setRealTime" color="primary" :disabled="startDate === null && endDate === null"><v-icon style="color: #4caf50 !important;" small v-if="startDate === null && endDate === null">fiber_manual_record</v-icon>Tempo real</v-btn>
           </div>
         </v-layout>
       </div>

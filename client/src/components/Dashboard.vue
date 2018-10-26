@@ -49,6 +49,7 @@ export default {
   data () {
     return {
       sensors: [],
+      meanInterval: null,
       temperatureChart: {
         uuid: "temp-chart",
         traces: [],
@@ -156,7 +157,7 @@ export default {
       const maxPoints = 1440 * 3;
       const selectMeanInterval = Math.ceil(duration / maxPoints);
 
-      console.log(Math.ceil(duration), selectMeanInterval);
+      this.meanInterval = selectMeanInterval;
       try {
         let response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
           whereStartTime,
@@ -203,8 +204,11 @@ export default {
           let traceIndex = sensorsConfig[groupedData.tags.sensor].index;
 
           _.forEach(groupedData.values, (data) => {
-            this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
-            this[measurement.chart].traces[traceIndex].y.push(data[1])
+            if (data[1] !== null) {
+              this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
+              this[measurement.chart].traces[traceIndex].y.push(data[1])
+            }
+
           });
 
           this[measurement.chart].layout.datarevision = new Date().getTime();
