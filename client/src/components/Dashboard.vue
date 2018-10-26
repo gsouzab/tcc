@@ -115,9 +115,9 @@ export default {
       this.humidityChart.traces = [];
       _.forEach(sensors, (value, key) => {
         sensorsConfig[value.mac] = {index: key, color: '#5e9e7e'};
-        this.temperatureChart.traces.push({x: [], y: [], name: value.name});
-        this.co2Chart.traces.push({x: [], y: [], name: value.name});
-        this.humidityChart.traces.push({x: [], y: [], name: value.name});
+        this.temperatureChart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
+        this.co2Chart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
+        this.humidityChart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
       });
     },
     addTelemetryData(data) {
@@ -151,12 +151,18 @@ export default {
       };
     },
     async getTelemetryData(whereStartTime, whereEndTime, sensors, selectMeanField) {
+      const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
+
+      const maxPoints = 1440 * 3;
+      const selectMeanInterval = Math.ceil(duration / maxPoints);
+
+      console.log(Math.ceil(duration), selectMeanInterval);
       try {
         let response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
           whereStartTime,
           whereEndTime,
           selectMeanField,
-          selectMeanInterval: "1",
+          selectMeanInterval: selectMeanInterval.toString(),
           GroupByTag: "sensor"
         });
         if (response.status == 200) {
@@ -192,14 +198,13 @@ export default {
 
       for (let measurement of telemetryMeasurements) {
         _.forEach(measurement.data, (groupedData) => {
+          if (!sensorsConfig[groupedData.tags.sensor]) return;
+
           let traceIndex = sensorsConfig[groupedData.tags.sensor].index;
 
           _.forEach(groupedData.values, (data) => {
-            if (data[1] !== null) {
-              this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
-              this[measurement.chart].traces[traceIndex].y.push(data[1])
-            }
-
+            this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
+            this[measurement.chart].traces[traceIndex].y.push(data[1])
           });
 
           this[measurement.chart].layout.datarevision = new Date().getTime();

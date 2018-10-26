@@ -240,8 +240,8 @@ export default {
       this.onDateRangeSelect();
     },
     onDateRangeChange(data) {
-      this.startDateTime = this.startDate ? this.startDate + " 00:00:00-03:00" : null;
-      this.endDateTime = this.endDate ? this.endDate + " 23:59:59-03:00" : null;
+      this.startDateTime = this.startDate ? this.startDate + "T00:00:00-03:00" : null;
+      this.endDateTime = this.endDate ? this.endDate + "T23:59:59-03:00" : null;
 
       if (this.endDate === null && this.startDate === null) {
         this.selectedTimeText = 'Agora';
