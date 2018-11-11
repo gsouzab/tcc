@@ -38,9 +38,7 @@
               data-vv-name="description"
               label="Descrição"
               :error-messages="errors.collect('description')"
-              v-validate="'required'"
               multi-line
-              required
             ></v-text-field>
           </v-flex>
         </v-layout>
@@ -59,9 +57,9 @@
 import axios from 'axios';
 
 export default {
-  props: ["visible", "initData"],
+  props: ['visible', 'initData'],
   watch: {
-    initData(val, oldVal) { // watch it
+    initData(val) { // watch it
       if (val) {
         this.name = val.name;
         this.mac = val.mac;
@@ -69,7 +67,7 @@ export default {
         this.longitude = val.longitude;
         this.description = val.description;
       }
-    }
+    },
   },
   data() {
     return {
@@ -78,7 +76,7 @@ export default {
       latitude: '',
       longitude: '',
       description: '',
-    }
+    };
   },
   events: {
     setLatLng(lat, lng) {
