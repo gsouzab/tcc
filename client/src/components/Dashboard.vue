@@ -32,80 +32,80 @@
 </template>
 
 <script>
-import PlotlyChart from './charts/PlotlyChart.vue'
-import TimePicker from '@/components/TimePicker';
 import axios from 'axios';
-import * as moment from "moment-timezone";
+import * as moment from 'moment';
 import _ from 'lodash';
+import TimePicker from '@/components/TimePicker';
+import PlotlyChart from './charts/PlotlyChart';
 
-var sensorsConfig = {};
+const sensorsConfig = {};
 
 export default {
   name: 'Dashboard',
   components: {
     PlotlyChart,
-    TimePicker
+    TimePicker,
   },
-  data () {
+  data() {
     return {
       sensors: [],
       meanInterval: null,
       temperatureChart: {
-        uuid: "temp-chart",
+        uuid: 'temp-chart',
         traces: [],
         layout: {
-          title:'Temperatura',
+          title: 'Temperatura',
           xaxis: {
-            title: 'Data e hora'
+            title: 'Data e hora',
           },
           yaxis: {
-            title: 'ºC'
-          }
-        }
+            title: 'ºC',
+          },
+        },
       },
       co2Chart: {
-        uuid: "co2-chart",
+        uuid: 'co2-chart',
         traces: [],
         layout: {
-          title:'Co2',
+          title: 'Co2',
           xaxis: {
-            title: 'Data e hora'
+            title: 'Data e hora',
           },
           yaxis: {
-            title: 'ppm'
-          }
-        }
+            title: 'ppm',
+          },
+        },
       },
       humidityChart: {
-        uuid: "hum-chart",
+        uuid: 'hum-chart',
         traces: [],
         layout: {
-          title:'Umidade',
+          title: 'Umidade',
           xaxis: {
-            title: 'Data e hora'
+            title: 'Data e hora',
           },
           yaxis: {
-            title: '%'
-          }
-        }
-      }
-    }
+            title: '%',
+          },
+        },
+      },
+    };
   },
   async mounted() {
     this.sensors = await this.getSensors();
 
     this.initTraces(this.sensors);
-    this.addOnMessageListener()
+    this.addOnMessageListener();
   },
   methods: {
     async getSensors() {
       try {
-        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
-        if (response.status == 200) {
+        const response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        if (response.status === 200) {
           return response.data.data;
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
 
       return [];
@@ -115,15 +115,15 @@ export default {
       this.co2Chart.traces = [];
       this.humidityChart.traces = [];
       _.forEach(sensors, (value, key) => {
-        sensorsConfig[value.mac] = {index: key, color: '#5e9e7e'};
-        this.temperatureChart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
-        this.co2Chart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
-        this.humidityChart.traces.push({x: [], y: [], name: value.name, line: {shape: 'spline'}});
+        sensorsConfig[value.mac] = { index: key, color: '#5e9e7e' };
+        this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
       });
     },
     addTelemetryData(data) {
-      let dateTime = new Date(data.createdAt);
-      let traceIndex = sensorsConfig[data.sensor].index;
+      const dateTime = new Date(data.createdAt);
+      const traceIndex = sensorsConfig[data.sensor].index;
 
       this.co2Chart.traces[traceIndex].y.push(data.co2);
       this.co2Chart.traces[traceIndex].x.push(dateTime);
@@ -146,9 +146,9 @@ export default {
     addOnMessageListener() {
       this.$options.sockets.onmessage = (data) => {
         const measurements = data.data.split('\n');
-        for (let m of measurements) {
-          if (m !== "") this.addTelemetryData(JSON.parse(m))
-        }
+        measurements.forEach((m) => {
+          if (m !== '') this.addTelemetryData(JSON.parse(m));
+        });
       };
     },
     async getTelemetryData(whereStartTime, whereEndTime, sensors, selectMeanField) {
@@ -159,14 +159,14 @@ export default {
 
       this.meanInterval = selectMeanInterval;
       try {
-        let response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
+        const response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
           whereStartTime,
           whereEndTime,
           selectMeanField,
           selectMeanInterval: selectMeanInterval.toString(),
-          GroupByTag: "sensor"
+          GroupByTag: 'sensor'
         });
-        if (response.status == 200) {
+        if (response.status === 200) {
           return response.data.data;
         }
       } catch (error) {
@@ -176,7 +176,6 @@ export default {
       return [];
     },
     async onDateRangeChange(startDate, endDate) {
-
       if (startDate === null && endDate === null) {
         this.addOnMessageListener();
         this.initTraces(this.sensors);

@@ -14,6 +14,30 @@
       slot="activator"
       class="map">
 
+      <div slot="visible">
+        <v-toolbar
+          dense
+          floating
+          class="mt-3"
+        >
+          <v-flex xs12 sm6>
+            <v-btn-toggle v-model="viewMode" class="transparent">
+              <v-btn :value="SENSOR_VIEW_MODE" flat>
+                Sensores
+              </v-btn>
+              <v-btn :value="TEMPERATURE_VIEW_MODE" flat>
+                Temperatura
+              </v-btn>
+              <v-btn :value="CO2_VIEW_MODE" flat>
+                CO2
+              </v-btn>
+              <v-btn :value="HUMIDITY_VIEW_MODE" flat>
+                Umidade
+              </v-btn>
+            </v-btn-toggle>
+          </v-flex>
+        </v-toolbar>
+      </div>
       <v-menu
         v-model="showContextMenu"
         :position-x="x"
@@ -45,28 +69,38 @@
         </v-list>
       </v-menu>
 
-      <gmap-circle
-        :key="key+index"
-        v-for="(m, key, index) in measurements"
-        :radius="m.radius"
-        :center="m.center"
-        :options="m.options">
-      </gmap-circle>
-
-      <gmap-cluster :zoomOnClick="true">
-        <gmap-marker
+      <section v-if="viewMode === TEMPERATURE_VIEW_MODE">
+        <gmap-circle
           :key="index"
-          v-for="(s, index) in sensors"
-          :icon="require('../assets/sensor.png')"
-          :position="{lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}"
-          :clickable="true"
-          @click="toggleInfoWindow(s, index)"
-          @rightclick="showSensorMenu($event, s, index)">
+          v-for="(m, index) in measurementsArray"
+          :radius="m.radius"
+          :center="m.center"
+          :options="m.options">
+        </gmap-circle>
+      </section>>
 
-        </gmap-marker>
-      </gmap-cluster>
+      <section v-if="viewMode === SENSOR_VIEW_MODE">
+        <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+          <div v-html="infoContent"></div>
+        </gmap-info-window>
+
+        <gmap-cluster :zoomOnClick="true">
+          <gmap-marker
+            :key="index"
+            v-for="(s, index) in sensors"
+            :icon="require('../assets/sensor.png')"
+            :position="{lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}"
+            :clickable="true"
+            @click="toggleInfoWindow(s, index)"
+            @rightclick="showSensorMenu($event, s, index)">
+
+          </gmap-marker>
+        </gmap-cluster>
+      </section>
 
     </gmap-map>
+
+    <div id="legend" v-if="viewMode !== SENSOR_VIEW_MODE"> </div>
   </v-container>
 </template>
 
@@ -76,41 +110,7 @@ import axios from 'axios';
 import {loaded} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
 import _ from 'lodash';
-
-const colorTemperaturePallete = {
-  0: "#0570b0",
-  1: "#0570b0",
-  2: "#0570b0",
-  3: "#238b45",
-  4: "#238b45",
-  5: "#238b45",
-  6: "#74c476",
-  7: "#74c476",
-  8: "#74c476",
-  9: "#ffff00",
-  10: "#ffff00",
-  11: "#ffff00",
-  12: "#fec44f",
-  13: "#fec44f",
-  14: "#fec44f",
-  15: "#ec7014",
-  16: "#ec7014",
-  17: "#ec7014",
-  18: "#e31a1c",
-  19: "#e31a1c",
-  20: "#e31a1c",
-  21: "#a50f15",
-  22: "#a50f15",
-  23: "#a50f15",
-  24: "#67000d",
-  25: "#67000d",
-  26: "#67000d",
-  27: "#67000d",
-  28: "#67000d",
-  29: "#67000d",
-  30: "#67000d",
-  31: "#67000d",
-};
+import * as d3 from 'd3';
 
 var sensorsConfig = {};
 
@@ -118,16 +118,25 @@ export default {
   async created() {
     await this.getSensors();
     this.connectWS()
+
+    this.setLegend();
   },
   data() {
     return {
       center: { lat: -22.8617784, lng: -43.2296038 },
       zoom: 15,
-      measurements: {},
+      viewMode: 1,
+      SENSOR_VIEW_MODE: 1,
+      TEMPERATURE_VIEW_MODE: 2,
+      CO2_VIEW_MODE: 3,
+      HUMIDITY_VIEW_MODE: 4,
+      measurements: new Map(),
+      measurementsTracker: 0,
       showContextMenu: false,
       isSensorMenu: false,
       isEdit: false,
       sensorData: null,
+      colorScale: null,
       x: 0,
       y: 0,
       sensors: [],
@@ -147,7 +156,80 @@ export default {
       },
     };
   },
+  computed: {
+    measurementsArray() {
+      return this.measurementsTracker && Array.from(this.measurements.values());
+    },
+  },
   methods: {
+    setLegend() {
+      var w = 300, h = 40;
+
+      var key = d3.select("#legend")
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .style("position", "absolute")
+        .style("right", "10px")
+        .style("top", "0px");
+
+      var legend = key.append("defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "100%")
+        .attr("y2", "100%")
+        .attr("spreadMethod", "pad");
+
+      legend.selectAll("stop")
+        .data([
+            {offset: "0%", color: "#2c7bb6"},
+            {offset: "12.5%", color: "#00a6ca"},
+            {offset: "25%", color: "#00ccbc"},
+            {offset: "37.5%", color: "#90eb9d"},
+            {offset: "50%", color: "#ffff8c"},
+            {offset: "62.5%", color: "#f9d057"},
+            {offset: "75%", color: "#f29e2e"},
+            {offset: "87.5%", color: "#e76818"},
+            {offset: "100%", color: "#d7191c"}
+          ])
+        .enter().append("stop")
+        .attr("offset", function(d) { return d.offset; })
+        .attr("stop-color", function(d) { return d.color; });
+
+
+      key.append("rect")
+        .attr("width", w)
+        .attr("height", h - 25)
+        .style("fill", "url(#gradient)")
+        .attr("transform", "translate(0,5)");
+
+      var y = d3.scaleLinear()
+        .domain([-15, 30])
+        .range([0, 280]);
+
+      var yAxis = d3.axisBottom()
+        .scale(y)
+        .tickFormat(function(d) { return d + "°C"; })
+        .ticks(5);
+
+      key.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(0,20)")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("axis title");
+
+      this.colorScale = d3.scaleLinear()
+        .domain([-15, 7.5, 30])
+        .range(["#2c7bb6", "#90eb9d", "#d7191c"])
+        .interpolate(d3.interpolateHcl);
+    },
     addSensor(sensorData) {
       if (this.isEdit) {
         this.sensors[this.sensorData.index] = sensorData;
@@ -168,17 +250,16 @@ export default {
         radius: 30,
         center: sensorsConfig[data.sensor].position,
         options: {
-          strokeColor: colorTemperaturePallete[Math.round(data.temp)],
-          strokeOpacity: 0.8,
+          strokeColor: this.colorScale(data.temp),
+          strokeOpacity: 0,
           strokeWeight: 0,
-          fillColor: colorTemperaturePallete[Math.round(data.temp)],
-          fillOpacity: 0.55,
+          fillColor: this.colorScale(data.temp),
+          fillOpacity: 0.45,
         }
       };
 
-      this.$nextTick(() => {
-        this.measurements[data.sensor] = m;
-      });
+      this.measurements.set(data.sensor, m);
+      this.measurementsTracker += 1;
     },
     openMenu(e) {
       this.showContextMenu = false;
@@ -300,12 +381,25 @@ export default {
 };
 </script>
 
+<style>
+.axis path,
+.axis tick,
+.axis line {
+  fill: none;
+  stroke: none;
+}
+
+.v-toolbar__content {
+  height: auto !important;
+  padding: 0;
+}
+</style>
+
 <style scoped>
 .map, .container {
   width: 100%;
   height: 100%;
 }
-
 .container.fluid, .container {
   padding: 0 !important;
 }

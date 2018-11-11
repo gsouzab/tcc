@@ -8,19 +8,24 @@ import Plotly from 'plotly.js-dist';
 export default {
   props: ['chart'],
   mounted() {
-    Plotly.plot(this.$refs[this.chart.uuid], this.chart.traces, this.chart.layout, {responsive: true});
+    Plotly.plot(
+      this.$refs[this.chart.uuid],
+      this.chart.traces,
+      this.chart.layout,
+      { responsive: true },
+    );
   },
   watch: {
     chart: {
-      handler: function() {
+      handler() {
         Plotly.react(
           this.$refs[this.chart.uuid],
           this.chart.traces,
-          this.chart.layout
+          this.chart.layout,
         );
       },
-      deep: true
-    }
-  }
+      deep: true,
+    },
+  },
 };
 </script>
