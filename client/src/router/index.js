@@ -24,7 +24,7 @@ Vue.use(Vuetify);
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: 'AIzaSyAzCpPloIvDqI0U2rUtjIiRPZ6s0bD6U94',
+    key: process.env.MAPS_API_KEY,
   },
 });
 
