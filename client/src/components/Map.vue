@@ -21,7 +21,7 @@
           class="mt-3"
         >
           <v-flex xs12 sm6>
-            <v-btn-toggle v-model="viewMode" class="transparent">
+            <v-btn-toggle v-model="viewMode" mandatory class="transparent">
               <v-btn :value="SENSOR_VIEW_MODE" flat>
                 Sensores
               </v-btn>
@@ -100,7 +100,7 @@
 
     </gmap-map>
 
-    <div id="legend" v-if="viewMode !== SENSOR_VIEW_MODE"> </div>
+    <div id="legend" v-show="viewMode !== SENSOR_VIEW_MODE"> </div>
   </v-container>
 </template>
 
@@ -206,8 +206,8 @@ export default {
         .attr("transform", "translate(0,5)");
 
       var y = d3.scaleLinear()
-        .domain([-15, 30])
-        .range([0, 280]);
+        .domain([10, 35])
+        .range([10, 280]);
 
       var yAxis = d3.axisBottom()
         .scale(y)
@@ -226,7 +226,7 @@ export default {
         .text("axis title");
 
       this.colorScale = d3.scaleLinear()
-        .domain([-15, 7.5, 30])
+        .domain([10, 20, 35])
         .range(["#2c7bb6", "#90eb9d", "#d7191c"])
         .interpolate(d3.interpolateHcl);
     },
@@ -254,7 +254,7 @@ export default {
           strokeOpacity: 0,
           strokeWeight: 0,
           fillColor: this.colorScale(data.temp),
-          fillOpacity: 0.45,
+          fillOpacity: 0.7,
         }
       };
 
@@ -263,7 +263,8 @@ export default {
     },
     openMenu(e) {
       this.showContextMenu = false;
-      const mouseEvent = e.wa || e.ta || e.xa;
+      const mouseEvent = _.find(e, (attr) => attr.clientX && attr.clientY);
+
       this.x = mouseEvent.clientX;
       this.y = mouseEvent.clientY;
       this.$nextTick(() => {

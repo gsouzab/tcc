@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title
         class="grey lighten-4 py-4 title">
-        Adicionar Sensor
+        {{isEdit ? 'Editar' : 'Adicionar'}} Sensor
       </v-card-title>
       <v-container grid-list-sm class="pa-4">
         <v-layout row wrap>
@@ -23,6 +23,7 @@
             prepend-icon="settings_input_antenna"
             v-model="mac"
             label="MAC"
+            :disabled="isEdit"
             :error-messages="errors.collect('mac')"
             mask="NN:NN:NN:NN:NN:NN"
             return-masked-value
@@ -57,7 +58,7 @@
 import axios from 'axios';
 
 export default {
-  props: ['visible', 'initData'],
+  props: ['visible', 'initData', 'isEdit'],
   watch: {
     initData(val) { // watch it
       if (val) {
