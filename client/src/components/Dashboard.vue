@@ -56,10 +56,10 @@ export default {
         layout: {
           title: 'Temperatura',
           xaxis: {
-            title: 'Data e hora',
+            type: 'date',
           },
           yaxis: {
-            title: 'ºC',
+            title: 'ºC'
           },
         },
       },
@@ -69,7 +69,7 @@ export default {
         layout: {
           title: 'Co2',
           xaxis: {
-            title: 'Data e hora',
+            type: 'date',
           },
           yaxis: {
             title: 'ppm',
@@ -82,7 +82,7 @@ export default {
         layout: {
           title: 'Umidade',
           xaxis: {
-            title: 'Data e hora',
+            type: 'date',
           },
           yaxis: {
             title: '%',
@@ -116,9 +116,9 @@ export default {
       this.humidityChart.traces = [];
       _.forEach(sensors, (value, key) => {
         sensorsConfig[value.mac] = { index: key, color: '#5e9e7e' };
-        this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
-        this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
-        this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'}});
+        this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
+        this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
       });
     },
     addTelemetryData(data) {
@@ -137,11 +137,6 @@ export default {
       this.temperatureChart.layout.datarevision = dateTime.getTime();
       this.co2Chart.layout.datarevision = dateTime.getTime();
       this.humidityChart.layout.datarevision = dateTime.getTime();
-    },
-    addData(i) {
-      this.temperatureChart.layout.datarevision = new Date().getTime();
-      this.temperatureChart.traces[0].y.push(Math.random());
-      this.temperatureChart.traces[0].x.push(i);
     },
     addOnMessageListener() {
       this.$options.sockets.onmessage = (data) => {
@@ -204,10 +199,9 @@ export default {
 
           _.forEach(groupedData.values, (data) => {
             if (data[1] !== null) {
-              this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]))
-              this[measurement.chart].traces[traceIndex].y.push(data[1])
+              this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]));
+              this[measurement.chart].traces[traceIndex].y.push(data[1]);
             }
-
           });
 
           this[measurement.chart].layout.datarevision = new Date().getTime();

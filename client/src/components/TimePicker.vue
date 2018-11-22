@@ -231,8 +231,8 @@ export default {
   methods: {
     onPresetSelect(preset) {
       this.selectedTimeText = preset.title;
-      this.startDateTime = preset.startDate().format("YYYY-MM-DD\\THH:mm:ss-03:00");
-      this.endDateTime = preset.endDate().format("YYYY-MM-DD\\THH:mm:ss-03:00");
+      this.startDateTime = preset.startDate().format("YYYY-MM-DD\\THH:mm:ss-02:00");
+      this.endDateTime = preset.endDate().format("YYYY-MM-DD\\THH:mm:ss-02:00");
 
       this.startDate = preset.startDate().format("YYYY-MM-DD");
       this.endDate = preset.endDate().format("YYYY-MM-DD");
@@ -240,8 +240,8 @@ export default {
       this.onDateRangeSelect();
     },
     onDateRangeChange(data) {
-      this.startDateTime = this.startDate ? this.startDate + "T00:00:00-03:00" : null;
-      this.endDateTime = this.endDate ? this.endDate + "T23:59:59-03:00" : null;
+      this.startDateTime = this.startDate ? this.startDate + "T00:00:00-02:00" : null;
+      this.endDateTime = this.endDate ? this.endDate + "T23:59:59-02:00" : null;
 
       if (this.endDate === null && this.startDate === null) {
         this.selectedTimeText = 'Agora';
