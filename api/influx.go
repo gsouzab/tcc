@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/influxdata/influxdb/client/v2"
+	client "github.com/influxdata/influxdb1-client/v2"
 )
 
 const influxAddr = "http://influx:8086"
