@@ -30,10 +30,10 @@ metadata:
 spec:
   selector:
     app: mosquitto
+  type: NodePort
   ports:
   - name: mosquitto
     port: 1883
     protocol: TCP
+    nodePort: 30000
     targetPort: 1883
-  type: LoadBalancer
-  loadBalancerIP: 35.198.46.103
