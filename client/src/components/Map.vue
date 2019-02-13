@@ -80,6 +80,8 @@
       </section>>
 
       <section v-if="viewMode === SENSOR_VIEW_MODE">
+        <heatmap :data="heatmapData" :options="heatmapOptions"></heatmap>
+
         <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
           <div v-html="infoContent"></div>
         </gmap-info-window>
@@ -107,8 +109,9 @@
 <script>
 
 import axios from 'axios';
-import {loaded} from 'vue2-google-maps';
+import {loaded, gmapApi} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
+import Heatmap from '@/components/Heatmap'
 import _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -117,8 +120,7 @@ var sensorsConfig = {};
 export default {
   async created() {
     await this.getSensors();
-    this.connectWS()
-
+    this.connectWS();
     this.setLegend();
   },
   data() {
@@ -130,6 +132,11 @@ export default {
       TEMPERATURE_VIEW_MODE: 2,
       CO2_VIEW_MODE: 3,
       HUMIDITY_VIEW_MODE: 4,
+      heatmapData: [],
+      heatmapOptions: {
+        radius: 20,
+        opacity: 0.8
+      },
       measurements: new Map(),
       measurementsTracker: 0,
       showContextMenu: false,
@@ -157,6 +164,7 @@ export default {
     };
   },
   computed: {
+    google: gmapApi,
     measurementsArray() {
       return this.measurementsTracker && Array.from(this.measurements.values());
     },
@@ -261,6 +269,9 @@ export default {
       this.measurements.set(data.sensor, m);
       this.measurementsTracker += 1;
     },
+    addProbeData(data) {
+
+    },
     openMenu(e) {
       this.showContextMenu = false;
       const mouseEvent = _.find(e, (attr) => attr.clientX && attr.clientY);
@@ -307,6 +318,25 @@ export default {
       }
     },
     async getSensors() {
+      this.waitingSensors = true;
+
+      try {
+        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        if (response.status == 200) {
+
+          this.sensors = response.data.data;
+
+          _.forEach(this.sensors, (s, index) => {
+            sensorsConfig[s.mac] = {position: {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}, index};
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.waitingSensors = false;
+    },
+    async getLastTelemetry() {
       this.waitingSensors = true;
 
       try {
@@ -377,7 +407,8 @@ export default {
     },
   },
   components: {
-    SensorForm
+    SensorForm,
+    Heatmap
   },
 };
 </script>

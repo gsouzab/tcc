@@ -25,6 +25,7 @@ Vue.use(Vuetify);
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.MAPS_API_KEY,
+    libraries: 'visualization'
   },
 });
 
