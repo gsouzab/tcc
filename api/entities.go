@@ -38,6 +38,15 @@ type TelemetryMessage struct {
 	CreatedAt int64  `json:"createdAt"`
 }
 
+// ProbeMessage object
+type ProbeMessage struct {
+	Sensor    string `json:"sensor"`
+	Count     string `json:"count"`
+	Latitude  string `json:"latitude"`
+	Longitude string `json:"longitude"`
+	CreatedAt int64  `json:"createdAt"`
+}
+
 // TelemetryQuery object
 type TelemetryQuery struct {
 	SelectFields       []string               `json:"selectFields,omitempty"`
