@@ -11,15 +11,9 @@ spec:
     spec:
       containers:
       - name: sdc
-        image: gsouzab/tcc-sdc:v1
+        image: gsouzab/tcc-sdc:latest
         ports:
         - containerPort: 18630
-        volumeMounts:
-        - name: sdc-data-storage
-          mountPath: /data
-      volumes:
-      - name: sdc-data-storage
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
