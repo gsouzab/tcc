@@ -139,7 +139,7 @@ export default {
       this.humidityChart.layout.datarevision = dateTime.getTime();
     },
     addOnMessageListener() {
-      this.$options.sockets.onmessage = (data) => {
+      this.$telemetryWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
         measurements.forEach((m) => {
           if (m !== '') this.addTelemetryData(JSON.parse(m));
