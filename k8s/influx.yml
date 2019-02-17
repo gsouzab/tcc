@@ -29,7 +29,7 @@ spec:
             - containerPort: 8086
               name: influx
           volumeMounts:
-            - name: influx-storage
+            - name: influx-pvc
               mountPath: /var/lib/influxdb
           livenessProbe:
             httpGet:
@@ -38,8 +38,9 @@ spec:
             initialDelaySeconds: 40
             timeoutSeconds: 4
       volumes:
-        - name: influx-storage
-          emptyDir: {}
+        - name: influx-pvc
+          persistentVolumeClaim:
+            claimName: influx-pvc
 ---
 apiVersion: v1
 kind: Service

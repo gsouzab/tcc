@@ -33,14 +33,13 @@
           </v-text-field>
           </v-flex>
           <v-flex xs12>
-            <v-text-field
+            <v-textarea
               prepend-icon="notes"
               v-model="description"
               data-vv-name="description"
               label="Descrição"
               :error-messages="errors.collect('description')"
-              multi-line
-            ></v-text-field>
+            ></v-textarea>
           </v-flex>
         </v-layout>
       </v-container>

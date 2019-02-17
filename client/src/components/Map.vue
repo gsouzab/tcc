@@ -80,6 +80,8 @@
       </section>>
 
       <section v-if="viewMode === SENSOR_VIEW_MODE">
+        <heatmap :data="heatmapDataArray" :options="heatmapOptions"></heatmap>
+
         <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
           <div v-html="infoContent"></div>
         </gmap-info-window>
@@ -107,8 +109,9 @@
 <script>
 
 import axios from 'axios';
-import {loaded} from 'vue2-google-maps';
+import {loaded, gmapApi} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
+import Heatmap from '@/components/Heatmap'
 import _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -117,8 +120,7 @@ var sensorsConfig = {};
 export default {
   async created() {
     await this.getSensors();
-    this.connectWS()
-
+    this.connectWS();
     this.setLegend();
   },
   data() {
@@ -130,8 +132,15 @@ export default {
       TEMPERATURE_VIEW_MODE: 2,
       CO2_VIEW_MODE: 3,
       HUMIDITY_VIEW_MODE: 4,
+      heatmapData: [],
+      heatmapOptions: {
+        radius: 80,
+        opacity: 0.8
+      },
       measurements: new Map(),
       measurementsTracker: 0,
+      probes: new Map(),
+      probesTracker: 0,
       showContextMenu: false,
       isSensorMenu: false,
       isEdit: false,
@@ -157,8 +166,12 @@ export default {
     };
   },
   computed: {
+    google: gmapApi,
     measurementsArray() {
-      return this.measurementsTracker && Array.from(this.measurements.values());
+      return this.measurementsTracker && Array.from(this.measurements.values()) || [];
+    },
+    heatmapDataArray() {
+      return this.probesTracker && Array.from(this.probes.values()) || [];
     },
   },
   methods: {
@@ -261,6 +274,21 @@ export default {
       this.measurements.set(data.sensor, m);
       this.measurementsTracker += 1;
     },
+    addProbeData(data) {
+      const i = _.findIndex(this.sensors, {mac: data.sensor});
+      this.sensors[i].probes = data;
+
+      if (this.infoWinOpen && this.infoWindowSensorMac == data.sensor) {
+        this.updateInfoContent(this.sensors[i]);
+      }
+      const heatmapData = {
+        location: new google.maps.LatLng(data.latitude, data.longitude),
+        weight: data.count,
+      };
+
+      this.probes.set(data.sensor, heatmapData);
+      this.probesTracker += 1;
+    },
     openMenu(e) {
       this.showContextMenu = false;
       const mouseEvent = _.find(e, (attr) => attr.clientX && attr.clientY);
@@ -325,6 +353,25 @@ export default {
 
       this.waitingSensors = false;
     },
+    async getLastTelemetry() {
+      this.waitingSensors = true;
+
+      try {
+        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        if (response.status == 200) {
+
+          this.sensors = response.data.data;
+
+          _.forEach(this.sensors, (s, index) => {
+            sensorsConfig[s.mac] = {position: {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}, index};
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
+      this.waitingSensors = false;
+    },
     getLastProbes() {
       return [];
     },
@@ -332,8 +379,17 @@ export default {
       /**
        * Method to connect to the WS instance
        */
-      this.$options.sockets.onmessage = (data) => {
+
+      this.$probesWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
+        for (let m of measurements) {
+          if (m !== "") this.addProbeData(JSON.parse(m))
+        }
+      }
+
+      this.$telemetryWS.onmessage = (data) => {
+        const measurements = data.data.split('\n');
+
         for (let m of measurements) {
           if (m !== "") this.addTelemetryData(JSON.parse(m))
         }
@@ -343,17 +399,24 @@ export default {
     updateInfoContent(sensor) {
       this.infoContent = `
         <h3>${sensor.name}</h3>
-        <p style="white-space: pre;">${sensor.description}</p>`;
+        <p style="white-space: pre;"><b>MAC</b>: ${sensor.mac} </br>${sensor.description}</p>`;
 
       if (sensor.telemetry) {
         this.infoContent += `
           <p>
-          Temperatura: ${sensor.telemetry.temp}º C <br>
-          CO2: ${sensor.telemetry.co2} ppm<br>
-          Umidade: ${sensor.telemetry.hum}% <br><br>
-          Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString('pt-BR')}
-          </p>
-        `;
+            Temperatura: ${sensor.telemetry.temp}º C <br>
+            CO2: ${sensor.telemetry.co2} ppm<br>
+            Umidade: ${sensor.telemetry.hum}% <br><br>
+            Atualizado em: ${new Date(data.createdAt).toLocaleString('pt-BR')}
+          </p>`;
+      }
+
+      if (sensor.probes) {
+        this.infoContent += `
+          <p>
+            Dispositivos nas proximidades: ${sensor.probes.count} <br><br>
+            Atualizado em: ${new Date(sensor.probes.createdAt).toLocaleString('pt-BR')}
+          </p>`;
       }
     },
     toggleInfoWindow: function(s, idx) {
@@ -377,7 +440,8 @@ export default {
     },
   },
   components: {
-    SensorForm
+    SensorForm,
+    Heatmap
   },
 };
 </script>

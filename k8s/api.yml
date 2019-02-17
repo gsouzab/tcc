@@ -15,7 +15,7 @@ spec:
         app: api
     spec:
       containers:
-        - image: gsouzab/tcc-api:v1
+        - image: gsouzab/tcc-api:latest
           name: api
           imagePullPolicy: Always
           ports:
