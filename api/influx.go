@@ -13,7 +13,7 @@ import (
 const influxAddr = "http://influx:8086"
 const influxDbName = "tcc_data"
 const telemetryMeasurement = "telemetry_data"
-const measurement = "probe"
+const probeMeasurement = "probe_data"
 const influxUsername = "tcc"
 const influxPassword = "tcc_ufrj"
 const precision = "s"
@@ -68,8 +68,8 @@ func writeBatchPointToDB() error {
 	return err
 }
 
-// InfluxInsertProbe ...
-func InfluxInsertProbe(point Point) {
+// InfluxInsert ...
+func InfluxInsert(point Point) {
 	if err := createNewPointBatch(); err != nil {
 		log.Fatal(err)
 	}
@@ -99,35 +99,35 @@ func queryDB(clnt client.Client, cmd string) (res []client.Result, err error) {
 	return res, nil
 }
 
-// InfluxQueryTelemetry ...
-func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, err error) {
+// CreateInfluxQuery ...
+func CreateInfluxQuery(influxQuery InfluxQuery, measurement string) (res []client.Result, err error) {
 
 	var query = "SELECT "
 
-	var selectByField = queryTelemetry.SelectFields != nil && len(queryTelemetry.SelectFields) > 0
-	var selectByTag = queryTelemetry.SelectTags != nil && len(queryTelemetry.SelectTags) > 0
-	var selectMean = queryTelemetry.SelectMeanField != ""
+	var selectByField = influxQuery.SelectFields != nil && len(influxQuery.SelectFields) > 0
+	var selectByTag = influxQuery.SelectTags != nil && len(influxQuery.SelectTags) > 0
+	var selectMean = influxQuery.SelectMeanField != ""
 	var hasSelect = selectByField || selectByTag || selectMean
 
-	var whereLastMinutes = queryTelemetry.WhereLastXMinutes != ""
-	var wherePeriod = queryTelemetry.WhereStartTime != "" && queryTelemetry.WhereEndTime != ""
-	var whereField = queryTelemetry.Where != nil && len(queryTelemetry.Where) > 0
+	var whereLastMinutes = influxQuery.WhereLastXMinutes != ""
+	var wherePeriod = influxQuery.WhereStartTime != "" && influxQuery.WhereEndTime != ""
+	var whereField = influxQuery.Where != nil && len(influxQuery.Where) > 0
 	var hasWhere = whereLastMinutes || wherePeriod || whereField
 
-	var groupByMeanTime = queryTelemetry.SelectMeanInterval != ""
-	var groupByTag = queryTelemetry.GroupByTag != ""
+	var groupByMeanTime = influxQuery.SelectMeanInterval != ""
+	var groupByTag = influxQuery.GroupByTag != ""
 	var hasGroupBy = groupByMeanTime || groupByTag
 
 	if hasSelect {
 		if selectMean {
-			query += "MEAN(" + queryTelemetry.SelectMeanField + ") "
+			query += "MEAN(" + influxQuery.SelectMeanField + ") "
 
 		} else {
 			if selectByField {
-				for i := 0; i < len(queryTelemetry.SelectFields); i++ {
-					query += queryTelemetry.SelectFields[i]
+				for i := 0; i < len(influxQuery.SelectFields); i++ {
+					query += influxQuery.SelectFields[i]
 					query += "::field"
-					if i < (len(queryTelemetry.SelectFields) - 1) {
+					if i < (len(influxQuery.SelectFields) - 1) {
 						query += ", "
 					}
 				}
@@ -138,10 +138,10 @@ func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, e
 					query += ", "
 				}
 
-				for i := 0; i < len(queryTelemetry.SelectTags); i++ {
-					query += queryTelemetry.SelectTags[i]
+				for i := 0; i < len(influxQuery.SelectTags); i++ {
+					query += influxQuery.SelectTags[i]
 					query += "::tag"
-					if i < (len(queryTelemetry.SelectTags) - 1) {
+					if i < (len(influxQuery.SelectTags) - 1) {
 						query += ", "
 					}
 				}
@@ -152,14 +152,14 @@ func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, e
 		query += "* "
 	}
 
-	query += " FROM \"" + telemetryMeasurement + "\" "
+	query += " FROM \"" + measurement + "\" "
 
 	if hasWhere {
 		query += "WHERE "
 
 		if whereField {
 			var mapCount int
-			for field, value := range queryTelemetry.Where {
+			for field, value := range influxQuery.Where {
 
 				query += "\"" + field + "\""
 				query += " = "
@@ -173,7 +173,7 @@ func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, e
 
 				mapCount++
 
-				if mapCount < (len(queryTelemetry.Where)) {
+				if mapCount < (len(influxQuery.Where)) {
 					query += "AND "
 				}
 			}
@@ -184,13 +184,13 @@ func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, e
 		}
 
 		if wherePeriod {
-			query += "time >= '" + queryTelemetry.WhereStartTime + "' AND "
-			query += "time <= '" + queryTelemetry.WhereEndTime + "' "
+			query += "time >= '" + influxQuery.WhereStartTime + "' AND "
+			query += "time <= '" + influxQuery.WhereEndTime + "' "
 
 		} else if whereLastMinutes {
 			now := time.Now()
 
-			minutesInt, error := strconv.Atoi(queryTelemetry.WhereLastXMinutes)
+			minutesInt, error := strconv.Atoi(influxQuery.WhereLastXMinutes)
 			if error != nil {
 				fmt.Println(err)
 			}
@@ -205,13 +205,13 @@ func InfluxQueryTelemetry(queryTelemetry TelemetryQuery) (res []client.Result, e
 		query += "GROUP BY "
 
 		if groupByMeanTime {
-			query += "time(" + queryTelemetry.SelectMeanInterval + "m)"
+			query += "time(" + influxQuery.SelectMeanInterval + "m)"
 			if groupByTag {
 				query += ", "
 			}
 		}
 		if groupByTag {
-			query += queryTelemetry.GroupByTag
+			query += influxQuery.GroupByTag
 		}
 	}
 
