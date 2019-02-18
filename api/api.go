@@ -57,8 +57,9 @@ func InsertProbe(w http.ResponseWriter, r *http.Request) {
 	var response Response
 
 	_ = json.NewDecoder(r.Body).Decode(&point)
+	point.Name = probeMeasurement
 
-	InfluxInsertProbe(point)
+	InfluxInsert(point)
 
 	w.Header().Set("Content-Type", "application/json")
 	response.Success = true
@@ -68,15 +69,55 @@ func InsertProbe(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// QueryTelemetry retorna um sensor especifico
-func QueryTelemetry(w http.ResponseWriter, r *http.Request) {
-
-	var queryTelemetry TelemetryQuery
+// InsertTelemetry ...
+func InsertTelemetry(w http.ResponseWriter, r *http.Request) {
+	var point Point
 	var response Response
 
-	_ = json.NewDecoder(r.Body).Decode(&queryTelemetry)
+	_ = json.NewDecoder(r.Body).Decode(&point)
+	point.Name = telemetryMeasurement
 
-	res, error := InfluxQueryTelemetry(queryTelemetry)
+	InfluxInsert(point)
+
+	w.Header().Set("Content-Type", "application/json")
+	response.Success = true
+	response.Msg = "Telemetria inserida com sucesso!"
+	response.Data = point
+
+	json.NewEncoder(w).Encode(response)
+}
+
+// QueryProbes ...
+func QueryProbes(w http.ResponseWriter, r *http.Request) {
+
+	var query InfluxQuery
+	var response Response
+
+	_ = json.NewDecoder(r.Body).Decode(&query)
+
+	res, error := CreateInfluxQuery(query, probeMeasurement)
+
+	if error != nil {
+		response.Success = false
+		response.Error = err.Error()
+	} else {
+		response.Success = true
+		response.Data = res[0].Series
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// QueryTelemetry ...
+func QueryTelemetry(w http.ResponseWriter, r *http.Request) {
+
+	var query InfluxQuery
+	var response Response
+
+	_ = json.NewDecoder(r.Body).Decode(&query)
+
+	res, error := CreateInfluxQuery(query, telemetryMeasurement)
 
 	if error != nil {
 		response.Success = false
