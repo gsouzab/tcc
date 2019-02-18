@@ -41,7 +41,7 @@ type TelemetryMessage struct {
 // ProbeMessage object
 type ProbeMessage struct {
 	Sensor    string `json:"sensor"`
-	Count     string `json:"count"`
+	Count     int	 `json:"count"`
 	Latitude  string `json:"latitude"`
 	Longitude string `json:"longitude"`
 	CreatedAt int64  `json:"createdAt"`
