@@ -343,7 +343,7 @@ export default {
     updateInfoContent(sensor) {
       this.infoContent = `
         <h3>${sensor.name}</h3>
-        <p style="white-space: pre;">${sensor.description}</p>`;
+        <p style="white-space: pre;">${sensor.description || ''}</p>`;
 
       if (sensor.telemetry) {
         this.infoContent += `

@@ -14,47 +14,53 @@
       </div>
       <v-card>
         <v-card-text>
-          <v-layout row justify-end>
-            <v-list>
-              <v-subheader>Acesso rápido</v-subheader>
-              <v-list-tile
-                v-for="(preset, index) in presets1"
-                :key="index"
-                @click="onPresetSelect(preset)"
-              >
-                <v-list-tile-content>
-                  {{ preset.title }}
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+          <v-layout row wrap>
+            <v-flex>
+              <v-list>
+                <v-subheader>Acesso rápido</v-subheader>
+                <v-list-tile
+                  v-for="(preset, index) in presets1"
+                  :key="index"
+                  @click="onPresetSelect(preset)"
+                >
+                  <v-list-tile-content>
+                    {{ preset.title }}
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
 
-            <v-list>
-              <v-subheader></v-subheader>
-              <v-list-tile
-                v-for="(preset, index) in presets2"
-                :key="index"
-                @click="onPresetSelect(preset)"
-              >
-                <v-list-tile-content>
-                  {{ preset.title }}
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <v-flex>
+              <v-list>
+                <v-subheader></v-subheader>
+                <v-list-tile
+                  v-for="(preset, index) in presets2"
+                  :key="index"
+                  @click="onPresetSelect(preset)"
+                >
+                  <v-list-tile-content>
+                    {{ preset.title }}
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
 
-            <v-list>
-              <v-subheader></v-subheader>
-              <v-list-tile
-                v-for="(preset, index) in presets3"
-                :key="index"
-                @click="onPresetSelect(preset)"
-              >
-                <v-list-tile-content>
-                  {{ preset.title }}
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
+            <v-flex>
+              <v-list>
+                <v-subheader></v-subheader>
+                <v-list-tile
+                  v-for="(preset, index) in presets3"
+                  :key="index"
+                  @click="onPresetSelect(preset)"
+                >
+                  <v-list-tile-content>
+                    {{ preset.title }}
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
 
-            <div class="mr-3">
+            <v-flex>
               <v-text-field
                 v-model="startDateTime"
                 :label="'Data inicial'"
@@ -64,9 +70,9 @@
                 @change="onDateRangeChange"
               />
               <v-date-picker v-model="startDate" no-title reactive locale="pt-br" :max="endDate" @change="onDateRangeChange"></v-date-picker>
-            </div>
+            </v-flex>
 
-            <div>
+            <v-flex>
               <v-text-field
                 v-model="endDateTime"
                 :label="'Data final'"
@@ -75,8 +81,7 @@
                 @change="onDateRangeChange"
               />
               <v-date-picker v-model="endDate" no-title reactive locale="pt-br" :min="startDate" @change="onDateRangeChange"></v-date-picker>
-            </div>
-
+            </v-flex>
             <v-btn color="success" large outline style="width: 44px; min-width: 44px;" @click="onDateRangeSelect"><v-icon>search</v-icon></v-btn>
           </v-layout>
 
