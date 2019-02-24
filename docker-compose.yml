@@ -12,17 +12,20 @@ services:
             - influx
         environment:
             - APP_ENV=development
+            
     client:
         build: ./client
         volumes:
             - ./client:/usr/src/app
         ports:
             - "8080:8080"
+
     mosquitto:
         image: eclipse-mosquitto:latest
         ports:
             - "1883:1883"
             - "9001:9001"
+
     redis:
         image: redis:alpine
         ports:
@@ -31,6 +34,7 @@ services:
             - ./redis-data:/data
         entrypoint: redis-server --appendonly yes
         restart: always
+
     influx:
         image: influxdb:alpine
         ports: 
@@ -41,6 +45,15 @@ services:
             - INFLUXDB_DB=tcc_data
             - INFLUXDB_USER=tcc
             - INFLUXDB_USER_PASSWORD=tcc_ufrj
+
+    chronograf:
+        image: chronograf:alpine
+        ports: 
+            - "8888:8888"
+        entrypoint: chronograf --influxdb-url=http://influx:8086
+        links: 
+            - influx
+
     data-collector:
         build: ./sdc
         ports:
@@ -50,6 +63,17 @@ services:
         links:
             - influx
             - redis
+
+    portainer:
+        image: portainer/portainer
+        command: --templates http://templates/templates.json
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./portainer-data:/data
+        # Enable you to access potainers web interface from your host machine
+        # using http://localhost:10001
+        ports:
+            - "10001:9000"
 volumes:
   schemas:
     external: false

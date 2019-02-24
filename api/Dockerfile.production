@@ -2,7 +2,7 @@
 FROM golang:alpine as builder
 
 RUN apk add --no-cache git
-ARG app_env
+ARG app_env=production
 ENV APP_ENV $app_env
 
 WORKDIR /go/src/app

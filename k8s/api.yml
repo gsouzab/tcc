@@ -15,7 +15,7 @@ spec:
         app: api
     spec:
       containers:
-        - image: gcr.io/tcc-ufrj/api:v5
+        - image: gsouzab/tcc-api:latest
           name: api
           imagePullPolicy: Always
           ports:
@@ -29,11 +29,11 @@ metadata:
     app: api
   name: api
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 35.198.46.103
+  type: NodePort
   ports:
     - port: 8000
       targetPort: 8000
       protocol: TCP
+      nodePort: 30003
   selector:
     app: api

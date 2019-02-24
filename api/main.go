@@ -23,11 +23,16 @@ func main() {
 	InfluxInit()
 	WebsocketInit(router)
 
+	//Redis
 	router.HandleFunc("/sensors", GetSensors).Methods("GET")
 	router.HandleFunc("/sensors/{id}", GetSensor).Methods("GET")
 	router.HandleFunc("/sensors", CreateSensor).Methods("POST")
 	router.HandleFunc("/sensors/{id}", DeleteSensor).Methods("DELETE")
+
+	//Influx
 	router.HandleFunc("/probes", InsertProbe).Methods("POST")
+	router.HandleFunc("/probes/query", QueryProbes).Methods("POST")
+	router.HandleFunc("/telemetry", InsertTelemetry).Methods("POST")
 	router.HandleFunc("/telemetry/query", QueryTelemetry).Methods("POST")
 
 	headers := handlers.AllowedHeaders([]string{"Content-Type", "X-Requested-With"})

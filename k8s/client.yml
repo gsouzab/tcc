@@ -15,7 +15,7 @@ spec:
         app: client
     spec:
       containers:
-        - image: gcr.io/tcc-ufrj/client:v5
+        - image: gsouzab/tcc-client:latest
           name: client
           imagePullPolicy: Always
           ports:
@@ -29,11 +29,11 @@ metadata:
     app: client
   name: client
 spec:
-  type: LoadBalancer
-  loadBalancerIP: 35.198.46.103
+  type: NodePort
   ports:
     - port: 80
       targetPort: 80
+      nodePort: 30002
       protocol: TCP
   selector:
     app: client

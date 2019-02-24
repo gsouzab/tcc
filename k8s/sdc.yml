@@ -11,15 +11,9 @@ spec:
     spec:
       containers:
       - name: sdc
-        image: gcr.io/tcc-ufrj/sdc:v1
+        image: gsouzab/tcc-sdc:latest
         ports:
         - containerPort: 18630
-        volumeMounts:
-        - name: sdc-data-storage
-          mountPath: /data
-      volumes:
-      - name: sdc-data-storage
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +27,7 @@ spec:
   ports:
   - name: sdc
     port: 18630
+    nodePort: 30001
     protocol: TCP
     targetPort: 18630
-  type: LoadBalancer
-  loadBalancerIP: 35.198.46.103
+  type: NodePort

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -32,6 +33,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+var typeRegistry = make(map[string]reflect.Type)
+
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
@@ -39,37 +42,54 @@ type Hub struct {
 	clients map[*Client]bool
 
 	// Inbound messages from the clients.
-	broadcast chan TelemetryMessage
+	broadcast chan interface{}
 
 	// Register requests from the clients.
 	register chan *Client
 
 	// Unregister requests from clients.
 	unregister chan *Client
+
+	// Unregister requests from clients.
+	messageType reflect.Type
 }
 
 // WebsocketInit initializes websocket features
 func WebsocketInit(router *mux.Router) {
-	hub := newHub()
-	go hub.run()
+	telemetryHub := newHub(reflect.TypeOf(TelemetryMessage{}))
+	go telemetryHub.run()
+
+	probeHub := newHub(reflect.TypeOf(ProbeMessage{}))
+	go probeHub.run()
 
 	// Configure websocket route
-	router.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+	router.HandleFunc("/ws/telemetry", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(telemetryHub, w, r)
 	})
 
 	// Configure websocket route
-	router.HandleFunc("/broadcast", func(w http.ResponseWriter, r *http.Request) {
-		broadcast(hub, w, r)
+	router.HandleFunc("/ws/probe", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(probeHub, w, r)
+	})
+
+	// Configure websocket route
+	router.HandleFunc("/broadcast/telemetry", func(w http.ResponseWriter, r *http.Request) {
+		broadcast(telemetryHub, w, r)
+	})
+
+	// Configure websocket route
+	router.HandleFunc("/broadcast/probe", func(w http.ResponseWriter, r *http.Request) {
+		broadcast(probeHub, w, r)
 	})
 }
 
-func newHub() *Hub {
+func newHub(messageType reflect.Type) *Hub {
 	return &Hub{
-		broadcast:  make(chan TelemetryMessage),
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
-		clients:    make(map[*Client]bool),
+		broadcast:   make(chan interface{}),
+		register:    make(chan *Client),
+		unregister:  make(chan *Client),
+		clients:     make(map[*Client]bool),
+		messageType: messageType,
 	}
 }
 
@@ -104,7 +124,7 @@ type Client struct {
 	conn *websocket.Conn
 
 	// Buffered channel of outbound messages.
-	send chan TelemetryMessage
+	send chan interface{}
 }
 
 // readPump pumps messages from the websocket connection to the hub.
@@ -122,8 +142,8 @@ func (c *Client) readPump() {
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 
-		var message TelemetryMessage
-		err := c.conn.ReadJSON(&message)
+		message := reflect.New(c.hub.messageType)
+		err := c.conn.ReadJSON(message.Interface())
 
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
@@ -137,8 +157,11 @@ func (c *Client) readPump() {
 }
 
 func broadcast(hub *Hub, w http.ResponseWriter, r *http.Request) {
-	messages := make([]TelemetryMessage, 0)
-	err := json.NewDecoder(r.Body).Decode(&messages)
+	messages := reflect.MakeSlice(reflect.SliceOf(hub.messageType), 0, 10)
+
+	x := reflect.New(messages.Type())
+	x.Elem().Set(messages)
+	err := json.NewDecoder(r.Body).Decode(x.Interface())
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -146,9 +169,9 @@ func broadcast(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	n := len(messages)
+	n := reflect.Indirect(x).Len()
 	for i := 0; i < n; i++ {
-		hub.broadcast <- messages[i]
+		hub.broadcast <- reflect.Indirect(x).Index(i)
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -182,14 +205,15 @@ func (c *Client) writePump() {
 				return
 			}
 
-			if err := json.NewEncoder(w).Encode(message); err != nil {
+			if err := json.NewEncoder(w).Encode(message.(reflect.Value).Interface()); err != nil {
 				return
 			}
 
 			// Add queued chat messages to the current websocket message.
 			n := len(c.send)
 			for i := 0; i < n; i++ {
-				if err := json.NewEncoder(w).Encode(<-c.send); err != nil {
+				m := <-c.send
+				if err := json.NewEncoder(w).Encode(m.(reflect.Value).Interface()); err != nil {
 					return
 				}
 			}
@@ -213,7 +237,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan TelemetryMessage, 256)}
+	client := &Client{hub: hub, conn: conn, send: make(chan interface{}, 256)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

@@ -93,13 +93,13 @@
 
 
 <script>
-import * as moment from "moment";
+import * as moment from 'moment';
 
 export default {
-  name: "TimePicker",
+  name: 'TimePicker',
   data() {
     return {
-      selectedTimeText: "Agora",
+      selectedTimeText: 'Agora',
       startDate: null,
       endDate: null,
       startDateTime: null,
@@ -107,127 +107,127 @@ export default {
       panel: [false],
       presets1: [
         {
-          title: "Hoje",
-          startDate: () => moment().startOf("day"),
-          endDate: () => moment().endOf("day")
+          title: 'Hoje',
+          startDate: () => moment().startOf('day'),
+          endDate: () => moment().endOf('day')
         },
         {
-          title: "Essa semana",
-          startDate: () => moment().startOf("week"),
-          endDate: () => moment().endOf("week")
+          title: 'Essa semana',
+          startDate: () => moment().startOf('week'),
+          endDate: () => moment().endOf('week')
         },
         {
-          title: "Esse mês",
-          startDate: () => moment().startOf("month"),
-          endDate: () => moment().endOf("month")
+          title: 'Esse mês',
+          startDate: () => moment().startOf('month'),
+          endDate: () => moment().endOf('month')
         },
         {
-          title: "Esse ano",
-          startDate: () => moment().startOf("year"),
-          endDate: () => moment().endOf("year")
+          title: 'Esse ano',
+          startDate: () => moment().startOf('year'),
+          endDate: () => moment().endOf('year')
         },
         {
-          title: "Desde o início da semana",
-          startDate: () => moment().startOf("week"),
+          title: 'Desde o início da semana',
+          startDate: () => moment().startOf('week'),
           endDate: () => moment()
         },
         {
-          title: "Desde o início do mês",
-          startDate: () => moment().startOf("month"),
+          title: 'Desde o início do mês',
+          startDate: () => moment().startOf('month'),
           endDate: () => moment()
         }
       ],
       presets2: [
         {
-          title: "Ontem",
+          title: 'Ontem',
           startDate: () =>
             moment()
-              .subtract(1, "days")
-              .startOf("day"),
+              .subtract(1, 'days')
+              .startOf('day'),
           endDate: () =>
             moment()
-              .subtract(1, "days")
-              .endOf("day")
+              .subtract(1, 'days')
+              .endOf('day')
         },
         {
-          title: "Semana passada",
+          title: 'Semana passada',
           startDate: () =>
             moment()
-              .subtract(1, "week")
-              .startOf("week"),
+              .subtract(1, 'week')
+              .startOf('week'),
           endDate: () =>
             moment()
-              .subtract(1, "week")
-              .endOf("week")
+              .subtract(1, 'week')
+              .endOf('week')
         },
         {
-          title: "Mês passado",
+          title: 'Mês passado',
           startDate: () =>
             moment()
-              .subtract(1, "month")
-              .startOf("month"),
+              .subtract(1, 'month')
+              .startOf('month'),
           endDate: () =>
             moment()
-              .subtract(1, "month")
-              .endOf("month")
+              .subtract(1, 'month')
+              .endOf('month')
         },
         {
-          title: "Ano passado",
+          title: 'Ano passado',
           startDate: () =>
             moment()
-              .subtract(1, "year")
-              .startOf("year"),
+              .subtract(1, 'year')
+              .startOf('year'),
           endDate: () =>
             moment()
-              .subtract(1, "year")
-              .endOf("year")
+              .subtract(1, 'year')
+              .endOf('year')
         },
         {
-          title: "Últimos 7 dias",
+          title: 'Últimos 7 dias',
           startDate: () =>
             moment()
-              .subtract(7, "days")
-              .startOf("day"),
-          endDate: () => moment().endOf("day")
+              .subtract(7, 'days')
+              .startOf('day'),
+          endDate: () => moment().endOf('day')
         },
         {
-          title: "Últimos 30 dias",
+          title: 'Últimos 30 dias',
           startDate: () =>
             moment()
-              .subtract(30, "days")
-              .startOf("day"),
-          endDate: () => moment().endOf("day")
+              .subtract(30, 'days')
+              .startOf('day'),
+          endDate: () => moment().endOf('day')
         }
       ],
       presets3: [
         {
-          title: "Últimos 15 minutos",
-          startDate: () => moment().subtract(15, "minutes"),
+          title: 'Últimos 15 minutos',
+          startDate: () => moment().subtract(15, 'minutes'),
           endDate: () => moment()
         },
         {
-          title: "Últimos 30 minutos",
-          startDate: () => moment().subtract(30, "minutes"),
+          title: 'Últimos 30 minutos',
+          startDate: () => moment().subtract(30, 'minutes'),
           endDate: () => moment()
         },
         {
-          title: "Última hora",
-          startDate: () => moment().subtract(1, "hour"),
+          title: 'Última hora',
+          startDate: () => moment().subtract(1, 'hour'),
           endDate: () => moment()
         },
         {
-          title: "Últimas 4 horas",
-          startDate: () => moment().subtract(4, "hours"),
+          title: 'Últimas 4 horas',
+          startDate: () => moment().subtract(4, 'hours'),
           endDate: () => moment()
         },
         {
-          title: "Últimas 12 horas",
-          startDate: () => moment().subtract(12, "hours"),
+          title: 'Últimas 12 horas',
+          startDate: () => moment().subtract(12, 'hours'),
           endDate: () => moment()
         },
         {
-          title: "Últimas 24 horas",
-          startDate: () => moment().subtract(24, "hours"),
+          title: 'Últimas 24 horas',
+          startDate: () => moment().subtract(24, 'hours'),
           endDate: () => moment()
         }
       ]
@@ -236,17 +236,17 @@ export default {
   methods: {
     onPresetSelect(preset) {
       this.selectedTimeText = preset.title;
-      this.startDateTime = preset.startDate().format("YYYY-MM-DD\\THH:mm:ss-02:00");
-      this.endDateTime = preset.endDate().format("YYYY-MM-DD\\THH:mm:ss-02:00");
+      this.startDateTime = preset.startDate().format('YYYY-MM-DD\\THH:mm:ss-02:00');
+      this.endDateTime = preset.endDate().format('YYYY-MM-DD\\THH:mm:ss-02:00');
 
-      this.startDate = preset.startDate().format("YYYY-MM-DD");
-      this.endDate = preset.endDate().format("YYYY-MM-DD");
+      this.startDate = preset.startDate().format('YYYY-MM-DD');
+      this.endDate = preset.endDate().format('YYYY-MM-DD');
 
       this.onDateRangeSelect();
     },
     onDateRangeChange(data) {
-      this.startDateTime = this.startDate ? this.startDate + "T00:00:00-02:00" : null;
-      this.endDateTime = this.endDate ? this.endDate + "T23:59:59-02:00" : null;
+      this.startDateTime = this.startDate ? this.startDate + 'T00:00:00-02:00' : null;
+      this.endDateTime = this.endDate ? this.endDate + 'T23:59:59-02:00' : null;
 
       if (this.endDate === null && this.startDate === null) {
         this.selectedTimeText = 'Agora';
@@ -267,7 +267,7 @@ export default {
       this.onDateRangeChange();
       this.onDateRangeSelect();
     }
-  }
+  },
 };
 </script>
 
