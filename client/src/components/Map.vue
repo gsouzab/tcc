@@ -120,6 +120,7 @@ var sensorsConfig = {};
 export default {
   async created() {
     await this.getSensors();
+    await this.getLastTelemetry();
     this.connectWS();
     this.setLegend();
   },
@@ -356,8 +357,21 @@ export default {
     async getLastTelemetry() {
       this.waitingSensors = true;
 
+       try {
+        const response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
+          whereLastXMinutes: "5",
+          selectMeanField: "temp",
+          GroupByTag: 'sensor'
+        });
+        if (response.status === 200) {
+          return response.data.data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
       try {
-        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        let response = await axios.post(`http://${process.env.API_HOST}/query/telemetry`);
         if (response.status == 200) {
 
           this.sensors = response.data.data;
@@ -407,7 +421,7 @@ export default {
             Temperatura: ${sensor.telemetry.temp}º C <br>
             CO2: ${sensor.telemetry.co2} ppm<br>
             Umidade: ${sensor.telemetry.hum}% <br><br>
-            Atualizado em: ${new Date(data.createdAt).toLocaleString('pt-BR')}
+            Atualizado em: ${new Date(sensor.telemetry.createdAt).toLocaleString('pt-BR')}
           </p>`;
       }
 

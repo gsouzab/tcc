@@ -175,7 +175,7 @@ export default {
         this.addOnMessageListener();
         this.initTraces(this.sensors);
       } else {
-        delete this.$options.sockets.onmessage;
+        delete this.$telemetryWS.onmessage;
 
         this.initTraces(this.sensors);
 
@@ -207,7 +207,6 @@ export default {
           this[measurement.chart].layout.datarevision = new Date().getTime();
         });
       }
-
     }
   }
 };

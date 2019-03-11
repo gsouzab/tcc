@@ -6,7 +6,7 @@ export default MapElementFactory({
   ctr: () => google.maps.visualization.HeatmapLayer,
   events: [],
   mappedProps: {
-    data: {type: Object},
+    data: {type: Array},
     options: {type: Object},
   }
 })
