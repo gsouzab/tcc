@@ -6,7 +6,7 @@
 import Plotly from 'plotly.js-dist';
 
 export default {
-  props: ['chart'],
+  props: ['chart', 'loading'],
   mounted() {
     Plotly.plot(
       this.$refs[this.chart.uuid],

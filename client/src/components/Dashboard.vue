@@ -4,8 +4,15 @@
     <v-layout row wrap>
       <v-flex lg12>
         <v-card>
-          <v-card-text class="py-0 px-0">
-            <plotly-chart :chart="temperatureChart"></plotly-chart>
+          <v-card-title>
+            Temperatura
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+          </v-card-title>
+          <v-card-text style="min-height: 200px">
+            <div v-if="!loading">
+              <p v-if="temperatureChartCount == 0">Nenhuma dado disponível.</p>
+              <plotly-chart v-if="temperatureChartCount > 0" :chart="temperatureChart"></plotly-chart>
+            </div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -14,16 +21,30 @@
     <v-layout row wrap>
       <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0 px-0">
-            <plotly-chart :chart="humidityChart"></plotly-chart>
+          <v-card-title>
+            Umidade
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+          </v-card-title>
+          <v-card-text style="min-height: 200px">
+            <div v-if="!loading">
+              <p v-if="humidityChartCount == 0">Nenhuma dado disponível.</p>
+              <plotly-chart v-if="humidityChartCount > 0" :chart="humidityChart"></plotly-chart>
+            </div>
           </v-card-text>
         </v-card>
       </v-flex>
 
       <v-flex lg6 md12>
         <v-card>
-          <v-card-text class="py-0" px-0>
-            <plotly-chart :chart="co2Chart"></plotly-chart>
+          <v-card-title>
+            CO2
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+          </v-card-title>
+          <v-card-text style="min-height: 200px">
+            <div v-if="!loading">
+              <p v-if="co2ChartCount == 0">Nenhuma dado disponível.</p>
+              <plotly-chart :chart="co2Chart" v-if="co2ChartCount > 0"></plotly-chart>
+            </div>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -50,11 +71,17 @@ export default {
     return {
       sensors: [],
       meanInterval: null,
+      loading: false,
+      temperatureChartCount: 0,
+      co2ChartCount: 0,
+      humidityChartCount: 0,
       temperatureChart: {
         uuid: 'temp-chart',
         traces: [],
         layout: {
-          title: 'Temperatura',
+          margin: {
+            t: '20px',
+          },
           xaxis: {
             type: 'date',
           },
@@ -67,7 +94,9 @@ export default {
         uuid: 'co2-chart',
         traces: [],
         layout: {
-          title: 'Co2',
+          margin: {
+            t: '20px',
+          },
           xaxis: {
             type: 'date',
           },
@@ -80,7 +109,9 @@ export default {
         uuid: 'hum-chart',
         traces: [],
         layout: {
-          title: 'Umidade',
+          margin: {
+            t: '20px',
+          },
           xaxis: {
             type: 'date',
           },
@@ -114,6 +145,11 @@ export default {
       this.temperatureChart.traces = [];
       this.co2Chart.traces = [];
       this.humidityChart.traces = [];
+
+      this.temperatureChartCount = 0;
+      this.co2ChartCount = 0;
+      this.humidityChartCount = 0;
+
       _.forEach(sensors, (value, key) => {
         sensorsConfig[value.mac] = { index: key, color: '#5e9e7e' };
         this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'}});
@@ -137,6 +173,10 @@ export default {
       this.temperatureChart.layout.datarevision = dateTime.getTime();
       this.co2Chart.layout.datarevision = dateTime.getTime();
       this.humidityChart.layout.datarevision = dateTime.getTime();
+
+      this.temperatureChartCount++;
+      this.co2ChartCount++;
+      this.humidityChartCount++;
     },
     addOnMessageListener() {
       this.$telemetryWS.onmessage = (data) => {
@@ -161,12 +201,13 @@ export default {
           selectMeanInterval: selectMeanInterval.toString(),
           GroupByTag: 'sensor'
         });
+
         if (response.status === 200) {
           return response.data.data;
         }
       } catch (error) {
         console.log(error);
-      }
+      } 
 
       return [];
     },
@@ -175,10 +216,11 @@ export default {
         this.addOnMessageListener();
         this.initTraces(this.sensors);
       } else {
-        delete this.$telemetryWS.onmessage;
+        this.$telemetryWS.onmessage = null;
 
         this.initTraces(this.sensors);
 
+        this.loading = true;
         const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, "temp");
         const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, "co2");
         const humData = await this.getTelemetryData(startDate, endDate, this.sensors, "hum");
@@ -186,7 +228,9 @@ export default {
         this.fillTelemetryMeasurements(
           {chart: "temperatureChart", data: temperatureData},
           {chart: "co2Chart", data: co2Data},
-          {chart: "humidityChart", data: humData})
+          {chart: "humidityChart", data: humData});
+
+        this.loading = false;
       }
     },
     fillTelemetryMeasurements(...telemetryMeasurements) {
@@ -201,6 +245,8 @@ export default {
             if (data[1] !== null) {
               this[measurement.chart].traces[traceIndex].x.push(new Date(data[0]));
               this[measurement.chart].traces[traceIndex].y.push(data[1]);
+
+              this[`${measurement.chart}Count`]++;
             }
           });
 
