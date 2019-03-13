@@ -81,6 +81,12 @@
 
       <section v-if="viewMode === SENSOR_VIEW_MODE">
         <heatmap :data="heatmapDataArray" :options="heatmapOptions"></heatmap>
+        <ground-overlay :source="require('../assets/mapa_fundao_cropped.jpg')" :bounds="{
+            north: -22.838507,
+            south: -22.867637,
+            east: -43.220495,
+            west: -43.239329,}" >
+        </ground-overlay>
 
         <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
           <div v-html="infoContent"></div>
@@ -112,6 +118,7 @@ import axios from 'axios';
 import {loaded, gmapApi} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
 import Heatmap from '@/components/Heatmap'
+import GroundOverlay from '@/components/GroundOverlay'
 import _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -455,7 +462,8 @@ export default {
   },
   components: {
     SensorForm,
-    Heatmap
+    Heatmap,
+    GroundOverlay
   },
 };
 </script>
