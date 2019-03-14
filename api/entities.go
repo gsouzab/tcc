@@ -63,4 +63,7 @@ type InfluxQuery struct {
 	WhereEndTime       string                 `json:"whereEndTime,omitempty"`
 	WhereLastXMinutes  string                 `json:"whereLastXMinutes,omitempty"`
 	GroupByTag         string                 `json:"groupByTag,omitempty"`
+	OrderByAsc         string                 `json:"orderByAsc,omitempty"`
+	OrderByDesc        string                 `json:"orderByDesc,omitempty"`
+	Limit              string                 `json:"limit,omitempty"`
 }

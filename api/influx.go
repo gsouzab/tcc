@@ -10,7 +10,8 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 )
 
-const influxAddr = "http://influx:8086"
+//const influxAddr = "http://influx:8086"  // ==> Internal Influx
+const influxAddr = "http://174.138.126.228:30004" // ==> External Influx
 const influxDbName = "tcc_data"
 const telemetryMeasurement = "telemetry_data"
 const probeMeasurement = "probe_data"
@@ -117,6 +118,9 @@ func CreateInfluxQuery(influxQuery InfluxQuery, measurement string) (res []clien
 	var groupByMeanTime = influxQuery.SelectMeanInterval != ""
 	var groupByTag = influxQuery.GroupByTag != ""
 	var hasGroupBy = groupByMeanTime || groupByTag
+	var hasOrderBy = influxQuery.OrderByAsc != "" || influxQuery.OrderByDesc != ""
+
+	var hasLimit = influxQuery.Limit != ""
 
 	if hasSelect {
 		if selectMean {
@@ -202,7 +206,7 @@ func CreateInfluxQuery(influxQuery InfluxQuery, measurement string) (res []clien
 	}
 
 	if hasGroupBy {
-		query += "GROUP BY "
+		query += " GROUP BY "
 
 		if groupByMeanTime {
 			query += "time(" + influxQuery.SelectMeanInterval + "m)"
@@ -213,6 +217,18 @@ func CreateInfluxQuery(influxQuery InfluxQuery, measurement string) (res []clien
 		if groupByTag {
 			query += influxQuery.GroupByTag
 		}
+	}
+
+	if hasOrderBy {
+		if influxQuery.OrderByAsc != "" {
+			query += " ORDER BY " + influxQuery.OrderByAsc
+		} else if influxQuery.OrderByDesc != "" {
+			query += " ORDER BY " + influxQuery.OrderByDesc + " DESC"
+		}
+	}
+
+	if hasLimit {
+		query += " LIMIT " + influxQuery.Limit
 	}
 
 	res, err = queryDB(influxClient, query)
