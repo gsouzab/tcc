@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: services-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: maps.sherlock.rappdo.com
+    http:
+      paths:
+      - backend:
+          serviceName: client
+          servicePort: 80
+  # - host: bar.foo.com
+  #   http:
+  #     paths:
+  #     - backend:
+  #         serviceName: service2
+  #         servicePort: 80
