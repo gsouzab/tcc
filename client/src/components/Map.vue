@@ -37,7 +37,18 @@
             </v-btn-toggle>
           </v-flex>
         </v-toolbar>
+
+        <v-toolbar
+          dense
+          floating
+          class="mt-3"
+        >
+          <v-flex xs12 sm6>
+            <datetime-field-picker ></datetime-field-picker>
+          </v-flex>
+        </v-toolbar>
       </div>
+
       <v-menu
         v-model="showContextMenu"
         :position-x="x"
@@ -81,11 +92,12 @@
 
       <section v-if="viewMode === SENSOR_VIEW_MODE">
         <heatmap :data="heatmapDataArray" :options="heatmapOptions"></heatmap>
-        <ground-overlay :source="require('../assets/mapa_fundao_cropped.jpg')" :bounds="{
-            north: -22.838507,
-            south: -22.867637,
-            east: -43.220495,
-            west: -43.239329,}" >
+        <ground-overlay :source="require('../assets/lab_layer.png')" :bounds="{
+            north: -22.86141065174842,
+            south: -22.861659764789806,
+            east: -43.22807595931624, 
+            west: -43.22840063788988,}"
+            @rightclick="showMenu">
         </ground-overlay>
 
         <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
@@ -117,8 +129,9 @@
 import axios from 'axios';
 import {loaded, gmapApi} from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
-import Heatmap from '@/components/Heatmap'
-import GroundOverlay from '@/components/GroundOverlay'
+import Heatmap from '@/components/Heatmap';
+import GroundOverlay from '@/components/GroundOverlay';
+import DatetimeFieldPicker from '@/components/DatetimeFieldPicker';
 import _ from 'lodash';
 import * as d3 from 'd3';
 
@@ -133,8 +146,8 @@ export default {
   },
   data() {
     return {
-      center: { lat: -22.8617784, lng: -43.2296038 },
-      zoom: 15,
+      center: { lat: -22.861659764789806, lng: -43.22840063788988 },
+      zoom: 20,
       viewMode: 1,
       SENSOR_VIEW_MODE: 1,
       TEMPERATURE_VIEW_MODE: 2,
@@ -463,7 +476,8 @@ export default {
   components: {
     SensorForm,
     Heatmap,
-    GroundOverlay
+    GroundOverlay,
+    DatetimeFieldPicker
   },
 };
 </script>
