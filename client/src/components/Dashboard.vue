@@ -6,7 +6,7 @@
         <v-card>
           <v-card-title>
             Temperatura
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
           </v-card-title>
           <v-card-text style="min-height: 200px">
             <div v-if="!loading">
@@ -23,7 +23,7 @@
         <v-card>
           <v-card-title>
             Umidade
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
           </v-card-title>
           <v-card-text style="min-height: 200px">
             <div v-if="!loading">
@@ -38,7 +38,7 @@
         <v-card>
           <v-card-title>
             CO2
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>  
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
           </v-card-title>
           <v-card-text style="min-height: 200px">
             <div v-if="!loading">
@@ -86,7 +86,8 @@ export default {
             type: 'date',
           },
           yaxis: {
-            title: 'ºC'
+            title: 'ºC',
+            range: [-10, 50]
           },
         },
       },
@@ -117,6 +118,7 @@ export default {
           },
           yaxis: {
             title: '%',
+            range: [0, 100]
           },
         },
       },
@@ -207,7 +209,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
-      } 
+      }
 
       return [];
     },
