@@ -10,7 +10,7 @@ export default MapElementFactory({
     'source': {type: String},
     'bounds': {type: Object},
   },
-  events: ['click', 'dblclick'],
+  events: ['click', 'dblclick', 'rightclick'],
   ctr: () => google.maps.GroundOverlay,
   ctrArgs: (options, {source, bounds}) => [source, bounds, options],
 })
