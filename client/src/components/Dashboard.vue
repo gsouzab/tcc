@@ -2,7 +2,21 @@
   <v-container fluid grid-list-md>
     <TimePicker @change="onDateRangeChange"></TimePicker>
     <v-layout row wrap>
-      <v-flex lg12>
+      <v-flex lg12 md12>
+        <v-card>
+          <v-card-title>
+            Presença
+            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
+          </v-card-title>
+          <v-card-text style="min-height: 200px">
+            <div v-if="!loading">
+              <p v-if="presenceChartCount == 0">Nenhuma dado disponível.</p>
+              <plotly-chart v-if="presenceChartCount > 0" :chart="presenceChart"></plotly-chart>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex lg6 md12>
         <v-card>
           <v-card-title>
             Temperatura
@@ -19,7 +33,7 @@
     </v-layout>
 
     <v-layout row wrap>
-      <v-flex lg6 md12>
+      <v-flex lg12 md12>
         <v-card>
           <v-card-title>
             Umidade
@@ -75,6 +89,7 @@ export default {
       temperatureChartCount: 0,
       co2ChartCount: 0,
       humidityChartCount: 0,
+      presenceChartCount: 0,
       temperatureChart: {
         uuid: 'temp-chart',
         traces: [],
@@ -122,6 +137,22 @@ export default {
           },
         },
       },
+      presenceChart: {
+        uuid: 'pres-chart',
+        traces: [],
+        layout: {
+          barmode: 'stack',
+          margin: {
+            t: '20px',
+          },
+          xaxis: {
+            type: 'date',
+          },
+          yaxis: {
+            title: '# de dispositivos'
+          },
+        },
+      },
     };
   },
   async mounted() {
@@ -144,19 +175,22 @@ export default {
       return [];
     },
     initTraces(sensors) {
-      this.temperatureChart.traces = [];
-      this.co2Chart.traces = [];
-      this.humidityChart.traces = [];
+      this.temperatureChart.traces  = [];
+      this.co2Chart.traces          = [];
+      this.humidityChart.traces     = [];
+      this.presenceChart.traces     = [];
 
-      this.temperatureChartCount = 0;
-      this.co2ChartCount = 0;
-      this.humidityChartCount = 0;
+      this.temperatureChartCount    = 0;
+      this.co2ChartCount            = 0;
+      this.humidityChartCount       = 0;
+      this.presenceChartCount       = 0;
 
       _.forEach(sensors, (value, key) => {
         sensorsConfig[value.mac] = { index: key, color: '#5e9e7e' };
         this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'}});
         this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
         this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
+        this.presenceChart.traces.push({ x: [], y: [], name: value.name, type: 'bar' });
       });
     },
     addTelemetryData(data) {
@@ -187,6 +221,25 @@ export default {
           if (m !== '') this.addTelemetryData(JSON.parse(m));
         });
       };
+    },
+    async getPresenceData(whereStartTime, whereEndTime, sensors) {
+      const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
+      const maxPoints = 1000;
+      const selectMeanInterval = Math.ceil(duration / maxPoints);
+      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(RSSI) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(${selectMeanInterval}m)`
+
+      try {
+        const response = await axios.get(query);
+        console.log(response);
+        if (response.status === 200) {
+          if (response.data.results[0].series) {
+            return response.data.results[0].series;
+          }
+          return [];
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
     async getTelemetryData(whereStartTime, whereEndTime, sensors, selectMeanField) {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
@@ -226,11 +279,14 @@ export default {
         const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, "temp");
         const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, "co2");
         const humData = await this.getTelemetryData(startDate, endDate, this.sensors, "hum");
+        const presenceData = await this.getPresenceData(startDate, endDate, this.sensors);
 
         this.fillTelemetryMeasurements(
           {chart: "temperatureChart", data: temperatureData},
           {chart: "co2Chart", data: co2Data},
           {chart: "humidityChart", data: humData});
+
+        this.fillPresenceMeasurements(presenceData);
 
         this.loading = false;
       }
@@ -255,6 +311,18 @@ export default {
           this[measurement.chart].layout.datarevision = new Date().getTime();
         });
       }
+    },
+    fillPresenceMeasurements(presenceData) {
+      for (let sensorData of presenceData) {
+        console.log(sensorData.tags.sensor);
+        const traceIndex = sensorsConfig[sensorData.tags.sensor].index;
+        _.forEach(sensorData.values, (data) => {
+          this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
+          this.presenceChart.traces[traceIndex].y.push(data[1]);
+          this.presenceChartCount++;
+        });
+      }
+      this.presenceChart.layout.datarevision = new Date().getTime();
     }
   }
 };
