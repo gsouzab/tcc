@@ -37,16 +37,6 @@
             </v-btn-toggle>
           </v-flex>
         </v-toolbar>
-
-        <v-toolbar
-          dense
-          floating
-          class="mt-3"
-        >
-          <v-flex xs12 sm6>
-            <datetime-field-picker ></datetime-field-picker>
-          </v-flex>
-        </v-toolbar>
       </div>
 
       <v-menu
@@ -92,13 +82,6 @@
 
       <section v-if="viewMode === SENSOR_VIEW_MODE">
         <heatmap :data="heatmapDataArray" :options="heatmapOptions"></heatmap>
-        <ground-overlay :source="require('../assets/lab_layer.png')" :bounds="{
-            north: -22.86141065174842,
-            south: -22.861659764789806,
-            east: -43.22807595931624, 
-            west: -43.22840063788988,}"
-            @rightclick="showMenu">
-        </ground-overlay>
 
         <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
           <div v-html="infoContent"></div>
@@ -117,6 +100,15 @@
           </gmap-marker>
         </gmap-cluster>
       </section>
+
+      <ground-overlay :source="require('../assets/lab_layer.png')" :bounds="{
+          north: -22.86141065174842,
+          south: -22.861659764789806,
+          east: -43.22807595931624,
+          west: -43.22840063788988,}"
+          @rightclick="showMenu">
+      </ground-overlay>
+
 
     </gmap-map>
 
@@ -388,20 +380,6 @@ export default {
         }
       } catch (error) {
         console.log(error);
-      }
-
-      try {
-        let response = await axios.post(`http://${process.env.API_HOST}/query/telemetry`);
-        if (response.status == 200) {
-
-          this.sensors = response.data.data;
-
-          _.forEach(this.sensors, (s, index) => {
-            sensorsConfig[s.mac] = {position: {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}, index};
-          });
-        }
-      } catch (error) {
-        console.error(error);
       }
 
       this.waitingSensors = false;
