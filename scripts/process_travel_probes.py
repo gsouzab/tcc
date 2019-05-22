@@ -1,12 +1,19 @@
 import pandas as pd
 from datetime import datetime
 import math
+import matplotlib.pyplot as plt
+from matplotlib.ticker import StrMethodFormatter
+from datetime import timedelta  
 
-N = 5
-M = 5
-P = 5
+MIN_DURATION = 180
+
+# N = 60
+M = 300
+P = 60
 
 N_PESSOAS = 0
+
+probe_file = "files/exp_20190329/volta.csv"
 
 class Device:
     states = ['possible_presence', 'confirmed_presence', 'possible_absence', 'confirmed_absence']
@@ -23,56 +30,78 @@ class Device:
     def __init__(self, mac, last_reading):
         self.mac = mac
         self.state = self.states[0]
+        self.first_reading = last_reading
+        self.seen_count = 1
         self.last_reading = last_reading
+        self.duration = 0
 
     def updateReading(self, last_reading):
         self.last_reading = last_reading
+        self.duration = (self.last_reading - self.first_reading).seconds
 
     def updateState(self, state):
         self.state = state
+
+    def increase_seen_count(self):
+        self.seen_count += 1
+
+    def reset_seen_count(self):
+        self.seen_count = 1
 
 devices = dict()
 
 def parse_date(str_date):
     return datetime.strptime(str_date, '%Y-%m-%d %H:%M:%S')
 
-def processReading(reading, device):
+def processArrival(time, reading, device):
     global N_PESSOAS
-    time_diff = reading['time'] - device.last_reading
+    time_diff = time - device.last_reading
+    device.updateReading(time)
+    device.increase_seen_count()
 
-    if time_diff.seconds < 5:
-        if device.state == 'possible_presence':
-            N_PESSOAS += 1
-            device.updateState('confirmed_presence')
-        elif device.state == 'possible_absence':
-            device.updateState('confirmed_presence')
+    if device.duration >= MIN_DURATION and device.state == 'possible_presence':        
+        N_PESSOAS += 1
+        print("%s, %f, %f, %d" % (time, reading['lat'], reading['lon'], N_PESSOAS))
+        device.updateState('confirmed_presence')
+    elif time_diff.seconds <= P and device.state == 'possible_absence':
+        device.updateState('confirmed_presence')
 
-    elif time_diff.seconds > 5:
-        if device.state == 'confirmed_presence':
-            device.updateState('possible_absence')
-        elif device.state == 'possible_absence':
-            device.updateState('confirmed_absence')
-            N_PESSOAS -= 1
+    
+def processDeparture(time, device, lat, lon):
+    global N_PESSOAS
+    time_diff = time - device.last_reading
 
-def processDevices(reading):
+    if time_diff.seconds > M and device.state == 'confirmed_presence':
+        device.updateState('possible_absence')
+    elif time_diff.seconds > P and device.state == 'possible_absence':
+        device.updateState('confirmed_absence')
+        N_PESSOAS -= 1
+        print("%s, %f, %f, %d" % (time, lat, lon, N_PESSOAS))
+
+def processReading(time, reading):
     mac = reading['mac']
     
     try:
         device = devices[mac]
-        processReading(reading, device)
-        device.updateReading(reading['time'])
+        processArrival(time, reading, device)
     except KeyError:
-    	devices[mac] = Device(mac, reading['time'])
+    	devices[mac] = Device(mac, time)
     
-    for m, d in devices.items():
-        if m != mac:
-            processReading(reading, d)
-    
-    print(reading['time'], N_PESSOAS)
-    
-dfIda = pd.read_csv('files/ida_preprocessada.csv', sep=',', date_parser=parse_date, parse_dates=['time'])
+dfIda = pd.read_csv(probe_file, date_parser=parse_date, parse_dates=['time'], index_col=[0])
 
-for index, row in dfIda.iterrows():
-    if row['rssi'] > -90:
-        processDevices(row)
+min_time = dfIda.index.min()
+max_time = dfIda.index.max() + timedelta(minutes=5)
 
+while min_time < max_time:
+    start_range = min_time
+    min_time += timedelta(seconds=30)
+
+    lat = lon = 0
+    for time, row in dfIda.loc[start_range:min_time].iterrows():
+        processReading(time, row)
+
+        lat = row['lat']
+        lon = row['lon']
+
+    for m, d in devices.iteritems():
+        processDeparture(min_time, d, lat, lon)
