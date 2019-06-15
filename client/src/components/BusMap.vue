@@ -1,5 +1,27 @@
 <template>
-  <v-container fluid>
+  <v-container fluid id="bus-map">
+    
+    <v-toolbar
+      dense
+      floating
+      id="selector-nav"
+      class="mt-3"
+    >
+      <v-overflow-btn
+        :items="dropdown_experiments"
+        label="Data experimento"
+        target="#bus-map"
+      ></v-overflow-btn>
+      <v-btn-toggle v-model="toggle_exclusive">
+        <v-btn flat value="ground_truth">
+          Real
+        </v-btn>
+        <v-btn flat value="estimated">
+          Estimado
+        </v-btn>
+      </v-btn-toggle>
+    </v-toolbar>
+
     <gmap-map
       :center="center"
       :zoom="zoom"
@@ -7,8 +29,20 @@
       slot="activator"
       class="map">
 
+     
+
 
       <gmap-polyline :key="path.id" v-for="path in paths" :options="{'strokeColor': path.color, 'strokeWeight': 6}" :path="path.snappedCoordinates" ></gmap-polyline>
+   
+      <GmapMarker
+        :key="index"
+        v-for="(m, index) in markers"
+        :position="m.position"
+        :clickable="false"
+        :icon="m.icon"
+        :draggable="false"
+      />
+   
     </gmap-map>
 
     <div>
@@ -29,7 +63,7 @@ import { csv } from 'd3-fetch';
 
 export default {
   async created() {
-    await this.runSnapToRoad();
+    // await this.runSnapToRoad();
   },
   mounted() {
     this.setLegend();
@@ -39,6 +73,7 @@ export default {
       center: { lat: -22.861659764789806, lng: -43.22840063788988 },
       zoom: 13,
       paths: [],
+      markers: []
     };
   },
   computed: {
@@ -61,6 +96,15 @@ export default {
       svg.append("text").attr("x", 30).attr("y", 70).text("10-19").style("font-size", "14px").attr("alignment-baseline","middle")
       svg.append("text").attr("x", 30).attr("y", 90).text("20-39").style("font-size", "14px").attr("alignment-baseline","middle")
       svg.append("text").attr("x", 30).attr("y", 110).text(">40").style("font-size", "14px").attr("alignment-baseline","middle")
+    },
+    clearMarkers() {
+      this.markers = []
+    },
+    addEndMarker(position) {
+      this.markers.push({position, icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'});
+    },
+    addStartMarker(position) {
+      this.markers.push({position, icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
     },
     async runSnapToRoad(path) {
       let colors = [];
@@ -134,6 +178,10 @@ export default {
 
       this.paths = paths;
       this.center = paths[0].snappedCoordinates[0];
+      
+      this.clearMarkers();
+      this.addStartMarker(paths[0].snappedCoordinates[0]);
+      this.addEndMarker(paths[paths.length-1].snappedCoordinates[0]);
     },
 
     getColorFromValue(n) {
@@ -162,6 +210,12 @@ export default {
 </style>
 
 <style scoped>
+#selector-nav {
+  top: 0px;
+  left: 0px;
+  z-index: 99999;
+  position: absolute;
+}
 .map, .container {
   width: 100%;
   height: 100%;

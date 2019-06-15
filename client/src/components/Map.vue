@@ -295,7 +295,7 @@ export default {
         this.updateInfoContent(this.sensors[i]);
       }
       const heatmapData = {
-        location: new google.maps.LatLng(data.latitude, data.longitude),
+        location: new google.maps.LatLng(this.sensors[i].latitude, this.sensors[i].longitude),
         weight: data.count,
       };
 
