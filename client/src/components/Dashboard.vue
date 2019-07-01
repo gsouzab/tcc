@@ -218,6 +218,16 @@ export default {
       this.co2ChartCount++;
       this.humidityChartCount++;
     },
+    addProbeData(data) {
+      const dateTime = new Date(data.createdAt);
+      const traceIndex = sensorsConfig[data.sensor].index;
+      
+      this.presenceChart.traces[traceIndex].x.push(dateTime);
+      this.presenceChart.traces[traceIndex].y.push(data.count);
+      this.presenceChart.layout.datarevision = dateTime.getTime();
+      
+      this.presenceChartCount += 1;
+    },
     addOnMessageListener() {
       this.$telemetryWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
@@ -225,6 +235,13 @@ export default {
           if (m !== '') this.addTelemetryData(JSON.parse(m));
         });
       };
+
+      this.$probesWS.onmessage = (data) => {
+        const measurements = data.data.split('\n');
+        for (let m of measurements) {
+          if (m !== "") this.addProbeData(JSON.parse(m))
+        }
+      }
     },
     async getPresenceData(whereStartTime, whereEndTime, sensors) {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
@@ -275,6 +292,7 @@ export default {
         this.initTraces(this.sensors);
       } else {
         this.$telemetryWS.onmessage = null;
+        this.$probesWS.onmessage = null;
 
         this.initTraces(this.sensors);
 
