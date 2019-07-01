@@ -14,7 +14,7 @@
       slot="activator"
       class="map">
 
-      <div slot="visible">
+      <!-- <div slot="visible">
         <v-toolbar
           dense
           floating
@@ -37,7 +37,7 @@
             </v-btn-toggle>
           </v-flex>
         </v-toolbar>
-      </div>
+      </div> -->
 
       <v-menu
         v-model="showContextMenu"
@@ -102,10 +102,10 @@
       </section>
 
       <ground-overlay :source="require('../assets/lab_layer.png')" :bounds="{
-          north: -22.86141065174842,
-          south: -22.861659764789806,
-          east: -43.22807595931624,
-          west: -43.22840063788988,}"
+          north: -22.861479854128124,
+          south: -22.861765421786675,
+          east: -43.22791502677535,
+          west: -43.22829133787252,}"
           @rightclick="showMenu">
       </ground-overlay>
 

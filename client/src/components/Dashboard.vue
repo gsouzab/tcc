@@ -1,68 +1,71 @@
 <template>
   <v-container fluid grid-list-md>
     <TimePicker @change="onDateRangeChange"></TimePicker>
-    <v-layout row wrap>
-      <v-flex lg12 md12>
-        <v-card>
-          <v-card-title>
-            Presença
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
-          </v-card-title>
-          <v-card-text style="min-height: 200px">
-            <div v-if="!loading">
-              <p v-if="presenceChartCount == 0">Nenhuma dado disponível.</p>
-              <plotly-chart v-if="presenceChartCount > 0" :chart="presenceChart"></plotly-chart>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-      <v-flex lg6 md12>
-        <v-card>
-          <v-card-title>
-            Temperatura
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
-          </v-card-title>
-          <v-card-text style="min-height: 200px">
-            <div v-if="!loading">
-              <p v-if="temperatureChartCount == 0">Nenhuma dado disponível.</p>
-              <plotly-chart v-if="temperatureChartCount > 0" :chart="temperatureChart"></plotly-chart>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+    <div class="pa-2">
 
-    <v-layout row wrap>
-      <v-flex lg12 md12>
-        <v-card>
-          <v-card-title>
-            Umidade
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
-          </v-card-title>
-          <v-card-text style="min-height: 200px">
-            <div v-if="!loading">
-              <p v-if="humidityChartCount == 0">Nenhuma dado disponível.</p>
-              <plotly-chart v-if="humidityChartCount > 0" :chart="humidityChart"></plotly-chart>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+      <v-layout row wrap>
+        <v-flex lg12 md12>
+          <v-card>
+            <v-card-title>
+              Presença
+              <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
+            </v-card-title>
+            <v-card-text style="min-height: 200px">
+              <div v-if="!loading">
+                <p v-if="presenceChartCount == 0">Nenhuma dado disponível.</p>
+                <plotly-chart v-if="presenceChartCount > 0" :chart="presenceChart"></plotly-chart>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex lg12 md12>
+          <v-card>
+            <v-card-title>
+              Temperatura
+              <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
+            </v-card-title>
+            <v-card-text style="min-height: 200px">
+              <div v-if="!loading">
+                <p v-if="temperatureChartCount == 0">Nenhuma dado disponível.</p>
+                <plotly-chart v-if="temperatureChartCount > 0" :chart="temperatureChart"></plotly-chart>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
 
-      <v-flex lg6 md12>
-        <v-card>
-          <v-card-title>
-            CO2
-            <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
-          </v-card-title>
-          <v-card-text style="min-height: 200px">
-            <div v-if="!loading">
-              <p v-if="co2ChartCount == 0">Nenhuma dado disponível.</p>
-              <plotly-chart :chart="co2Chart" v-if="co2ChartCount > 0"></plotly-chart>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
+      <v-layout row wrap>
+        <v-flex lg12 md12>
+          <v-card>
+            <v-card-title>
+              Umidade
+              <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
+            </v-card-title>
+            <v-card-text style="min-height: 200px">
+              <div v-if="!loading">
+                <p v-if="humidityChartCount == 0">Nenhuma dado disponível.</p>
+                <plotly-chart v-if="humidityChartCount > 0" :chart="humidityChart"></plotly-chart>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+
+        <v-flex lg12 md12>
+          <v-card>
+            <v-card-title>
+              CO2
+              <v-progress-linear indeterminate v-if="loading"></v-progress-linear>
+            </v-card-title>
+            <v-card-text style="min-height: 200px">
+              <div v-if="!loading">
+                <p v-if="co2ChartCount == 0">Nenhuma dado disponível.</p>
+                <plotly-chart :chart="co2Chart" v-if="co2ChartCount > 0"></plotly-chart>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
   </v-container>
 </template>
 
@@ -141,7 +144,7 @@ export default {
         uuid: 'pres-chart',
         traces: [],
         layout: {
-          barmode: 'stack',
+          // barmode: 'stack',
           margin: {
             t: '20px',
           },
@@ -190,9 +193,10 @@ export default {
         this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'}});
         this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
         this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
-        this.presenceChart.traces.push({ x: [], y: [], name: value.name, type: 'bar' });
+        this.presenceChart.traces.push({ x: [], y: [], name: value.name, type: 'scatter' , fill: 'tozeroy'});
       });
     },
+
     addTelemetryData(data) {
       const dateTime = new Date(data.createdAt);
       const traceIndex = sensorsConfig[data.sensor].index;
@@ -226,11 +230,10 @@ export default {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
       const maxPoints = 1000;
       const selectMeanInterval = Math.ceil(duration / maxPoints);
-      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(RSSI) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(${selectMeanInterval}m)`
+      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(DISTINCT(srcMac)) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(${selectMeanInterval}m)`
 
       try {
         const response = await axios.get(query);
-        console.log(response);
         if (response.status === 200) {
           if (response.data.results[0].series) {
             return response.data.results[0].series;
@@ -314,12 +317,11 @@ export default {
     },
     fillPresenceMeasurements(presenceData) {
       for (let sensorData of presenceData) {
-        console.log(sensorData.tags.sensor);
         const traceIndex = sensorsConfig[sensorData.tags.sensor].index;
         _.forEach(sensorData.values, (data) => {
-          this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
-          this.presenceChart.traces[traceIndex].y.push(data[1]);
-          this.presenceChartCount++;
+            this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
+            this.presenceChart.traces[traceIndex].y.push(data[1]);
+            this.presenceChartCount++;
         });
       }
       this.presenceChart.layout.datarevision = new Date().getTime();

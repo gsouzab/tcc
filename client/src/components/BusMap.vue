@@ -1,27 +1,5 @@
 <template>
   <v-container fluid id="bus-map">
-    
-    <v-toolbar
-      dense
-      floating
-      id="selector-nav"
-      class="mt-3"
-    >
-      <v-overflow-btn
-        :items="dropdown_experiments"
-        label="Data experimento"
-        target="#bus-map"
-      ></v-overflow-btn>
-      <v-btn-toggle v-model="toggle_exclusive">
-        <v-btn flat value="ground_truth">
-          Real
-        </v-btn>
-        <v-btn flat value="estimated">
-          Estimado
-        </v-btn>
-      </v-btn-toggle>
-    </v-toolbar>
-
     <gmap-map
       :center="center"
       :zoom="zoom"
@@ -29,11 +7,42 @@
       slot="activator"
       class="map">
 
-     
+      <div slot="visible">
+        <v-toolbar
+          dense
+          floating
+          id="selector-nav"
+          class="mt-3"
+        >
+          <v-overflow-btn
+            :items="dropdown_experiments"
+            label="Data experimento"
+            class="pa-0"
+            hide-details
+            v-model="experiment"
+            @change="runSnapToRoad"
+            target="#bus-map"
+          ></v-overflow-btn>
+
+          <v-divider
+            class="mr-2"
+            vertical
+          ></v-divider>
+
+          <v-btn-toggle v-model="experiment_type" class="mr-2" @change="runSnapToRoad">
+            <v-btn flat value="ground_truth">
+              Real
+            </v-btn>
+            <v-btn flat value="estimated">
+              Estimado
+            </v-btn>
+          </v-btn-toggle>
+        </v-toolbar>
+      </div>
 
 
       <gmap-polyline :key="path.id" v-for="path in paths" :options="{'strokeColor': path.color, 'strokeWeight': 6}" :path="path.snappedCoordinates" ></gmap-polyline>
-   
+
       <GmapMarker
         :key="index"
         v-for="(m, index) in markers"
@@ -42,7 +51,7 @@
         :icon="m.icon"
         :draggable="false"
       />
-   
+
     </gmap-map>
 
     <div>
@@ -72,8 +81,17 @@ export default {
     return {
       center: { lat: -22.861659764789806, lng: -43.22840063788988 },
       zoom: 13,
+      experiment: 'Volta 29/03/2019',
+      experiment_type: "ground_truth",
       paths: [],
-      markers: []
+      dropdown_experiments: ['Volta 29/03/2019'],
+      markers: [],
+      files: {
+        'Volta 29/03/2019': {
+          "estimated": "static/entrada_180_saida_360.csv",
+          "ground_truth": "static/volta_real.csv",
+        }
+      }
     };
   },
   computed: {
@@ -106,20 +124,20 @@ export default {
     addStartMarker(position) {
       this.markers.push({position, icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
     },
-    async runSnapToRoad(path) {
+    async runSnapToRoad() {
       let colors = [];
-      
-      let gpsData = await csv('static/entrada_180_saida_360.csv');
+      let file = this.files[this.experiment][this.experiment_type];
+      let gpsData = await csv(file);
       delete gpsData['columns'];
-      
+
       colors[0] = this.getColorFromValue(gpsData[0].n_sherlock);
-      
+
       var pathQuery = `${gpsData[0].lat},${gpsData[0].lon}`;
       var snappedPoints = [];
 
       for (let i = 1; i < gpsData.length; i++) {
         colors[i] = this.getColorFromValue(gpsData[i].n_sherlock);
-      
+
         if (pathQuery === "") {
           pathQuery += `${gpsData[i].lat},${gpsData[i].lon}`;
         } else {
@@ -178,7 +196,7 @@ export default {
 
       this.paths = paths;
       this.center = paths[0].snappedCoordinates[0];
-      
+
       this.clearMarkers();
       this.addStartMarker(paths[0].snappedCoordinates[0]);
       this.addEndMarker(paths[paths.length-1].snappedCoordinates[0]);
@@ -207,15 +225,13 @@ export default {
   height: auto !important;
   padding: 0;
 }
+.v-select__slot {
+  min-width: 220px;
+}
 </style>
 
 <style scoped>
-#selector-nav {
-  top: 0px;
-  left: 0px;
-  z-index: 99999;
-  position: absolute;
-}
+
 .map, .container {
   width: 100%;
   height: 100%;
