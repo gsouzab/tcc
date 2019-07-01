@@ -7,10 +7,8 @@ import json
 
 QOS = 1
 SENSORS = [
-    'AA:AA:AA:AA:AA:AA',
-    'BB:BB:BB:BB:BB:BB',
-    'CC:CC:CC:CC:CC:CC',
-    'DD:DD:DD:DD:DD:DD'
+    'B8:27:EB:F2:64:A9',
+    'B8:27:EB:52:43:B7',
 ]
 
 # The "random" message creation, in json format
@@ -41,10 +39,10 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("35.198.28.153", 1883, 60)
+client.connect("174.138.126.228", 30000, 60)
 client.loop_start()
 
 while True:
     publish(client)
-    time.sleep(0.5)
+    time.sleep(2)
 

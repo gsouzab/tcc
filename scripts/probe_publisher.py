@@ -6,10 +6,8 @@ import json
 
 QOS = 1
 SENSORS = [
-    'AA:AA:AA:AA:AA:AA',
-    'BB:BB:BB:BB:BB:BB',
-    'CC:CC:CC:CC:CC:CC',
-    'DD:DD:DD:DD:DD:DD'
+    'B8:27:EB:52:43:B7',
+    'B8:27:EB:3E:A2:EB',
 ]
 
 SOURCES = [
@@ -38,16 +36,16 @@ def on_message(client, userdata, msg):
 def publish(client):
     jsonMessage = create_json_message()
     # print jsonMessage
-    client.publish('probe', jsonMessage, QOS)
+    client.publish('telemetry/probes', jsonMessage, QOS)
 
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect("localhost", 1883, 60)
+client.connect("174.138.126.228", 30000, 60)
 client.loop_start()
 
 while True:
     publish(client)
-    time.sleep(1)
+    time.sleep(0.5)
 
