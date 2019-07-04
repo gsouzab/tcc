@@ -5,15 +5,10 @@
       :zoom="zoom"
       :options="{fullscreenControl: false, streetViewControl: false, mapTypeControl: false}"
       slot="activator"
-      class="map">
-
+      class="map"
+    >
       <div slot="visible">
-        <v-toolbar
-          dense
-          floating
-          id="selector-nav"
-          class="mt-3"
-        >
+        <v-toolbar dense floating id="selector-nav" class="mt-3">
           <v-overflow-btn
             :items="dropdown_experiments"
             label="Data experimento"
@@ -24,24 +19,31 @@
             target="#bus-map"
           ></v-overflow-btn>
 
-          <v-divider
-            class="mr-2"
-            vertical
-          ></v-divider>
+          <v-divider class="mr-2" vertical></v-divider>
 
           <v-btn-toggle v-model="experiment_type" class="mr-2" @change="runSnapToRoad">
-            <v-btn flat value="ground_truth">
-              Real
-            </v-btn>
-            <v-btn flat value="estimated">
-              Estimado
-            </v-btn>
+            <v-btn flat value="ground_truth">Real</v-btn>
+            <v-btn flat value="estimated">Estimado</v-btn>
           </v-btn-toggle>
         </v-toolbar>
       </div>
 
+      <gmap-polyline
+        :key="index"
+        v-for="(path, index) in paths"
+        :options="{'strokeColor': path.color, 'strokeWeight': 6}"
+        :path="path.snappedCoordinates"
+        @mouseover="showLegend($event, path)"
+      ></gmap-polyline>
 
-      <gmap-polyline :key="path.id" v-for="path in paths" :options="{'strokeColor': path.color, 'strokeWeight': 6}" :path="path.snappedCoordinates" ></gmap-polyline>
+      <gmap-info-window
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen=false"
+      >
+        <div v-html="infoContent"></div>
+      </gmap-info-window>
 
       <GmapMarker
         :key="index"
@@ -49,25 +51,24 @@
         :position="m.position"
         :clickable="false"
         :icon="m.icon"
+        :label="m.label"
         :draggable="false"
       />
-
     </gmap-map>
 
     <div>
-      <svg id="legend" height=150 width=100></svg>
+      <svg id="legend" height="150" width="100" />
     </div>
   </v-container>
 </template>
 
 <script>
-
-import axios from 'axios';
-import {loaded, gmapApi} from 'vue2-google-maps';
-import Heatmap from '@/components/Heatmap';
-import _ from 'lodash';
-import * as d3 from 'd3';
-import { csv } from 'd3-fetch';
+import axios from "axios";
+import { loaded, gmapApi } from "vue2-google-maps";
+import Heatmap from "@/components/Heatmap";
+import _ from "lodash";
+import * as d3 from "d3";
+import { csv } from "d3-fetch";
 // import url from '../assets/ida_real.csv';
 
 export default {
@@ -79,56 +80,139 @@ export default {
   },
   data() {
     return {
+      infoContent: "",
+      infoWindowPos: null,
+      infoWinOpen: false,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      },
       center: { lat: -22.861659764789806, lng: -43.22840063788988 },
       zoom: 13,
-      experiment: 'Volta 29/03/2019',
+      experiment: "Volta 29/03/2019",
       experiment_type: "ground_truth",
       paths: [],
-      dropdown_experiments: ['Volta 29/03/2019'],
+      dropdown_experiments: ["Volta 29/03/2019"],
       markers: [],
       files: {
-        'Volta 29/03/2019': {
-          "estimated": "static/entrada_180_saida_360.csv",
-          "ground_truth": "static/volta_real.csv",
+        "Volta 29/03/2019": {
+          estimated: "static/entrada_180_saida_360.csv",
+          ground_truth: "static/volta_real.csv"
         }
       }
     };
   },
   computed: {
-    google: gmapApi,
+    google: gmapApi
   },
   methods: {
+    showLegend(e, b) {
+      let position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
+
+      this.infoWinOpen = position;
+      this.infoWinOpen = true;
+    },
     setLegend() {
-      var svg = d3.select("#legend")
+      var svg = d3
+        .select("#legend")
         .style("position", "absolute")
         .style("right", "10px")
-        // .style("background-color", "white")
-        .style("top", "0px");
+        .style("background-color", "white")
+        .style("border-radius", "6px")
+        .style("height", "80px")
+        .style("width", "70px")
+        .style("top", "16px");
 
       // Handmade legend
-      svg.append("circle").attr("cx",10).attr("cy",50).attr("r", 6).style("fill", "green")
-      svg.append("circle").attr("cx",10).attr("cy",70).attr("r", 6).style("fill", "yellow")
-      svg.append("circle").attr("cx",10).attr("cy",90).attr("r", 6).style("fill", "orange")
-      svg.append("circle").attr("cx",10).attr("cy",110).attr("r", 6).style("fill", "red")
-      svg.append("text").attr("x", 30).attr("y", 50).text("0-9").style("font-size", "14px").attr("alignment-baseline","middle")
-      svg.append("text").attr("x", 30).attr("y", 70).text("10-19").style("font-size", "14px").attr("alignment-baseline","middle")
-      svg.append("text").attr("x", 30).attr("y", 90).text("20-39").style("font-size", "14px").attr("alignment-baseline","middle")
-      svg.append("text").attr("x", 30).attr("y", 110).text(">40").style("font-size", "14px").attr("alignment-baseline","middle")
+      svg
+        .append("circle")
+        .attr("cx", 10)
+        .attr("cy", 10)
+        .attr("r", 6)
+        .style("fill", "green");
+      svg
+        .append("circle")
+        .attr("cx", 10)
+        .attr("cy", 30)
+        .attr("r", 6)
+        .style("fill", "yellow");
+      svg
+        .append("circle")
+        .attr("cx", 10)
+        .attr("cy", 50)
+        .attr("r", 6)
+        .style("fill", "orange");
+      svg
+        .append("circle")
+        .attr("cx", 10)
+        .attr("cy", 70)
+        .attr("r", 6)
+        .style("fill", "red");
+      svg
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 10)
+        .text("0-9")
+        .style("font-size", "14px")
+        .attr("alignment-baseline", "middle");
+      svg
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 30)
+        .text("10-19")
+        .style("font-size", "14px")
+        .attr("alignment-baseline", "middle");
+      svg
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 50)
+        .text("20-39")
+        .style("font-size", "14px")
+        .attr("alignment-baseline", "middle");
+      svg
+        .append("text")
+        .attr("x", 25)
+        .attr("y", 70)
+        .text(">40")
+        .style("font-size", "14px")
+        .attr("alignment-baseline", "middle");
     },
     clearMarkers() {
-      this.markers = []
+      this.markers = [];
     },
     addEndMarker(position) {
-      this.markers.push({position, icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'});
+      this.markers.push({
+        position,
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+          labelOrigin: new google.maps.Point(15, -10)
+        },
+        label: "Fim"
+      });
     },
     addStartMarker(position) {
-      this.markers.push({position, icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'});
+      this.markers.push({
+        position,
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+          labelOrigin: new google.maps.Point(15, -10)
+        },
+        label: "Início"
+      });
     },
     async runSnapToRoad() {
-      let colors = [];
       let file = this.files[this.experiment][this.experiment_type];
+
+      if (!file) {
+        return;
+      }
+
+      let colors = [];
+
       let gpsData = await csv(file);
-      delete gpsData['columns'];
+      delete gpsData["columns"];
 
       colors[0] = this.getColorFromValue(gpsData[0].n_sherlock);
 
@@ -145,78 +229,97 @@ export default {
         }
 
         if (i % 99 === 0) {
-
-          const data = await axios.get('https://roads.googleapis.com/v1/snapToRoads', {
-            params: {
-              interpolate: true,
-              key: "AIzaSyAnY70pmN83mIyNnWRAxqeydbKsuP5ehIE",
-              path: pathQuery
+          const data = await axios.get(
+            "https://roads.googleapis.com/v1/snapToRoads",
+            {
+              params: {
+                interpolate: true,
+                key: "AIzaSyAnY70pmN83mIyNnWRAxqeydbKsuP5ehIE",
+                path: pathQuery
+              }
             }
-          });
+          );
           pathQuery = "";
           snappedPoints = _.concat(snappedPoints, data.data.snappedPoints);
         }
       }
 
       if (pathQuery !== "") {
-        const data = await axios.get('https://roads.googleapis.com/v1/snapToRoads', {
-          params: {
-            interpolate: true,
-            key: "AIzaSyAnY70pmN83mIyNnWRAxqeydbKsuP5ehIE",
-            path: pathQuery
+        const data = await axios.get(
+          "https://roads.googleapis.com/v1/snapToRoads",
+          {
+            params: {
+              interpolate: true,
+              key: "AIzaSyAnY70pmN83mIyNnWRAxqeydbKsuP5ehIE",
+              path: pathQuery
+            }
           }
-        });
+        );
 
         snappedPoints = _.concat(snappedPoints, data.data.snappedPoints);
       }
 
+      console.log(gpsData, snappedPoints);
+
       let currColor = colors[0];
       let paths = [];
       let currCoordinates = [];
-      var index = 0;
+      
       _.each(snappedPoints, point => {
-        let snappedCoordinate = new google.maps.LatLng(point.location.latitude, point.location.longitude);
+        let snappedCoordinate = new google.maps.LatLng(
+          point.location.latitude,
+          point.location.longitude
+        );
 
         if (point.originalIndex && point.originalIndex > 0) {
-
-          paths.push({id: index, color: currColor, snappedCoordinates: currCoordinates});
-          currColor = colors[index];
-          index++;
-          let lastCoord = currCoordinates[currCoordinates.length-1];
+          let orgIndex = point.originalIndex;
+          paths.push({
+            id: orgIndex,
+            color: currColor,
+            snappedCoordinates: currCoordinates,
+            n_sherlock: gpsData[orgIndex].n_sherlock,
+            timestamp: gpsData[orgIndex].timestamp
+          });
+          currColor = colors[orgIndex];
+          let lastCoord = currCoordinates[currCoordinates.length - 1];
           currCoordinates = [lastCoord];
         }
 
         currCoordinates.push(snappedCoordinate);
-
       });
 
       if (currCoordinates.length) {
-        paths.push({id: paths.length+1, color: currColor, snappedCoordinates: currCoordinates});
+        paths.push({
+          id: 11231231,
+          color: currColor,
+          snappedCoordinates: currCoordinates
+        });
       }
 
+      console.log(Array(paths));
       this.paths = paths;
       this.center = paths[0].snappedCoordinates[0];
 
       this.clearMarkers();
       this.addStartMarker(paths[0].snappedCoordinates[0]);
-      this.addEndMarker(paths[paths.length-1].snappedCoordinates[0]);
+      this.addEndMarker(paths[paths.length - 1].snappedCoordinates[0]);
     },
 
     getColorFromValue(n) {
       if (n < 10) {
-        return 'green';
+        return "green";
       } else if (n < 20) {
-        return 'yellow';
+        return "yellow";
       } else if (n < 30) {
-        return 'orange';
+        return "orange";
       }
 
-      return 'red';
+      return "red";
     }
   },
   components: {
     Heatmap
-  },
+  }
 };
 </script>
 
@@ -231,12 +334,13 @@ export default {
 </style>
 
 <style scoped>
-
-.map, .container {
+.map,
+.container {
   width: 100%;
   height: 100%;
 }
-.container.fluid, .container {
+.container.fluid,
+.container {
   padding: 0 !important;
 }
 </style>
