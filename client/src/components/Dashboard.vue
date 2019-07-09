@@ -247,7 +247,7 @@ export default {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
       const maxPoints = 1000;
       const selectMeanInterval = Math.ceil(duration / maxPoints);
-      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(DISTINCT(srcMac)) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(${selectMeanInterval}m)`
+      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT CEIL(MOVING_AVERAGE(COUNT("srcMac"),5)) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(1m)`
 
       try {
         const response = await axios.get(query);
