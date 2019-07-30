@@ -221,11 +221,11 @@ export default {
     addProbeData(data) {
       const dateTime = new Date(data.createdAt);
       const traceIndex = sensorsConfig[data.sensor].index;
-      
+
       this.presenceChart.traces[traceIndex].x.push(dateTime);
       this.presenceChart.traces[traceIndex].y.push(data.count);
       this.presenceChart.layout.datarevision = dateTime.getTime();
-      
+
       this.presenceChartCount += 1;
     },
     addOnMessageListener() {
@@ -335,6 +335,8 @@ export default {
     },
     fillPresenceMeasurements(presenceData) {
       for (let sensorData of presenceData) {
+        if (!sensorsConfig[sensorData.tags.sensor]) return;
+
         const traceIndex = sensorsConfig[sensorData.tags.sensor].index;
         _.forEach(sensorData.values, (data) => {
             this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
