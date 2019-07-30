@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         # see https://hub.docker.com/_/influxdb/ for config options
-        - image: influxdb:1.4.2-alpine
+        - image: influxdb:1.7-alpine
           name: influx
           env:
             - name: INFLUXDB_DB
