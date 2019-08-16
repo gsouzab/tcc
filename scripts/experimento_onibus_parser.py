@@ -3,11 +3,11 @@ from math import log10
 from datetime import datetime
 
 gps_file = "files/exp_20190329/gps.csv"
-probe_file = "files/exp_20190329/probe_volta.csv"
-real_file = "files/exp_20190329/pessoas_volta.csv"
+probe_file = "files/exp_20190329/probe_ida.csv"
+real_file = "files/exp_20190329/pessoas_ida.csv"
 
-out_file_probe = "files/exp_20190329/volta.csv"
-out_file_real = "files/exp_20190329/ida_volta.csv"
+out_file_probe = "files/exp_20190329/ida_teste.csv"
+out_file_real = "files/exp_20190329/ida_real_2.csv"
 
 def dateparse (time_in_secs):    
     return datetime.utcfromtimestamp(float(time_in_secs))

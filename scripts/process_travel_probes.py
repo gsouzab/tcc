@@ -13,7 +13,7 @@ P = 60
 
 N_PESSOAS = 0
 
-probe_file = "files/exp_20190329/volta.csv"
+probe_file = "files/exp_20190329/ida.csv"
 
 class Device:
     states = ['possible_presence', 'confirmed_presence', 'possible_absence', 'confirmed_absence']

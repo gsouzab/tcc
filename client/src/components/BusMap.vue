@@ -1,5 +1,9 @@
 <template>
   <v-container fluid id="bus-map">
+    <UploadForm :visible="showUploadForm"
+                @close="showUploadForm=false"
+                @onSave="" />
+
     <gmap-map
       :center="center"
       :zoom="zoom"
@@ -29,8 +33,8 @@
       </div>
 
       <gmap-polyline
-        :key="index"
-        v-for="(path, index) in paths"
+        :key="path.id"
+        v-for="path in paths"
         :options="{'strokeColor': path.color, 'strokeWeight': 6}"
         :path="path.snappedCoordinates"
         @mouseover="showLegend($event, path)"
@@ -54,6 +58,21 @@
         :label="m.label"
         :draggable="false"
       />
+
+      <div slot="visible">
+        <v-btn
+          absolute
+          dark
+          fab
+          bottom
+          right
+          class="add-button"
+          color="green"
+          @click="showUploadForm=true;"
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
+      </div>
     </gmap-map>
 
     <div>
@@ -66,6 +85,7 @@
 import axios from "axios";
 import { loaded, gmapApi } from "vue2-google-maps";
 import Heatmap from "@/components/Heatmap";
+import UploadForm from "@/components/forms/UploadForm";
 import _ from "lodash";
 import * as d3 from "d3";
 import { csv } from "d3-fetch";
@@ -80,14 +100,11 @@ export default {
   },
   data() {
     return {
+      showUploadForm: false,
       infoContent: "",
       infoWindowPos: null,
       infoWinOpen: false,
       infoOptions: {
-        pixelOffset: {
-          width: 0,
-          height: -35
-        }
       },
       center: { lat: -22.861659764789806, lng: -43.22840063788988 },
       zoom: 13,
@@ -108,11 +125,21 @@ export default {
     google: gmapApi
   },
   methods: {
-    showLegend(e, b) {
+    showLegend(e, path) {
       let position = { lat: e.latLng.lat(), lng: e.latLng.lng() };
 
-      this.infoWinOpen = position;
-      this.infoWinOpen = true;
+      this.$nextTick(() => {
+        // this.center = position;
+        this.infoContent = `Quantidade estimada: ${path.n_sherlock}
+        <br>Quantidade real: 12
+        <br>Velocidade: 26 km/h
+        <br>Data e hora: ${new Date(path.timestamp).toLocaleString('pt-BR')}`;
+        this.infoWindowPos = position;
+        this.infoWinOpen = true;
+      })
+      // console.log(path.timestamp, path.n_sherlock);
+      // this.infoWinOpen = position;
+      // this.infoWinOpen = true;
     },
     setLegend() {
       var svg = d3
@@ -259,12 +286,10 @@ export default {
         snappedPoints = _.concat(snappedPoints, data.data.snappedPoints);
       }
 
-      console.log(gpsData, snappedPoints);
-
       let currColor = colors[0];
-      let paths = [];
+      const paths = [];
       let currCoordinates = [];
-      
+
       _.each(snappedPoints, point => {
         let snappedCoordinate = new google.maps.LatLng(
           point.location.latitude,
@@ -278,7 +303,7 @@ export default {
             color: currColor,
             snappedCoordinates: currCoordinates,
             n_sherlock: gpsData[orgIndex].n_sherlock,
-            timestamp: gpsData[orgIndex].timestamp
+            timestamp: gpsData[orgIndex].time
           });
           currColor = colors[orgIndex];
           let lastCoord = currCoordinates[currCoordinates.length - 1];
@@ -296,9 +321,11 @@ export default {
         });
       }
 
-      console.log(Array(paths));
-      this.paths = paths;
-      this.center = paths[0].snappedCoordinates[0];
+      this.$nextTick(() => {
+        this.paths = null;
+        this.paths = paths;
+        this.center = paths[0].snappedCoordinates[0];
+      })
 
       this.clearMarkers();
       this.addStartMarker(paths[0].snappedCoordinates[0]);
@@ -318,7 +345,8 @@ export default {
     }
   },
   components: {
-    Heatmap
+    Heatmap,
+    UploadForm
   }
 };
 </script>
@@ -342,5 +370,9 @@ export default {
 .container.fluid,
 .container {
   padding: 0 !important;
+}
+.add-button {
+  right: 80px;
+  bottom: 36px;
 }
 </style>

@@ -23,6 +23,12 @@ func main() {
 	InfluxInit()
 	WebsocketInit(router)
 
+	//Upload
+	router.HandleFunc("/uploads", GetUploads).Methods("GET")
+	router.HandleFunc("/uploads/{id}", GetUpload).Methods("GET")
+	// router.HandleFunc("/uploads", CreateUpload).Methods("POST")
+	// router.HandleFunc("/uploads/{id}", DeleteUpload).Methods("DELETE")
+
 	//Redis
 	router.HandleFunc("/sensors", GetSensors).Methods("GET")
 	router.HandleFunc("/sensors/{id}", GetSensor).Methods("GET")
