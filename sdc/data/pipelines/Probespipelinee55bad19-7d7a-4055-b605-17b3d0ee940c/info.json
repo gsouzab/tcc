@@ -1,0 +1,18 @@
+{
+  "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+  "title" : "Probes pipeline",
+  "description" : "",
+  "created" : 1574012269980,
+  "lastModified" : 1574012299903,
+  "creator" : "admin",
+  "lastModifier" : "admin",
+  "lastRev" : "0",
+  "uuid" : "399b9f68-2f0e-48fb-9008-de4d6f403117",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+  "sdcVersion" : "3.7.1",
+  "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
+}

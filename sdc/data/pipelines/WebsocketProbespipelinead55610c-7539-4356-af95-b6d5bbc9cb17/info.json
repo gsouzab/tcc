@@ -1,0 +1,18 @@
+{
+  "pipelineId" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
+  "title" : "Websocket Probes pipeline",
+  "description" : "",
+  "created" : 1574012269714,
+  "lastModified" : 1574012269796,
+  "creator" : "admin",
+  "lastModifier" : "admin",
+  "lastRev" : "0",
+  "uuid" : "406f965f-feb5-410d-8b24-52fcec0d88b9",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "name" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
+  "sdcVersion" : "3.7.1",
+  "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
+}

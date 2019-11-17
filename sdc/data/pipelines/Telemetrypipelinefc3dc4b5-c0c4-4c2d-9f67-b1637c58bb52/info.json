@@ -1,0 +1,18 @@
+{
+  "pipelineId" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
+  "title" : "Telemetry pipeline",
+  "description" : "",
+  "created" : 1574012269877,
+  "lastModified" : 1574012269935,
+  "creator" : "admin",
+  "lastModifier" : "admin",
+  "lastRev" : "0",
+  "uuid" : "67d7d5e1-db87-475e-bb66-d970be15b1cc",
+  "valid" : true,
+  "metadata" : {
+    "labels" : [ ]
+  },
+  "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
+  "sdcVersion" : "3.7.1",
+  "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
+}

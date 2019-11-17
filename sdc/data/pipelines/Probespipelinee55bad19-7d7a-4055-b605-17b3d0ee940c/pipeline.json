@@ -1,10 +1,10 @@
 {
-  "schemaVersion" : 5,
-  "version" : 9,
-  "pipelineId" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
-  "title" : "Probe Data",
-  "description" : "Probe's data ingestion pipeline",
-  "uuid" : "5e655387-d104-46b3-b4c1-47fa15636d11",
+  "schemaVersion" : 6,
+  "version" : 11,
+  "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+  "title" : "Probes pipeline",
+  "description" : "",
+  "uuid" : "399b9f68-2f0e-48fb-9008-de4d6f403117",
   "configuration" : [ {
     "name" : "executionMode",
     "value" : "STANDALONE"
@@ -82,19 +82,94 @@
     "value" : [ ]
   }, {
     "name" : "statsAggregatorStage",
-    "value" : ""
+    "value" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1"
   }, {
     "name" : "edgeHttpUrl",
     "value" : "http://localhost:18633"
   }, {
     "name" : "runnerIdleTIme",
     "value" : 60
+  }, {
+    "name" : "testOriginStage",
+    "value" : "streamsets-datacollector-dev-lib::com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource::3"
+  }, {
+    "name" : "logLevel",
+    "value" : "INFO"
+  }, {
+    "name" : "amazonEMRConfig.userRegion",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.userRegionCustom",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.s3StagingUri",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.clusterPrefix",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.clusterId",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.terminateCluster",
+    "value" : false
+  }, {
+    "name" : "amazonEMRConfig.enableEMRDebugging",
+    "value" : true
+  }, {
+    "name" : "amazonEMRConfig.s3LogUri",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.serviceRole",
+    "value" : "EMR_DefaultRole"
+  }, {
+    "name" : "amazonEMRConfig.jobFlowRole",
+    "value" : "EMR_EC2_DefaultRole"
+  }, {
+    "name" : "amazonEMRConfig.visibleToAllUsers",
+    "value" : true
+  }, {
+    "name" : "amazonEMRConfig.loggingEnabled",
+    "value" : true
+  }, {
+    "name" : "amazonEMRConfig.ec2SubnetId",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.masterSecurityGroup",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.slaveSecurityGroup",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.instanceCount",
+    "value" : 2
+  }, {
+    "name" : "amazonEMRConfig.masterInstanceType",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.slaveInstanceType",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.masterInstanceTypeCustom",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.slaveInstanceTypeCustom",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.accessKey",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.secretKey",
+    "value" : null
+  }, {
+    "name" : "amazonEMRConfig.provisionNewCluster",
+    "value" : false
   } ],
   "uiInfo" : {
     "previewConfig" : {
       "previewSource" : "CONFIGURED_SOURCE",
       "batchSize" : "1",
-      "timeout" : 10000,
+      "timeout" : "60000",
       "writeToDestinations" : true,
       "executeLifecycleEvents" : true,
       "showHeader" : false,
@@ -107,7 +182,7 @@
     "instanceName" : "MQTTSubscriber_01",
     "library" : "streamsets-datacollector-basic-lib",
     "stageName" : "com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource",
-    "stageVersion" : "2",
+    "stageVersion" : "3",
     "configuration" : [ {
       "name" : "commonConf.brokerUrl",
       "value" : "tcp://mosquitto:1883"
@@ -164,7 +239,7 @@
       "value" : [ ]
     }, {
       "name" : "subscriberConf.topicFilters",
-      "value" : [ "probe" ]
+      "value" : [ "telemetry/probes" ]
     }, {
       "name" : "subscriberConf.dataFormat",
       "value" : "JSON"
@@ -369,16 +444,74 @@
     }, {
       "name" : "stageOnRecordError",
       "value" : "DISCARD"
+    }, {
+      "name" : "subscriberConf.dataFormatConfig.excelHeader",
+      "value" : null
+    }, {
+      "name" : "commonConf.cleanSession",
+      "value" : false
+    }, {
+      "name" : "commonConf.tlsConfig.keyStoreFilePath",
+      "value" : null
+    }, {
+      "name" : "commonConf.tlsConfig.keyStoreType",
+      "value" : "JKS"
+    }, {
+      "name" : "commonConf.tlsConfig.keyStorePassword",
+      "value" : null
+    }, {
+      "name" : "commonConf.tlsConfig.keyStoreAlgorithm",
+      "value" : "SunX509"
     } ],
     "uiInfo" : {
       "description" : "",
       "label" : "Probe Subscriber",
-      "xPos" : 60,
-      "yPos" : 50,
+      "xPos" : 61.295753479003906,
+      "yPos" : 51.295753479003906,
       "stageType" : "SOURCE"
     },
     "inputLanes" : [ ],
     "outputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  }, {
+    "instanceName" : "ExpressionEvaluator_01",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
+    "stageVersion" : "2",
+    "configuration" : [ {
+      "name" : "expressionProcessorConfigs",
+      "value" : [ {
+        "fieldToSet" : "/sensor",
+        "expression" : "${str:toUpper(record:value('/sensor'))}"
+      } ]
+    }, {
+      "name" : "headerAttributeConfigs",
+      "value" : [ { } ]
+    }, {
+      "name" : "fieldAttributeConfigs",
+      "value" : [ {
+        "fieldToSet" : "/"
+      } ]
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    }, {
+      "name" : "stageRequiredFields",
+      "value" : [ ]
+    }, {
+      "name" : "stageRecordPreconditions",
+      "value" : [ ]
+    } ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Uppercase MAC",
+      "xPos" : 280,
+      "yPos" : 50,
+      "stageType" : "PROCESSOR"
+    },
+    "inputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
+    "outputLanes" : [ "ExpressionEvaluator_01OutputLane15396248797930" ],
     "eventLanes" : [ ],
     "services" : [ ]
   }, {
@@ -430,11 +563,11 @@
     "uiInfo" : {
       "description" : "Redis lookup for geopositioning data",
       "label" : "GeoPosition lookpup",
-      "xPos" : 280,
+      "xPos" : 500,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
-    "inputLanes" : [ "MQTTSubscriber_01OutputLane15378113100160" ],
+    "inputLanes" : [ "ExpressionEvaluator_01OutputLane15396248797930" ],
     "outputLanes" : [ "RedisLookupProcessor_01OutputLane15378160930590" ],
     "eventLanes" : [ ],
     "services" : [ ]
@@ -471,7 +604,7 @@
     "uiInfo" : {
       "description" : "",
       "label" : "Measurement field workaroud",
-      "xPos" : 500,
+      "xPos" : 720,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
@@ -495,10 +628,10 @@
       } ]
     }, {
       "name" : "errorHandler.nonExistingFromFieldHandling",
-      "value" : "TO_ERROR"
+      "value" : "CONTINUE"
     }, {
       "name" : "errorHandler.existingToFieldHandling",
-      "value" : "TO_ERROR"
+      "value" : "CONTINUE"
     }, {
       "name" : "errorHandler.multipleFromFieldsMatching",
       "value" : "TO_ERROR"
@@ -507,7 +640,7 @@
       "value" : "TO_ERROR"
     }, {
       "name" : "stageRequiredFields",
-      "value" : [ "/location" ]
+      "value" : [ ]
     }, {
       "name" : "stageRecordPreconditions",
       "value" : [ ]
@@ -515,7 +648,7 @@
     "uiInfo" : {
       "description" : "",
       "label" : "Rename geoposition fields",
-      "xPos" : 720,
+      "xPos" : 940,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
@@ -540,11 +673,14 @@
     }, {
       "name" : "stageRecordPreconditions",
       "value" : [ ]
+    }, {
+      "name" : "constant",
+      "value" : null
     } ],
     "uiInfo" : {
       "description" : "Removes unnecessary fields from redis lookup",
       "label" : "Redis field remover",
-      "xPos" : 940,
+      "xPos" : 1160,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
@@ -553,22 +689,49 @@
     "eventLanes" : [ ],
     "services" : [ ]
   }, {
-    "instanceName" : "JavaScriptEvaluator_01",
+    "instanceName" : "FieldTypeConverter_01",
     "library" : "streamsets-datacollector-basic-lib",
-    "stageName" : "com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
+    "stageName" : "com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
     "stageVersion" : "2",
     "configuration" : [ {
-      "name" : "processingMode",
-      "value" : "BATCH"
+      "name" : "convertBy",
+      "value" : "BY_FIELD"
     }, {
-      "name" : "initScript",
-      "value" : "/**\n * Available Objects:\n * \n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters and long-lived resources.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n *                          to check if the field is typed field with value null\n *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n *                          Pass true to this function to create a list map (ordered map)\n */\nstate['connection'] = new Connection().open();"
+      "name" : "fieldTypeConverterConfigs",
+      "value" : [ {
+        "fields" : [ "/timestamp" ],
+        "targetType" : "LONG",
+        "treatInputFieldAsDate" : false,
+        "dataLocale" : "en,US",
+        "scale" : -1,
+        "decimalScaleRoundingStrategy" : "ROUND_UNNECESSARY",
+        "dateFormat" : "YYYY_MM_DD",
+        "zonedDateTimeFormat" : "ISO_ZONED_DATE_TIME",
+        "encoding" : "UTF-8"
+      }, {
+        "fields" : [ "/RSSI", "/Channel" ],
+        "targetType" : "INTEGER",
+        "treatInputFieldAsDate" : false,
+        "dataLocale" : "en,US",
+        "scale" : -1,
+        "decimalScaleRoundingStrategy" : "ROUND_UNNECESSARY",
+        "dateFormat" : "YYYY_MM_DD",
+        "zonedDateTimeFormat" : "ISO_ZONED_DATE_TIME",
+        "encoding" : "UTF-8"
+      } ]
     }, {
-      "name" : "script",
-      "value" : "/**\n * Available constants: \n *   They are to assign a type to a field with a value null.\n *   NULL_BOOLEAN, NULL_CHAR, NULL_BYTE, NULL_SHORT, NULL_INTEGER, NULL_LONG\n *   NULL_FLOATNULL_DOUBLE, NULL_DATE, NULL_DATETIME, NULL_TIME, NULL_DECIMAL\n *   NULL_BYTE_ARRAY, NULL_STRING, NULL_LIST, NULL_MAP\n *\n * Available Objects:\n * \n *  records: an array of records to process, depending on the JavaScript processor\n *           processing mode it may have 1 record or all the records in the batch.\n *\n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *\n *  output.write(record): writes a record to processor output\n *\n *  error.write(record, message): sends a record to error\n *\n *  sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above\n *                            to check if the field is typed field with value null\n *  sdcFunctions.createRecord(String recordId): Creates a new record.\n *                            Pass a recordId to uniquely identify the record and include enough information to track down the record source. \n *  sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record.\n *                            Pass true to this function to create a list map (ordered map)\n *\n *  sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                            Create new empty event with standard headers.\n *  sdcFunctions.toEvent(Record): Send event to event stream\n *                            Only events created with sdcFunctions.createEvent are supported.\n *  sdcFunctions.isPreview(): Determine if pipeline is in preview mode.\n *\n * Available Record Header Variables:n *\n *  record.attributes: a map of record header attributes.\n *\n *  record.<header name>: get the value of 'header name'.\n */\n\n// Sample JavaScript code\nfor(var i = 0; i < records.length; i++) {\n  try {\n    var rssi = records[i].rssi;    \n    var distance = Math.pow(10, (rssi) / (10 * 1.7));\n    records[i].distance = distance;\n    \n    records[i].rssi = 0;  \n\tlog.info(\"teste\");\n    // Write record to processor output\n    output.write(records[i]);\n  } catch (e) {\n    // Send record to error\n    error.write(records[i], e);\n  }\n}"
-    }, {
-      "name" : "destroyScript",
-      "value" : "/**\n * Available Objects:\n * \n *  state: a dict that is preserved between invocations of this script. \n *        Useful for caching bits of data e.g. counters and long-lived resources.\n *\n *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n *   sdcFunctions.getFieldNull(Record, 'field path'): Receive a constant defined above \n *                          to check if the field is typed field with value null\n *   sdcFunctions.createMap(boolean listMap): Create a map for use as a field in a record. \n *                          Pass true to this function to create a list map (ordered map)\n *   sdcFunctions.createEvent(String type, int version): Creates a new event.\n *                          Create new empty event with standard headers.\n *   sdcFunctions.toEvent(Record): Send event to event stream\n *                          Only events created with sdcFunctions.createEvent are supported.\n */\n\nstate['connection'].close();"
+      "name" : "wholeTypeConverterConfigs",
+      "value" : [ {
+        "sourceType" : "INTEGER",
+        "targetType" : "INTEGER",
+        "treatInputFieldAsDate" : false,
+        "dataLocale" : "en,US",
+        "scale" : -1,
+        "decimalScaleRoundingStrategy" : "ROUND_UNNECESSARY",
+        "dateFormat" : "YYYY_MM_DD",
+        "zonedDateTimeFormat" : "ISO_ZONED_DATE_TIME",
+        "encoding" : "UTF-8"
+      } ]
     }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
@@ -581,13 +744,13 @@
     } ],
     "uiInfo" : {
       "description" : "",
-      "label" : "Distance Calculator",
-      "xPos" : 1160,
+      "label" : "Fields type cast",
+      "xPos" : 1380,
       "yPos" : 50,
       "stageType" : "PROCESSOR"
     },
     "inputLanes" : [ "FieldRemover_01OutputLane15379684389410" ],
-    "outputLanes" : [ "JavaScriptEvaluator_01OutputLane15383242847180" ],
+    "outputLanes" : [ "FieldTypeConverter_01OutputLane15498897416360" ],
     "eventLanes" : [ ],
     "services" : [ ]
   }, {
@@ -597,16 +760,16 @@
     "stageVersion" : "1",
     "configuration" : [ {
       "name" : "conf.url",
-      "value" : "http://influxdb:8086"
+      "value" : "http://influx:8086"
     }, {
       "name" : "conf.username",
-      "value" : "influx"
+      "value" : "tcc"
     }, {
       "name" : "conf.password",
-      "value" : "123456"
+      "value" : "tcc_ufrj"
     }, {
       "name" : "conf.dbName",
-      "value" : "probes"
+      "value" : "tcc_data"
     }, {
       "name" : "conf.autoCreate",
       "value" : true
@@ -624,16 +787,16 @@
       "value" : "/measurement"
     }, {
       "name" : "conf.fieldMapping.timeField",
-      "value" : "/createdAt"
+      "value" : "/timestamp"
     }, {
       "name" : "conf.fieldMapping.timeUnit",
-      "value" : "MILLISECONDS"
+      "value" : "SECONDS"
     }, {
       "name" : "conf.fieldMapping.tagFields",
-      "value" : [ "/sensor", "/longitude", "/latitude", "/srcMac" ]
+      "value" : [ "/sensor", "/SSID" ]
     }, {
       "name" : "conf.fieldMapping.valueFields",
-      "value" : [ "/rssi", "/distance" ]
+      "value" : [ "/RSSI", "/Channel", "/srcMac", "/dstMac" ]
     }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
@@ -647,11 +810,11 @@
     "uiInfo" : {
       "description" : "",
       "label" : "Influx Data persistence",
-      "xPos" : 1380,
+      "xPos" : 1600,
       "yPos" : 50,
       "stageType" : "TARGET"
     },
-    "inputLanes" : [ "JavaScriptEvaluator_01OutputLane15383242847180" ],
+    "inputLanes" : [ "FieldTypeConverter_01OutputLane15498897416360" ],
     "outputLanes" : [ ],
     "eventLanes" : [ ],
     "services" : [ ]
@@ -675,27 +838,44 @@
     "services" : [ ]
   },
   "info" : {
-    "pipelineId" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
-    "title" : "Probe Data",
-    "description" : "Probe's data ingestion pipeline",
-    "created" : 1538322918437,
-    "lastModified" : 1538327724591,
+    "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+    "title" : "Probes pipeline",
+    "description" : "",
+    "created" : 1574012269980,
+    "lastModified" : 1574012296671,
     "creator" : "admin",
     "lastModifier" : "admin",
     "lastRev" : "0",
-    "uuid" : "3bc72399-4b75-496c-ada6-f226fa852d21",
+    "uuid" : "6fb4dfee-1e1a-477c-a7fb-2d47a0f9e1eb",
     "valid" : true,
     "metadata" : {
       "labels" : [ ]
     },
-    "name" : "ProbeData6f139fe4-4615-4098-8334-a38d428565b4",
-    "sdcVersion" : "3.2.0.0",
+    "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+    "sdcVersion" : "3.7.1",
     "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
   },
   "metadata" : {
     "labels" : [ ]
   },
-  "statsAggregatorStage" : null,
+  "statsAggregatorStage" : {
+    "instanceName" : "Discard_StatsAggregatorStage",
+    "library" : "streamsets-datacollector-basic-lib",
+    "stageName" : "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget",
+    "stageVersion" : "1",
+    "configuration" : [ ],
+    "uiInfo" : {
+      "description" : "",
+      "label" : "Stats Aggregator - Discard",
+      "xPos" : 1380,
+      "yPos" : 50,
+      "stageType" : "TARGET"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ ],
+    "eventLanes" : [ ],
+    "services" : [ ]
+  },
   "startEventStages" : [ {
     "instanceName" : "Discard_StartEventStage",
     "library" : "streamsets-datacollector-basic-lib",
@@ -732,11 +912,249 @@
     "eventLanes" : [ ],
     "services" : [ ]
   } ],
+  "testOriginStage" : {
+    "instanceName" : "com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource_TestOriginStage",
+    "library" : "streamsets-datacollector-dev-lib",
+    "stageName" : "com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource",
+    "stageVersion" : "3",
+    "configuration" : [ {
+      "name" : "rawData",
+      "value" : "{\n  \"f1\": \"abc\",\n  \"f2\": \"xyz\",\n  \"f3\": \"lmn\"\n}"
+    }, {
+      "name" : "stopAfterFirstBatch",
+      "value" : false
+    }, {
+      "name" : "stageOnRecordError",
+      "value" : "TO_ERROR"
+    } ],
+    "uiInfo" : {
+      "stageType" : "SOURCE",
+      "label" : "Test Origin - Dev Raw Data Source"
+    },
+    "inputLanes" : [ ],
+    "outputLanes" : [ "com_streamsets_pipeline_stage_devtest_rawdata_RawDataDSource_TestOriginStageOutputLane1" ],
+    "eventLanes" : [ ],
+    "services" : [ {
+      "service" : "com.streamsets.pipeline.api.service.dataformats.DataFormatParserService",
+      "serviceVersion" : 1,
+      "configuration" : [ {
+        "name" : "displayFormats",
+        "value" : "DELIMITED,JSON,LOG,SDC_JSON,TEXT,XML"
+      }, {
+        "name" : "dataFormat",
+        "value" : "JSON"
+      }, {
+        "name" : "dataFormatConfig.compression",
+        "value" : "NONE"
+      }, {
+        "name" : "dataFormatConfig.filePatternInArchive",
+        "value" : "*"
+      }, {
+        "name" : "dataFormatConfig.charset",
+        "value" : "UTF-8"
+      }, {
+        "name" : "dataFormatConfig.removeCtrlChars",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.textMaxLineLen",
+        "value" : 1024
+      }, {
+        "name" : "dataFormatConfig.useCustomDelimiter",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.customDelimiter",
+        "value" : "\\r\\n"
+      }, {
+        "name" : "dataFormatConfig.includeCustomDelimiterInTheText",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.jsonContent",
+        "value" : "MULTIPLE_OBJECTS"
+      }, {
+        "name" : "dataFormatConfig.jsonMaxObjectLen",
+        "value" : 4096
+      }, {
+        "name" : "dataFormatConfig.csvFileFormat",
+        "value" : "CSV"
+      }, {
+        "name" : "dataFormatConfig.csvHeader",
+        "value" : "NO_HEADER"
+      }, {
+        "name" : "dataFormatConfig.csvAllowExtraColumns",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.csvExtraColumnPrefix",
+        "value" : "_extra_"
+      }, {
+        "name" : "dataFormatConfig.csvMaxObjectLen",
+        "value" : 1024
+      }, {
+        "name" : "dataFormatConfig.csvCustomDelimiter",
+        "value" : "|"
+      }, {
+        "name" : "dataFormatConfig.csvCustomEscape",
+        "value" : "\\"
+      }, {
+        "name" : "dataFormatConfig.csvCustomQuote",
+        "value" : "\""
+      }, {
+        "name" : "dataFormatConfig.csvEnableComments",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.csvCommentMarker",
+        "value" : "#"
+      }, {
+        "name" : "dataFormatConfig.csvIgnoreEmptyLines",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.csvRecordType",
+        "value" : "LIST_MAP"
+      }, {
+        "name" : "dataFormatConfig.csvSkipStartLines",
+        "value" : 0
+      }, {
+        "name" : "dataFormatConfig.parseNull",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.nullConstant",
+        "value" : "\\\\N"
+      }, {
+        "name" : "dataFormatConfig.xmlRecordElement",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.includeFieldXpathAttributes",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.xPathNamespaceContext",
+        "value" : [ ]
+      }, {
+        "name" : "dataFormatConfig.outputFieldAttributes",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.xmlMaxObjectLen",
+        "value" : 4096
+      }, {
+        "name" : "dataFormatConfig.logMode",
+        "value" : "COMMON_LOG_FORMAT"
+      }, {
+        "name" : "dataFormatConfig.logMaxObjectLen",
+        "value" : 1024
+      }, {
+        "name" : "dataFormatConfig.retainOriginalLine",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.customLogFormat",
+        "value" : "%h %l %u %t \"%r\" %>s %b"
+      }, {
+        "name" : "dataFormatConfig.regex",
+        "value" : "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)"
+      }, {
+        "name" : "dataFormatConfig.fieldPathsToGroupName",
+        "value" : [ {
+          "fieldPath" : "/",
+          "group" : 1
+        } ]
+      }, {
+        "name" : "dataFormatConfig.grokPatternDefinition",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.grokPattern",
+        "value" : "%{COMMONAPACHELOG}"
+      }, {
+        "name" : "dataFormatConfig.onParseError",
+        "value" : "ERROR"
+      }, {
+        "name" : "dataFormatConfig.maxStackTraceLines",
+        "value" : 50
+      }, {
+        "name" : "dataFormatConfig.enableLog4jCustomLogFormat",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.log4jCustomLogFormat",
+        "value" : "%r [%t] %-5p %c %x - %m%n"
+      }, {
+        "name" : "dataFormatConfig.avroSchemaSource",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.avroSchema",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.schemaRegistryUrls",
+        "value" : [ ]
+      }, {
+        "name" : "dataFormatConfig.schemaLookupMode",
+        "value" : "SUBJECT"
+      }, {
+        "name" : "dataFormatConfig.subject",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.schemaId",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.protoDescriptorFile",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.messageType",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.isDelimited",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.binaryMaxObjectLen",
+        "value" : 1024
+      }, {
+        "name" : "dataFormatConfig.datagramMode",
+        "value" : "SYSLOG"
+      }, {
+        "name" : "dataFormatConfig.typesDbPath",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.convertTime",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.excludeInterval",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.authFilePath",
+        "value" : null
+      }, {
+        "name" : "dataFormatConfig.netflowOutputValuesMode",
+        "value" : "RAW_AND_INTERPRETED"
+      }, {
+        "name" : "dataFormatConfig.maxTemplateCacheSize",
+        "value" : -1
+      }, {
+        "name" : "dataFormatConfig.templateCacheTimeoutMs",
+        "value" : -1
+      }, {
+        "name" : "dataFormatConfig.netflowOutputValuesModeDatagram",
+        "value" : "RAW_AND_INTERPRETED"
+      }, {
+        "name" : "dataFormatConfig.maxTemplateCacheSizeDatagram",
+        "value" : -1
+      }, {
+        "name" : "dataFormatConfig.templateCacheTimeoutMsDatagram",
+        "value" : -1
+      }, {
+        "name" : "dataFormatConfig.wholeFileMaxObjectLen",
+        "value" : 8192
+      }, {
+        "name" : "dataFormatConfig.rateLimit",
+        "value" : "-1"
+      }, {
+        "name" : "dataFormatConfig.verifyChecksum",
+        "value" : false
+      }, {
+        "name" : "dataFormatConfig.excelHeader",
+        "value" : null
+      } ]
+    } ]
+  },
   "valid" : true,
   "issues" : {
+    "pipelineIssues" : [ ],
     "issueCount" : 0,
-    "stageIssues" : { },
-    "pipelineIssues" : [ ]
+    "stageIssues" : { }
   },
   "previewable" : true
 }

@@ -1,0 +1,71 @@
+{
+  "MQTTSubscriber_01" : {
+    "description" : "",
+    "label" : "Probe Subscriber",
+    "xPos" : 60,
+    "yPos" : 50,
+    "stageType" : "SOURCE"
+  },
+  "ExpressionEvaluator_01" : {
+    "description" : "",
+    "label" : "Uppercase MAC",
+    "xPos" : 280,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  "RecordDeduplicator_01" : {
+    "outputStreamLabels" : [ "Unique Records", "Duplicate Records" ],
+    "yPos" : 110,
+    "stageType" : "PROCESSOR",
+    "description" : "",
+    "label" : "Record Deduplicator 1",
+    "xPos" : 500
+  },
+  ":pipeline:" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : "1",
+      "timeout" : "60000",
+      "writeToDestinations" : true,
+      "executeLifecycleEvents" : true,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
+  "Aggregator_01" : {
+    "description" : "",
+    "label" : "Aggregator 1",
+    "xPos" : 720,
+    "yPos" : 40,
+    "stageType" : "PROCESSOR"
+  },
+  "JavaScriptEvaluator_01" : {
+    "description" : "",
+    "label" : "JavaScript Evaluator 1",
+    "xPos" : 940,
+    "yPos" : 190,
+    "stageType" : "PROCESSOR"
+  },
+  "HTTPClient_01" : {
+    "description" : "",
+    "label" : "HTTP Client 1",
+    "xPos" : 1160,
+    "yPos" : 190,
+    "stageType" : "TARGET"
+  },
+  "Trash_01" : {
+    "description" : "",
+    "label" : "Trash 1",
+    "xPos" : 720,
+    "yPos" : 170,
+    "stageType" : "TARGET"
+  },
+  "Trash_02" : {
+    "description" : "",
+    "label" : "Trash 2",
+    "xPos" : 940,
+    "yPos" : 40,
+    "stageType" : "TARGET"
+  }
+}

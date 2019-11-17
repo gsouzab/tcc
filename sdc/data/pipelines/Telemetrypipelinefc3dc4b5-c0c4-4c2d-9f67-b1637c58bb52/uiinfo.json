@@ -1,36 +1,57 @@
 {
   "MQTTSubscriber_01" : {
     "description" : "",
-    "label" : "Probe Subscriber",
+    "label" : "Telemetry Subscriber",
     "xPos" : 60,
     "yPos" : 50,
     "stageType" : "SOURCE"
   },
   "InfluxDB_01" : {
     "description" : "",
-    "label" : "Influx Data persistence",
-    "xPos" : 1380,
+    "label" : "Telemetry DB",
+    "xPos" : 1820,
     "yPos" : 50,
     "stageType" : "TARGET"
+  },
+  "ExpressionEvaluator_01" : {
+    "description" : "",
+    "label" : "Uppercase MAC",
+    "xPos" : 280,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
   },
   "RedisLookupProcessor_01" : {
     "description" : "Redis lookup for geopositioning data",
     "label" : "GeoPosition lookpup",
-    "xPos" : 280,
+    "xPos" : 500,
     "yPos" : 50,
     "stageType" : "PROCESSOR"
   },
   "StaticLookup_01" : {
     "description" : "",
     "label" : "Measurement field workaroud",
-    "xPos" : 500,
+    "xPos" : 720,
     "yPos" : 50,
     "stageType" : "PROCESSOR"
   },
   "FieldRemover_01" : {
     "description" : "Removes unnecessary fields from redis lookup",
     "label" : "Redis field remover",
-    "xPos" : 940,
+    "xPos" : 1160,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  "FieldTypeConverter_01" : {
+    "description" : "",
+    "label" : "createdAt",
+    "xPos" : 1380,
+    "yPos" : 50,
+    "stageType" : "PROCESSOR"
+  },
+  "Aggregator_02" : {
+    "description" : "",
+    "label" : "AVGs aggregator",
+    "xPos" : 1600,
     "yPos" : 50,
     "stageType" : "PROCESSOR"
   },
@@ -48,15 +69,22 @@
   },
   "JavaScriptEvaluator_01" : {
     "description" : "",
-    "label" : "Distance Calculator",
-    "xPos" : 1160,
-    "yPos" : 50,
+    "label" : "Aggregation parser",
+    "xPos" : 1820,
+    "yPos" : 200,
     "stageType" : "PROCESSOR"
+  },
+  "HTTPClient_01" : {
+    "description" : "",
+    "label" : "HTTP Client 1",
+    "xPos" : 2035.146484375,
+    "yPos" : 200,
+    "stageType" : "TARGET"
   },
   "FieldRenamer_01" : {
     "description" : "",
     "label" : "Rename geoposition fields",
-    "xPos" : 720,
+    "xPos" : 940,
     "yPos" : 50,
     "stageType" : "PROCESSOR"
   }

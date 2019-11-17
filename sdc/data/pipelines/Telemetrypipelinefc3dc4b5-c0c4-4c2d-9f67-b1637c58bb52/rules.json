@@ -10,7 +10,7 @@
     "condition" : "${value() > 100}",
     "sendEmail" : false,
     "enabled" : false,
-    "timestamp" : 1537811298333,
+    "timestamp" : 1539624123871,
     "valid" : true
   }, {
     "id" : "stageErrorAlertID",
@@ -21,7 +21,7 @@
     "condition" : "${value() > 100}",
     "sendEmail" : false,
     "enabled" : false,
-    "timestamp" : 1537811298333,
+    "timestamp" : 1539624123871,
     "valid" : true
   }, {
     "id" : "idleGaugeID",
@@ -32,7 +32,7 @@
     "condition" : "${time:now() - value() > 120000}",
     "sendEmail" : false,
     "enabled" : false,
-    "timestamp" : 1537811298333,
+    "timestamp" : 1539624123871,
     "valid" : true
   }, {
     "id" : "batchTimeAlertID",
@@ -43,7 +43,7 @@
     "condition" : "${value() > 200}",
     "sendEmail" : false,
     "enabled" : false,
-    "timestamp" : 1537811298333,
+    "timestamp" : 1539624123871,
     "valid" : true
   }, {
     "id" : "memoryLimitAlertID",
@@ -54,12 +54,12 @@
     "condition" : "${value() > (jvm:maxMemoryMB() * 0.65)}",
     "sendEmail" : false,
     "enabled" : false,
-    "timestamp" : 1537811298333,
+    "timestamp" : 1539624123871,
     "valid" : true
   } ],
   "dataRuleDefinitions" : [ ],
   "driftRuleDefinitions" : [ ],
-  "uuid" : "173e9950-9020-4f7c-bc3e-64e3b3d54a28",
+  "uuid" : "1620562f-08e3-4e81-9764-a95a84f38cfa",
   "configuration" : [ {
     "name" : "emailIDs",
     "value" : [ ]
