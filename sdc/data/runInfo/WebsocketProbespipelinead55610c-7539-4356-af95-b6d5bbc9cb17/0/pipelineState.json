@@ -2,11 +2,13 @@
   "pipelineId" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
   "rev" : "0",
   "user" : "admin",
-  "status" : "EDITED",
-  "message" : "Pipeline edited",
-  "timeStamp" : 1574012269761,
+  "status" : "STARTING",
+  "message" : null,
+  "timeStamp" : 1574013093753,
   "attributes" : {
-    "IS_REMOTE_PIPELINE" : false
+    "IS_REMOTE_PIPELINE" : false,
+    "RUNTIME_PARAMETERS" : null,
+    "INTERCEPTOR_CONFIGS" : [ ]
   },
   "executionMode" : "STANDALONE",
   "metrics" : null,

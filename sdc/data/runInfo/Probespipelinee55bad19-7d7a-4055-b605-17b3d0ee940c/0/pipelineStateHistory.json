@@ -14,3 +14,21 @@
   "nextRetryTimeStamp" : 0,
   "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c"
 }
+{
+  "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+  "rev" : "0",
+  "user" : "admin",
+  "status" : "STARTING",
+  "message" : null,
+  "timeStamp" : 1574013093651,
+  "attributes" : {
+    "IS_REMOTE_PIPELINE" : false,
+    "RUNTIME_PARAMETERS" : null,
+    "INTERCEPTOR_CONFIGS" : [ ]
+  },
+  "executionMode" : "STANDALONE",
+  "metrics" : null,
+  "retryAttempt" : 0,
+  "nextRetryTimeStamp" : 0,
+  "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c"
+}

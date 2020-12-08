@@ -2,11 +2,13 @@
   "pipelineId" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
   "rev" : "0",
   "user" : "admin",
-  "status" : "EDITED",
-  "message" : "Pipeline edited",
-  "timeStamp" : 1574012269906,
+  "status" : "STARTING",
+  "message" : null,
+  "timeStamp" : 1574013093706,
   "attributes" : {
-    "IS_REMOTE_PIPELINE" : false
+    "IS_REMOTE_PIPELINE" : false,
+    "RUNTIME_PARAMETERS" : null,
+    "INTERCEPTOR_CONFIGS" : [ ]
   },
   "executionMode" : "STANDALONE",
   "metrics" : null,
