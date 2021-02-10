@@ -44,8 +44,8 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: 'Bus', icon: 'map', route: 'map' },
-        { title: 'Map', icon: 'directions_bus', route: 'bus' },
+        { title: 'Map', icon: 'map', route: 'map' },
+        // { title: 'Map', icon: 'directions_bus', route: 'bus' },
         { title: 'Dashboard', icon: 'dashboard', route: 'dashboard' }
       ]
     }

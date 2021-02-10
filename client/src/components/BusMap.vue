@@ -1,9 +1,5 @@
 <template>
   <v-container fluid id="bus-map">
-    <UploadForm :visible="showUploadForm"
-                @close="showUploadForm=false"
-                @onSave="" />
-
     <gmap-map
       :center="center"
       :zoom="zoom"
