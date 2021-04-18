@@ -8,13 +8,7 @@
     app>
 
     <v-toolbar flat>
-      <v-list>
-        <v-list-tile>
-          <v-list-tile-title class="title">
-
-          </v-list-tile-title>
-        </v-list-tile>
-      </v-list>
+      <img src="../../assets/logo.png" width="100%">
     </v-toolbar>
 
     <v-divider></v-divider>

@@ -105,7 +105,7 @@ export default {
           },
           yaxis: {
             title: 'ºC',
-            range: [-10, 50]
+            range: [-10, 50],
           },
         },
       },
@@ -136,7 +136,7 @@ export default {
           },
           yaxis: {
             title: '%',
-            range: [0, 100]
+            range: [0, 100],
           },
         },
       },
@@ -144,7 +144,7 @@ export default {
         uuid: 'pres-chart',
         traces: [],
         layout: {
-          // barmode: 'stack',
+          barmode: 'stack',
           margin: {
             t: '20px',
           },
@@ -152,7 +152,7 @@ export default {
             type: 'date',
           },
           yaxis: {
-            title: '# de dispositivos'
+            title: '# de dispositivos',
           },
         },
       },
@@ -161,8 +161,9 @@ export default {
   async mounted() {
     this.sensors = await this.getSensors();
 
-    this.initTraces(this.sensors);
-    this.addOnMessageListener();
+    this.loading = true;
+    await this.initRealtimeData();
+    this.loading = false;
   },
   methods: {
     async getSensors() {
@@ -178,22 +179,22 @@ export default {
       return [];
     },
     initTraces(sensors) {
-      this.temperatureChart.traces  = [];
-      this.co2Chart.traces          = [];
-      this.humidityChart.traces     = [];
-      this.presenceChart.traces     = [];
+      this.temperatureChart.traces = [];
+      this.co2Chart.traces = [];
+      this.humidityChart.traces = [];
+      this.presenceChart.traces = [];
 
-      this.temperatureChartCount    = 0;
-      this.co2ChartCount            = 0;
-      this.humidityChartCount       = 0;
-      this.presenceChartCount       = 0;
+      this.temperatureChartCount = 0;
+      this.co2ChartCount = 0;
+      this.humidityChartCount = 0;
+      this.presenceChartCount = 0;
 
       _.forEach(sensors, (value, key) => {
         sensorsConfig[value.mac] = { index: key, color: '#5e9e7e' };
-        this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'}});
-        this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
-        this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: {shape: 'spline'} });
-        this.presenceChart.traces.push({ x: [], y: [], name: value.name, type: 'scatter' , fill: 'tozeroy'});
+        this.temperatureChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.co2Chart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.humidityChart.traces.push({ x: [], y: [], name: value.name, line: { shape: 'spline' } });
+        this.presenceChart.traces.push({ x: [], y: [], name: value.name, type: 'scatter', fill: 'tozeroy' });
       });
     },
 
@@ -238,16 +239,16 @@ export default {
 
       this.$probesWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
-        for (let m of measurements) {
-          if (m !== "") this.addProbeData(JSON.parse(m))
+        for (const m of measurements) {
+          if (m !== '') this.addProbeData(JSON.parse(m));
         }
-      }
+      };
     },
-    async getPresenceData(whereStartTime, whereEndTime, sensors) {
+    async getPresenceData(whereStartTime, whereEndTime) {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
       const maxPoints = 1000;
       const selectMeanInterval = Math.ceil(duration / maxPoints);
-      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT CEIL(MOVING_AVERAGE(COUNT("srcMac"),5)) FROM "probe_data" WHERE time >= '${whereStartTime}' AND time <= '${whereEndTime}' GROUP BY sensor, time(1m)`
+      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(DISTINCT("srcMac")) FROM "probe_data" WHERE time >= '${moment(whereStartTime).toISOString()}' AND time <= '${moment(whereEndTime).toISOString()}' GROUP BY time(${selectMeanInterval}m), sensor`;
 
       try {
         const response = await axios.get(query);
@@ -274,7 +275,7 @@ export default {
           whereEndTime,
           selectMeanField,
           selectMeanInterval: selectMeanInterval.toString(),
-          GroupByTag: 'sensor'
+          GroupByTag: 'sensor',
         });
 
         if (response.status === 200) {
@@ -287,38 +288,56 @@ export default {
       return [];
     },
     async onDateRangeChange(startDate, endDate) {
+      this.loading = true;
+
       if (startDate === null && endDate === null) {
-        this.addOnMessageListener();
-        this.initTraces(this.sensors);
+        await this.initRealtimeData();
       } else {
         this.$telemetryWS.onmessage = null;
         this.$probesWS.onmessage = null;
 
         this.initTraces(this.sensors);
 
-        this.loading = true;
-        const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, "temp");
-        const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, "co2");
-        const humData = await this.getTelemetryData(startDate, endDate, this.sensors, "hum");
+        const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, 'temp');
+        const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, 'co2');
+        const humData = await this.getTelemetryData(startDate, endDate, this.sensors, 'hum');
         const presenceData = await this.getPresenceData(startDate, endDate, this.sensors);
 
         this.fillTelemetryMeasurements(
-          {chart: "temperatureChart", data: temperatureData},
-          {chart: "co2Chart", data: co2Data},
-          {chart: "humidityChart", data: humData});
+          { chart: 'temperatureChart', data: temperatureData },
+          { chart: 'co2Chart', data: co2Data },
+          { chart: 'humidityChart', data: humData });
 
         this.fillPresenceMeasurements(presenceData);
-
-        this.loading = false;
       }
+      this.loading = false;
+    },
+    async initRealtimeData() {
+      const now = moment();
+      const endDate = now.format('YYYY-MM-DD\\THH:mm:ssZ');
+      const startDate = now.subtract(1, 'minute').format('YYYY-MM-DD\\THH:mm:ssZ');
+
+      const temperatureData = await this.getTelemetryData(startDate, endDate, this.sensors, 'temp');
+      const co2Data = await this.getTelemetryData(startDate, endDate, this.sensors, 'co2');
+      const humData = await this.getTelemetryData(startDate, endDate, this.sensors, 'hum');
+      const presenceData = await this.getPresenceData(startDate, endDate, this.sensors);
+
+      this.initTraces(this.sensors);
+
+      this.fillTelemetryMeasurements(
+        { chart: 'temperatureChart', data: temperatureData },
+        { chart: 'co2Chart', data: co2Data },
+        { chart: 'humidityChart', data: humData });
+
+      this.fillPresenceMeasurements(presenceData);
+      this.addOnMessageListener();
     },
     fillTelemetryMeasurements(...telemetryMeasurements) {
-
-      for (let measurement of telemetryMeasurements) {
+      for (const measurement of telemetryMeasurements) {
         _.forEach(measurement.data, (groupedData) => {
           if (!sensorsConfig[groupedData.tags.sensor]) return;
 
-          let traceIndex = sensorsConfig[groupedData.tags.sensor].index;
+          const traceIndex = sensorsConfig[groupedData.tags.sensor].index;
 
           _.forEach(groupedData.values, (data) => {
             if (data[1] !== null) {
@@ -334,19 +353,19 @@ export default {
       }
     },
     fillPresenceMeasurements(presenceData) {
-      for (let sensorData of presenceData) {
+      for (const sensorData of presenceData) {
         if (!sensorsConfig[sensorData.tags.sensor]) return;
 
         const traceIndex = sensorsConfig[sensorData.tags.sensor].index;
         _.forEach(sensorData.values, (data) => {
-            this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
-            this.presenceChart.traces[traceIndex].y.push(data[1]);
-            this.presenceChartCount++;
+          this.presenceChart.traces[traceIndex].x.push(new Date(data[0]));
+          this.presenceChart.traces[traceIndex].y.push(data[1]);
+          this.presenceChartCount++;
         });
       }
       this.presenceChart.layout.datarevision = new Date().getTime();
-    }
-  }
+    },
+  },
 };
 </script>
 

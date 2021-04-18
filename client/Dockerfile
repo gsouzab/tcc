@@ -1,10 +1,11 @@
-FROM node:alpine
+FROM node:9.11.1-alpine
 
-RUN npm install -g yarn
-
-ADD . /usr/src/app
+WORKDIR /app
+COPY package.json .
 
 # Install dependencies
-WORKDIR /usr/src/app
+RUN yarn install
+
+ADD . /app
 
 CMD npm start

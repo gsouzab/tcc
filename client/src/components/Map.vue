@@ -87,7 +87,7 @@
           <div v-html="infoContent"></div>
         </gmap-info-window>
 
-        <gmap-cluster :zoomOnClick="true">
+        <gmap-cluster :zoomOnClick="true" :maxZoom=21>
           <gmap-marker
             :key="index"
             v-for="(s, index) in sensors"
@@ -119,7 +119,7 @@
 <script>
 
 import axios from 'axios';
-import {loaded, gmapApi} from 'vue2-google-maps';
+import { loaded, gmapApi } from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
 import Heatmap from '@/components/Heatmap';
 import GroundOverlay from '@/components/GroundOverlay';
@@ -127,7 +127,7 @@ import DatetimeFieldPicker from '@/components/DatetimeFieldPicker';
 import _ from 'lodash';
 import * as d3 from 'd3';
 
-var sensorsConfig = {};
+const sensorsConfig = {};
 
 export default {
   async created() {
@@ -148,7 +148,7 @@ export default {
       heatmapData: [],
       heatmapOptions: {
         radius: 80,
-        opacity: 0.8
+        opacity: 0.8,
       },
       measurements: new Map(),
       measurementsTracker: 0,
@@ -173,87 +173,88 @@ export default {
       infoOptions: {
         pixelOffset: {
           width: 0,
-          height: -35
-        }
+          height: -35,
+        },
       },
     };
   },
   computed: {
     google: gmapApi,
     measurementsArray() {
-      return this.measurementsTracker && Array.from(this.measurements.values()) || [];
+      return (this.measurementsTracker && Array.from(this.measurements.values())) || [];
     },
     heatmapDataArray() {
-      return this.probesTracker && Array.from(this.probes.values()) || [];
+      return (this.probesTracker && Array.from(this.probes.values())) || [];
     },
   },
   methods: {
     setLegend() {
-      var w = 300, h = 40;
+      const w = 300,
+        h = 40;
 
-      var key = d3.select("#legend")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .style("position", "absolute")
-        .style("right", "10px")
-        .style("top", "0px");
+      const key = d3.select('#legend')
+        .append('svg')
+        .attr('width', w)
+        .attr('height', h)
+        .style('position', 'absolute')
+        .style('right', '10px')
+        .style('top', '0px');
 
-      var legend = key.append("defs")
-        .append("svg:linearGradient")
-        .attr("id", "gradient")
-        .attr("x1", "0%")
-        .attr("y1", "100%")
-        .attr("x2", "100%")
-        .attr("y2", "100%")
-        .attr("spreadMethod", "pad");
+      const legend = key.append('defs')
+        .append('svg:linearGradient')
+        .attr('id', 'gradient')
+        .attr('x1', '0%')
+        .attr('y1', '100%')
+        .attr('x2', '100%')
+        .attr('y2', '100%')
+        .attr('spreadMethod', 'pad');
 
-      legend.selectAll("stop")
+      legend.selectAll('stop')
         .data([
-            {offset: "0%", color: "#2c7bb6"},
-            {offset: "12.5%", color: "#00a6ca"},
-            {offset: "25%", color: "#00ccbc"},
-            {offset: "37.5%", color: "#90eb9d"},
-            {offset: "50%", color: "#ffff8c"},
-            {offset: "62.5%", color: "#f9d057"},
-            {offset: "75%", color: "#f29e2e"},
-            {offset: "87.5%", color: "#e76818"},
-            {offset: "100%", color: "#d7191c"}
-          ])
-        .enter().append("stop")
-        .attr("offset", function(d) { return d.offset; })
-        .attr("stop-color", function(d) { return d.color; });
+          { offset: '0%', color: '#2c7bb6' },
+          { offset: '12.5%', color: '#00a6ca' },
+          { offset: '25%', color: '#00ccbc' },
+          { offset: '37.5%', color: '#90eb9d' },
+          { offset: '50%', color: '#ffff8c' },
+          { offset: '62.5%', color: '#f9d057' },
+          { offset: '75%', color: '#f29e2e' },
+          { offset: '87.5%', color: '#e76818' },
+          { offset: '100%', color: '#d7191c' },
+        ])
+        .enter().append('stop')
+        .attr('offset', d => d.offset)
+        .attr('stop-color', d => d.color);
 
 
-      key.append("rect")
-        .attr("width", w)
-        .attr("height", h - 25)
-        .style("fill", "url(#gradient)")
-        .attr("transform", "translate(0,5)");
+      key.append('rect')
+        .attr('width', w)
+        .attr('height', h - 25)
+        .style('fill', 'url(#gradient)')
+        .attr('transform', 'translate(0,5)');
 
-      var y = d3.scaleLinear()
+      const y = d3.scaleLinear()
         .domain([10, 35])
         .range([10, 280]);
 
-      var yAxis = d3.axisBottom()
+      const yAxis = d3.axisBottom()
         .scale(y)
-        .tickFormat(function(d) { return d + "°C"; })
+        .tickFormat(d => `${d}°C`)
         .ticks(5);
 
-      key.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(0,20)")
+      key.append('g')
+        .attr('class', 'y axis')
+        .attr('transform', 'translate(0,20)')
         .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("axis title");
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 0)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .text('axis title');
 
       this.colorScale = d3.scaleLinear()
         .domain([10, 20, 35])
-        .range(["#2c7bb6", "#90eb9d", "#d7191c"])
+        .range(['#2c7bb6', '#90eb9d', '#d7191c'])
         .interpolate(d3.interpolateHcl);
     },
     addSensor(sensorData) {
@@ -265,10 +266,10 @@ export default {
       }
     },
     addTelemetryData(data) {
-      const i = _.findIndex(this.sensors, {mac: data.sensor});
+      const i = _.findIndex(this.sensors, { mac: data.sensor });
       this.sensors[i].telemetry = data;
 
-      if (this.infoWinOpen && this.infoWindowSensorMac == data.sensor) {
+      if (this.infoWinOpen && this.infoWindowSensorMac === data.sensor) {
         this.updateInfoContent(this.sensors[i]);
       }
 
@@ -281,17 +282,17 @@ export default {
           strokeWeight: 0,
           fillColor: this.colorScale(data.temp),
           fillOpacity: 0.7,
-        }
+        },
       };
 
       this.measurements.set(data.sensor, m);
       this.measurementsTracker += 1;
     },
     addProbeData(data) {
-      const i = _.findIndex(this.sensors, {mac: data.sensor});
+      const i = _.findIndex(this.sensors, { mac: data.sensor });
       this.sensors[i].probes = data;
 
-      if (this.infoWinOpen && this.infoWindowSensorMac == data.sensor) {
+      if (this.infoWinOpen && this.infoWindowSensorMac === data.sensor) {
         this.updateInfoContent(this.sensors[i]);
       }
       const heatmapData = {
@@ -304,13 +305,13 @@ export default {
     },
     openMenu(e) {
       this.showContextMenu = false;
-      const mouseEvent = _.find(e, (attr) => attr.clientX && attr.clientY);
+      const mouseEvent = _.find(e, attr => attr.clientX && attr.clientY);
 
       this.x = mouseEvent.clientX;
       this.y = mouseEvent.clientY;
       this.$nextTick(() => {
         this.showContextMenu = true;
-      })
+      });
     },
     showSensorMenu(e, sensor, index) {
       this.showContextMenu = false;
@@ -320,7 +321,7 @@ export default {
       this.$nextTick(() => {
         this.sensorData = sensor;
         this.sensorData.index = index;
-      })
+      });
 
       this.openMenu(e);
     },
@@ -332,15 +333,15 @@ export default {
         name: '',
         description: '',
         latitude: e.latLng.lat(),
-        longitude: e.latLng.lng()
-      }
+        longitude: e.latLng.lng(),
+      };
       this.openMenu(e);
     },
     async removeSensor() {
-      let sensor = this.sensorData;
+      const sensor = this.sensorData;
       try {
-        let response = await axios.delete(`http://${process.env.API_HOST}/sensors/${sensor.mac}`);
-        if (response.status == 200) {
+        const response = await axios.delete(`http://${process.env.API_HOST}/sensors/${sensor.mac}`);
+        if (response.status === 200) {
           this.sensors.splice(sensor.index, 1);
         }
       } catch (error) {
@@ -351,13 +352,12 @@ export default {
       this.waitingSensors = true;
 
       try {
-        let response = await axios.get(`http://${process.env.API_HOST}/sensors`);
-        if (response.status == 200) {
-
+        const response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        if (response.status === 200) {
           this.sensors = response.data.data;
 
           _.forEach(this.sensors, (s, index) => {
-            sensorsConfig[s.mac] = {position: {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)}, index};
+            sensorsConfig[s.mac] = { position: { lat: parseFloat(s.latitude), lng: parseFloat(s.longitude) }, index };
           });
         }
       } catch (error) {
@@ -369,11 +369,11 @@ export default {
     async getLastTelemetry() {
       this.waitingSensors = true;
 
-       try {
+      try {
         const response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
-          whereLastXMinutes: "5",
-          selectMeanField: "temp",
-          GroupByTag: 'sensor'
+          whereLastXMinutes: '5',
+          selectMeanField: 'temp',
+          GroupByTag: 'sensor',
         });
         if (response.status === 200) {
           return response.data.data;
@@ -394,18 +394,17 @@ export default {
 
       this.$probesWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
-        for (let m of measurements) {
-          if (m !== "") this.addProbeData(JSON.parse(m))
+        for (const m of measurements) {
+          if (m !== '') this.addProbeData(JSON.parse(m));
         }
-      }
+      };
 
       this.$telemetryWS.onmessage = (data) => {
         const measurements = data.data.split('\n');
 
-        for (let m of measurements) {
-          if (m !== "") this.addTelemetryData(JSON.parse(m))
+        for (const m of measurements) {
+          if (m !== '') this.addTelemetryData(JSON.parse(m));
         }
-
       };
     },
     updateInfoContent(sensor) {
@@ -431,12 +430,12 @@ export default {
           </p>`;
       }
     },
-    toggleInfoWindow: function(s, idx) {
-      let position = {lat: parseFloat(s.latitude), lng: parseFloat(s.longitude)};
+    toggleInfoWindow(s, idx) {
+      const position = { lat: parseFloat(s.latitude), lng: parseFloat(s.longitude) };
 
       this.updateInfoContent(s);
       // check if its the same marker that was selected if yes toggle
-      if (this.currentMidx == idx) {
+      if (this.currentMidx === idx) {
         this.infoWinOpen = !this.infoWinOpen;
       } else {
         // if different marker set infowindow to open and reset current marker index
@@ -448,14 +447,14 @@ export default {
         this.center = position;
         this.infoWindowPos = position;
         this.infoWindowSensorMac = s.mac;
-      })
+      });
     },
   },
   components: {
     SensorForm,
     Heatmap,
     GroundOverlay,
-    DatetimeFieldPicker
+    DatetimeFieldPicker,
   },
 };
 </script>
