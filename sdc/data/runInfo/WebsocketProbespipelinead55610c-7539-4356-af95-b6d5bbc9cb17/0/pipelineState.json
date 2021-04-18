@@ -2,9 +2,9 @@
   "pipelineId" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
   "rev" : "0",
   "user" : "admin",
-  "status" : "STARTING",
+  "status" : "RUNNING",
   "message" : null,
-  "timeStamp" : 1574013093753,
+  "timeStamp" : 1615729344377,
   "attributes" : {
     "IS_REMOTE_PIPELINE" : false,
     "RUNTIME_PARAMETERS" : null,

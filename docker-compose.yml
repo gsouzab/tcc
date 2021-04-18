@@ -16,12 +16,12 @@ services:
     client:
         build: ./client
         volumes:
-            - ./client:/usr/src/app
+            - ./client:/app
         ports:
             - "8080:8080"
 
     mosquitto:
-        image: eclipse-mosquitto:latest
+        image: eclipse-mosquitto:1.6
         ports:
             - "1883:1883"
             - "9001:9001"

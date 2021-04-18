@@ -1,0 +1,90 @@
+{
+  "activeStats" : {
+    "startTime" : 1616403127695,
+    "endTime" : 0,
+    "dataCollectorVersion" : "3.7.1",
+    "dpmEnabled" : false,
+    "upTime" : {
+      "name" : "upTime",
+      "accumulatedTime" : 98620763
+    },
+    "pipelines" : [ {
+      "name" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
+      "accumulatedTime" : 98620750
+    }, {
+      "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
+      "accumulatedTime" : 98620750
+    }, {
+      "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+      "accumulatedTime" : 98620750
+    } ],
+    "stages" : [ {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor",
+      "accumulatedTime" : 197241488
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
+      "accumulatedTime" : 197241488
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
+      "accumulatedTime" : 98620743
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource",
+      "accumulatedTime" : 295862229
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
+      "accumulatedTime" : 295862229
+    }, {
+      "name" : "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "accumulatedTime" : 197241486
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor",
+      "accumulatedTime" : 197241486
+    } ],
+    "recordCount" : 0,
+    "version" : "1.0"
+  },
+  "collectedStats" : [ {
+    "version" : "1.0",
+    "dataCollectorVersion" : "3.7.1",
+    "dpmEnabled" : false,
+    "startTime" : 1615729041333,
+    "endTime" : 1616403127695,
+    "upTime" : 674086363,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 2021956444,
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 1347870079,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 1348172762,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 673783699,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 1348172764,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 1347870080,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 1347870081,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 2021956465,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 1348172766,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 1348172764,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 2021956463,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 1348172764,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 1347567397,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 1348172764
+    },
+    "recordsOM" : 4
+  } ]
+}

@@ -58,7 +58,7 @@
   ":pipeline:" : {
     "previewConfig" : {
       "previewSource" : "CONFIGURED_SOURCE",
-      "batchSize" : "1",
+      "batchSize" : "5",
       "timeout" : 10000,
       "writeToDestinations" : true,
       "executeLifecycleEvents" : true,
@@ -77,7 +77,7 @@
   "HTTPClient_01" : {
     "description" : "",
     "label" : "HTTP Client 1",
-    "xPos" : 2035.146484375,
+    "xPos" : 2040,
     "yPos" : 200,
     "stageType" : "TARGET"
   },

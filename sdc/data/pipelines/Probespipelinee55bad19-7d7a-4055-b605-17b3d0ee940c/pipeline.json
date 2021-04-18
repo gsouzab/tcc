@@ -4,7 +4,7 @@
   "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
   "title" : "Probes pipeline",
   "description" : "",
-  "uuid" : "399b9f68-2f0e-48fb-9008-de4d6f403117",
+  "uuid" : "4f8db0c1-8ce2-45f0-9d1b-21dd9810ec2e",
   "configuration" : [ {
     "name" : "executionMode",
     "value" : "STANDALONE"
@@ -787,16 +787,16 @@
       "value" : "/measurement"
     }, {
       "name" : "conf.fieldMapping.timeField",
-      "value" : "/timestamp"
+      "value" : "/createdAt"
     }, {
       "name" : "conf.fieldMapping.timeUnit",
-      "value" : "SECONDS"
+      "value" : "MILLISECONDS"
     }, {
       "name" : "conf.fieldMapping.tagFields",
-      "value" : [ "/sensor", "/SSID" ]
+      "value" : [ "/sensor", "/latitude", "/longitude" ]
     }, {
       "name" : "conf.fieldMapping.valueFields",
-      "value" : [ "/RSSI", "/Channel", "/srcMac", "/dstMac" ]
+      "value" : [ "/rssi", "/srcMac" ]
     }, {
       "name" : "stageOnRecordError",
       "value" : "TO_ERROR"
@@ -842,11 +842,11 @@
     "title" : "Probes pipeline",
     "description" : "",
     "created" : 1574012269980,
-    "lastModified" : 1574012296671,
+    "lastModified" : 1615728741459,
     "creator" : "admin",
     "lastModifier" : "admin",
     "lastRev" : "0",
-    "uuid" : "6fb4dfee-1e1a-477c-a7fb-2d47a0f9e1eb",
+    "uuid" : "9346cb6b-cfc2-4e6e-9a43-a6a1e089e901",
     "valid" : true,
     "metadata" : {
       "labels" : [ ]
@@ -1152,9 +1152,9 @@
   },
   "valid" : true,
   "issues" : {
-    "pipelineIssues" : [ ],
+    "stageIssues" : { },
     "issueCount" : 0,
-    "stageIssues" : { }
+    "pipelineIssues" : [ ]
   },
   "previewable" : true
 }

@@ -4,7 +4,7 @@
   "pipelineId" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
   "title" : "Telemetry pipeline",
   "description" : "",
-  "uuid" : "67d7d5e1-db87-475e-bb66-d970be15b1cc",
+  "uuid" : "778b979f-44d9-4c75-ac83-b6c47d9a3254",
   "configuration" : [ {
     "name" : "executionMode",
     "value" : "STANDALONE"
@@ -168,7 +168,7 @@
   "uiInfo" : {
     "previewConfig" : {
       "previewSource" : "CONFIGURED_SOURCE",
-      "batchSize" : "1",
+      "batchSize" : "5",
       "timeout" : 10000,
       "writeToDestinations" : true,
       "executeLifecycleEvents" : true,
@@ -1152,7 +1152,7 @@
     "uiInfo" : {
       "description" : "",
       "label" : "HTTP Client 1",
-      "xPos" : 2035.146484375,
+      "xPos" : 2040,
       "yPos" : 200,
       "stageType" : "TARGET"
     },
@@ -1194,10 +1194,10 @@
       "value" : "/measurement"
     }, {
       "name" : "conf.fieldMapping.timeField",
-      "value" : ""
+      "value" : "/createdAt"
     }, {
       "name" : "conf.fieldMapping.timeUnit",
-      "value" : "SECONDS"
+      "value" : "MILLISECONDS"
     }, {
       "name" : "conf.fieldMapping.tagFields",
       "value" : [ "/latitude", "/longitude", "/sensor" ]
@@ -1245,22 +1245,22 @@
     "services" : [ ]
   },
   "info" : {
-    "pipelineId" : "Telemetrypipelinebbac82c1-4d82-4f10-978a-30597c787ca1",
+    "pipelineId" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
     "title" : "Telemetry pipeline",
     "description" : "",
-    "created" : 1560171605542,
-    "lastModified" : 1560171659087,
+    "created" : 1574012269877,
+    "lastModified" : 1615728214487,
     "creator" : "admin",
     "lastModifier" : "admin",
     "lastRev" : "0",
-    "uuid" : "7a71a100-cca5-4bc8-a55a-d6e332aa6f0e",
+    "uuid" : "12ccf194-4330-4253-9478-4386ce65598c",
     "valid" : true,
     "metadata" : {
       "labels" : [ ]
     },
-    "name" : "Telemetrypipelinebbac82c1-4d82-4f10-978a-30597c787ca1",
+    "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
     "sdcVersion" : "3.7.1",
-    "sdcId" : "3ddc4e08-2dfb-11e9-9bcd-e11be2560c4d"
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a"
   },
   "metadata" : {
     "labels" : [ ]
@@ -1559,9 +1559,9 @@
   },
   "valid" : true,
   "issues" : {
-    "pipelineIssues" : [ ],
+    "stageIssues" : { },
     "issueCount" : 0,
-    "stageIssues" : { }
+    "pipelineIssues" : [ ]
   },
   "previewable" : true
 }

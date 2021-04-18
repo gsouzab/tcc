@@ -2,9 +2,9 @@
   "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
   "rev" : "0",
   "user" : "admin",
-  "status" : "STARTING",
+  "status" : "RUNNING",
   "message" : null,
-  "timeStamp" : 1574013093651,
+  "timeStamp" : 1615729004397,
   "attributes" : {
     "IS_REMOTE_PIPELINE" : false,
     "RUNTIME_PARAMETERS" : null,

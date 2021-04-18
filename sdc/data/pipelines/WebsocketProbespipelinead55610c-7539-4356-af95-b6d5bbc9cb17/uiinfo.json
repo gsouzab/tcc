@@ -1,4 +1,16 @@
 {
+  ":pipeline:" : {
+    "previewConfig" : {
+      "previewSource" : "CONFIGURED_SOURCE",
+      "batchSize" : "1",
+      "timeout" : "60000",
+      "writeToDestinations" : true,
+      "executeLifecycleEvents" : true,
+      "showHeader" : false,
+      "showFieldType" : true,
+      "rememberMe" : false
+    }
+  },
   "MQTTSubscriber_01" : {
     "description" : "",
     "label" : "Probe Subscriber",
@@ -21,17 +33,12 @@
     "label" : "Record Deduplicator 1",
     "xPos" : 500
   },
-  ":pipeline:" : {
-    "previewConfig" : {
-      "previewSource" : "CONFIGURED_SOURCE",
-      "batchSize" : "1",
-      "timeout" : "60000",
-      "writeToDestinations" : true,
-      "executeLifecycleEvents" : true,
-      "showHeader" : false,
-      "showFieldType" : true,
-      "rememberMe" : false
-    }
+  "Trash_01" : {
+    "description" : "",
+    "label" : "Trash 1",
+    "xPos" : 713,
+    "yPos" : 239,
+    "stageType" : "TARGET"
   },
   "Aggregator_01" : {
     "description" : "",
@@ -47,25 +54,18 @@
     "yPos" : 190,
     "stageType" : "PROCESSOR"
   },
-  "HTTPClient_01" : {
-    "description" : "",
-    "label" : "HTTP Client 1",
-    "xPos" : 1160,
-    "yPos" : 190,
-    "stageType" : "TARGET"
-  },
-  "Trash_01" : {
-    "description" : "",
-    "label" : "Trash 1",
-    "xPos" : 720,
-    "yPos" : 170,
-    "stageType" : "TARGET"
-  },
   "Trash_02" : {
     "description" : "",
     "label" : "Trash 2",
     "xPos" : 940,
     "yPos" : 40,
+    "stageType" : "TARGET"
+  },
+  "HTTPClient_01" : {
+    "description" : "",
+    "label" : "HTTP Client 1",
+    "xPos" : 1160,
+    "yPos" : 190,
     "stageType" : "TARGET"
   }
 }

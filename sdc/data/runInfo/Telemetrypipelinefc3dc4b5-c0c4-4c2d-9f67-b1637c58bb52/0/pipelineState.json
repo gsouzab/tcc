@@ -2,9 +2,9 @@
   "pipelineId" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
   "rev" : "0",
   "user" : "admin",
-  "status" : "STARTING",
+  "status" : "RUNNING",
   "message" : null,
-  "timeStamp" : 1574013093706,
+  "timeStamp" : 1615728875824,
   "attributes" : {
     "IS_REMOTE_PIPELINE" : false,
     "RUNTIME_PARAMETERS" : null,
@@ -12,7 +12,7 @@
   },
   "executionMode" : "STANDALONE",
   "metrics" : null,
-  "retryAttempt" : 0,
-  "nextRetryTimeStamp" : 0,
+  "retryAttempt" : 1,
+  "nextRetryTimeStamp" : 1615728859602,
   "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52"
 }
