@@ -10,8 +10,8 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 )
 
-//const influxAddr = "http://influx:8086"  // ==> Internal Influx
-const influxAddr = "http://174.138.126.228:30004" // ==> External Influx
+const influxAddr = "http://influx:8086"  // ==> Internal Influx
+// const influxAddr = "http://174.138.126.228:30004" // ==> External Influx
 const influxDbName = "tcc_data"
 const telemetryMeasurement = "telemetry_data"
 const probeMeasurement = "probe_data"
