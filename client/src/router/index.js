@@ -8,7 +8,6 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import GmapCluster from 'vue2-google-maps/dist/components/cluster'; // replace src with dist if you have Babel issues
 
 import Map from '@/components/Map';
-// import BusMap from '@/components/BusMap';
 import Dashboard from '@/components/Dashboard';
 
 Vue.use(VeeValidate);
@@ -68,11 +67,6 @@ export default new Router({
       name: 'map',
       component: Map,
     },
-    // {
-    //   path: '/bus',
-    //   name: 'bus',
-    //   component: BusMap,
-    // },
     {
       path: '/dashboard',
       name: 'dashboard',
