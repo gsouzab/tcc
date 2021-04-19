@@ -35,5 +35,4 @@ spec:
   - name: mosquitto
     port: 1883
     protocol: TCP
-    nodePort: 30000
     targetPort: 1883

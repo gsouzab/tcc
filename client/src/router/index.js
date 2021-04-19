@@ -16,7 +16,7 @@ Vue.use(Vuetify);
 
 Vue.prototype.$connectTelemetryWS = () => {
   console.log('CONNECTING TELEMERY SOCKET...');
-  Vue.prototype.$telemetryWS = new WebSocket(`ws://${process.env.API_HOST}/ws/telemetry`);
+  Vue.prototype.$telemetryWS = new WebSocket(`wss://${process.env.API_HOST}/ws/telemetry`);
 
   Vue.prototype.$telemetryWS.onclose = (e) => {
     console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
@@ -33,7 +33,7 @@ Vue.prototype.$connectTelemetryWS = () => {
 
 Vue.prototype.$connectProbesWS = () => {
   console.log('CONNECTING PROBE SOCKET...');
-  Vue.prototype.$probesWS = new WebSocket(`ws://${process.env.API_HOST}/ws/probe`);
+  Vue.prototype.$probesWS = new WebSocket(`wss://${process.env.API_HOST}/ws/probe`);
 
   Vue.prototype.$probesWS.onclose = (e) => {
     console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);

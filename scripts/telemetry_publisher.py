@@ -26,9 +26,9 @@ def publish(client):
         client.publish('telemetry', jsonMessage, QOS)
 
 client = mqtt.Client()
-client.connect("localhost", 1883, 60)
+client.connect("174.138.126.228", 30000, 60)
 client.loop_start()
 
 while True:
     publish(client)
-    time.sleep(1.5)
+    time.sleep(1)

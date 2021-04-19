@@ -168,7 +168,7 @@ export default {
   methods: {
     async getSensors() {
       try {
-        const response = await axios.get(`http://${process.env.API_HOST}/sensors`);
+        const response = await axios.get(`https://${process.env.API_HOST}/sensors`);
         if (response.status === 200) {
           return response.data.data;
         }
@@ -248,7 +248,7 @@ export default {
       const duration = moment.duration(moment(whereEndTime).diff(moment(whereStartTime))).as('minutes');
       const maxPoints = 1000;
       const selectMeanInterval = Math.ceil(duration / maxPoints);
-      const query = `http://174.138.126.228:30004/query?pretty=true&db=tcc_data&q=SELECT COUNT(DISTINCT("srcMac")) FROM "probe_data" WHERE time >= '${moment(whereStartTime).toISOString()}' AND time <= '${moment(whereEndTime).toISOString()}' GROUP BY time(${selectMeanInterval}m), sensor`;
+      const query = `https://${process.env.INFLUX_HOST}/query?pretty=true&db=tcc_data&q=SELECT COUNT(DISTINCT("srcMac")) FROM "probe_data" WHERE time >= '${moment(whereStartTime).toISOString()}' AND time <= '${moment(whereEndTime).toISOString()}' GROUP BY time(${selectMeanInterval}m), sensor`;
 
       try {
         const response = await axios.get(query);
@@ -270,7 +270,7 @@ export default {
 
       this.meanInterval = selectMeanInterval;
       try {
-        const response = await axios.post(`http://${process.env.API_HOST}/telemetry/query`, {
+        const response = await axios.post(`https://${process.env.API_HOST}/telemetry/query`, {
           whereStartTime,
           whereEndTime,
           selectMeanField,

@@ -3,18 +3,44 @@ kind: Ingress
 metadata:
   name: services-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
+  tls:
+  - hosts:
+    - sensein.tech
+    - api.sensein.tech
+    - sdc.sensein.tech
+    - mqtt.sensein.tech
+    - influx.sensein.tech
+    secretName: sensein-letscrypt-tls
   rules:
-  - host: maps.sherlock.rappdo.com
+  - host: sensein.tech
     http:
       paths:
       - backend:
           serviceName: client
           servicePort: 80
-  # - host: bar.foo.com
-  #   http:
-  #     paths:
-  #     - backend:
-  #         serviceName: service2
-  #         servicePort: 80
+  - host: sdc.sensein.tech
+    http:
+      paths:
+      - backend:
+          serviceName: sdc
+          servicePort: 18630
+  - host: mqqt.sensein.tech
+    http:
+      paths:
+      - backend:
+          serviceName: mqtt
+          servicePort: 1883
+  - host: influx.sensein.tech
+    http:
+      paths:
+      - backend:
+          serviceName: influx
+          servicePort: 8086
+  - host: api.sensein.tech
+    http:
+      paths:
+      - backend:
+          serviceName: api
+          servicePort: 8000

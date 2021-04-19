@@ -34,6 +34,5 @@ spec:
     - port: 8000
       targetPort: 8000
       protocol: TCP
-      nodePort: 30003
   selector:
     app: api

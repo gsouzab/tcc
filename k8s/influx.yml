@@ -54,6 +54,5 @@ spec:
     - port: 8086
       targetPort: 8086
       protocol: TCP
-      nodePort: 30004
   selector:
     app: influx
