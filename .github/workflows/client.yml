@@ -29,6 +29,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./client
-          file: Dockerfile.production
+          file: ./client/Dockerfile.production
           push: true
           tags: gsouzab/tcc-client:latest
