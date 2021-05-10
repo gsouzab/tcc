@@ -37,5 +37,12 @@ jobs:
         with:
           context: ./client
           file: ./client/Dockerfile.production
+          build-args: |
+            NODE_ENV=production
+            API_HOST=api.sensein.tech
+            INFLUX_HOST=influx.sensein.tech
+            MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/tcc-client:latest
+          cache-to: type=inline
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tcc-client:latest
