@@ -13,9 +13,6 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       -
@@ -25,13 +22,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Create .env
+        run: |
+          touch ./client/.env
+          {
+            echo NODE_ENV="production"
+            echo API_HOST="api.sensein.tech"
+            echo INFLUX_HOST="influx.sensein.tech"
+            echo MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}
+          } >> ./client/.env
+      -
         name: Build and push
         uses: docker/build-push-action@v2
-        env:
-          NODE_ENV: production
-          API_HOST: api.sensein.tech
-          INFLUX_HOST: influx.sensein.tech
-          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         with:
           context: ./client
           file: ./client/Dockerfile.production
