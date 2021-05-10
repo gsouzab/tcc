@@ -30,7 +30,7 @@ jobs:
         with:
           context: ./client
           file: ./client/Dockerfile.production
-          secrets: |
+          build-args: |
             NODE_ENV=production
             API_HOST=api.sensein.tech
             INFLUX_HOST=influx.sensein.tech
