@@ -1,7 +1,7 @@
-FROM node:9.11.1-alpine as builder
+FROM node:16.10.0-alpine3.14 as builder
 WORKDIR /app
 COPY package.json .
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build
 

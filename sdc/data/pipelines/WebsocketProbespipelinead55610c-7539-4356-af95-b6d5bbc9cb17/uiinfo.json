@@ -9,21 +9,24 @@
       "showHeader" : false,
       "showFieldType" : true,
       "rememberMe" : false
-    }
+    },
+    "displayMode" : "BASIC"
   },
   "MQTTSubscriber_01" : {
     "description" : "",
     "label" : "Probe Subscriber",
     "xPos" : 60,
     "yPos" : 50,
-    "stageType" : "SOURCE"
+    "stageType" : "SOURCE",
+    "displayMode" : "BASIC"
   },
   "ExpressionEvaluator_01" : {
     "description" : "",
     "label" : "Uppercase MAC",
     "xPos" : 280,
     "yPos" : 50,
-    "stageType" : "PROCESSOR"
+    "stageType" : "PROCESSOR",
+    "displayMode" : "BASIC"
   },
   "RecordDeduplicator_01" : {
     "outputStreamLabels" : [ "Unique Records", "Duplicate Records" ],

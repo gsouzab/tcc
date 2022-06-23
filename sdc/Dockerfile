@@ -1,4 +1,4 @@
-ARG SDC_VERSION=3.7.1
+ARG SDC_VERSION=3.21.0
 FROM streamsets/datacollector:${SDC_VERSION}
 
 COPY --chown=sdc:sdc ./data /data

@@ -340,7 +340,7 @@ export default {
     async removeSensor() {
       const sensor = this.sensorData;
       try {
-        const response = await axios.delete(`https://${process.env.API_HOST}/sensors/${sensor.mac}`);
+        const response = await axios.delete(`${process.env.API_HOST}/sensors/${sensor.mac}`);
         if (response.status === 200) {
           this.sensors.splice(sensor.index, 1);
         }
@@ -352,7 +352,7 @@ export default {
       this.waitingSensors = true;
 
       try {
-        const response = await axios.get(`https://${process.env.API_HOST}/sensors`);
+        const response = await axios.get(`${process.env.API_HOST}/sensors`);
         if (response.status === 200) {
           this.sensors = response.data.data;
 
@@ -370,7 +370,7 @@ export default {
       this.waitingSensors = true;
 
       try {
-        const response = await axios.post(`https://${process.env.API_HOST}/telemetry/query`, {
+        const response = await axios.post(`${process.env.API_HOST}/telemetry/query`, {
           whereLastXMinutes: '5',
           selectMeanField: 'temp',
           GroupByTag: 'sensor',

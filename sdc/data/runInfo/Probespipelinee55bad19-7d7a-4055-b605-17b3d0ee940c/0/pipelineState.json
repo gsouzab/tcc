@@ -1,10 +1,10 @@
 {
   "pipelineId" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
   "rev" : "0",
-  "user" : "admin",
+  "user" : "gabriel.souza1@gmail.com",
   "status" : "RUNNING",
   "message" : null,
-  "timeStamp" : 1615729004397,
+  "timeStamp" : 1656001234586,
   "attributes" : {
     "IS_REMOTE_PIPELINE" : false,
     "RUNTIME_PARAMETERS" : null,
@@ -12,7 +12,7 @@
   },
   "executionMode" : "STANDALONE",
   "metrics" : null,
-  "retryAttempt" : 0,
-  "nextRetryTimeStamp" : 0,
+  "retryAttempt" : 7,
+  "nextRetryTimeStamp" : 1656001107586,
   "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c"
 }

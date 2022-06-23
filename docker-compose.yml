@@ -2,9 +2,9 @@
 version: '3'
 services:
     api: 
-        build: ./api
-        volumes:
-            - ./api:/go/src/app
+        build:
+            context: ./api
+            dockerfile: Dockerfile.production
         ports: 
             - "8000:8000"
         links: 
@@ -14,12 +14,21 @@ services:
             - APP_ENV=development
             
     client:
-        build: ./client
-        volumes:
-            - ./client:/app
+        build: 
+            context: ./client
+            dockerfile: Dockerfile.production
+            args:
+            - NODE_ENV="production"
+            - API_HOST="http://localhost:8000"
+            - API_WS_HOST="ws://localhost:8000"
+            - INFLUX_HOST="http://localhost:8086"
         ports:
-            - "8080:8080"
-
+            - "8080:80"
+        environment:
+            - NODE_ENV="production"
+            - API_HOST="http://localhost:8000"
+            - API_WS_HOST="ws://localhost:8000"
+            - INFLUX_HOST="http://localhost:8086"
     mosquitto:
         image: eclipse-mosquitto:1.6
         ports:
@@ -36,7 +45,7 @@ services:
         restart: always
 
     influx:
-        image: influxdb:alpine
+        image: influxdb:1.8
         ports: 
             - "8086:8086"
         volumes:
@@ -45,14 +54,6 @@ services:
             - INFLUXDB_DB=tcc_data
             - INFLUXDB_USER=tcc
             - INFLUXDB_USER_PASSWORD=tcc_ufrj
-
-    chronograf:
-        image: chronograf:alpine
-        ports: 
-            - "8888:8888"
-        entrypoint: chronograf --influxdb-url=http://influx:8086
-        links: 
-            - influx
 
     data-collector:
         build: ./sdc

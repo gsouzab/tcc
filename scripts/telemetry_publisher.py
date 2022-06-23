@@ -5,8 +5,7 @@ import json
 
 QOS = 1
 SENSORS = [
-    'B8:27:EB:F2:64:A9',
-    'B8:27:EB:52:43:B7',
+    '00:00:00:00:00:00'
 ]
 
 # The "random" message creation, in json format
@@ -26,7 +25,7 @@ def publish(client):
         client.publish('telemetry', jsonMessage, QOS)
 
 client = mqtt.Client()
-client.connect("174.138.126.228", 30000, 60)
+client.connect("localhost", 1883, 60)
 client.loop_start()
 
 while True:

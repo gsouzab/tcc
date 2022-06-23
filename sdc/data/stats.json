@@ -1,90 +1,917 @@
 {
   "activeStats" : {
-    "startTime" : 1616403127695,
+    "extensions" : [ ],
+    "version" : "1.3",
+    "startTime" : 1656001224113,
     "endTime" : 0,
-    "dataCollectorVersion" : "3.7.1",
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
     "dpmEnabled" : false,
     "upTime" : {
       "name" : "upTime",
-      "accumulatedTime" : 98620763
+      "accumulatedTime" : 419727
     },
-    "pipelines" : [ {
-      "name" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
-      "accumulatedTime" : 98620750
-    }, {
-      "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
-      "accumulatedTime" : 98620750
-    }, {
-      "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
-      "accumulatedTime" : 98620750
-    } ],
+    "pipelineStats" : {
+      "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17" : {
+        "runs" : [ {
+          "startTime" : 1655995095005,
+          "timer" : {
+            "name" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
+            "accumulatedTime" : 414204
+          },
+          "runnerCount" : 1,
+          "executionMode" : "STANDALONE",
+          "finalState" : null
+        } ]
+      },
+      "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52" : {
+        "runs" : [ {
+          "startTime" : 1655995095648,
+          "timer" : {
+            "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
+            "accumulatedTime" : 413667
+          },
+          "runnerCount" : 1,
+          "executionMode" : "STANDALONE",
+          "finalState" : null
+        } ]
+      },
+      "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c" : {
+        "runs" : [ {
+          "startTime" : 1655995395754,
+          "timer" : {
+            "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
+            "accumulatedTime" : 413198
+          },
+          "runnerCount" : 1,
+          "executionMode" : "STANDALONE",
+          "finalState" : null
+        } ]
+      }
+    },
     "stages" : [ {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor",
-      "accumulatedTime" : 197241488
-    }, {
-      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
-      "accumulatedTime" : 197241488
+      "accumulatedTime" : 827867
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
-      "accumulatedTime" : 98620743
+      "accumulatedTime" : 414203
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
+      "accumulatedTime" : 826855
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 826854
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 827866
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 827865
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource",
-      "accumulatedTime" : 295862229
+      "accumulatedTime" : 1241067
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 826852
     }, {
       "name" : "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 826848
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
-      "accumulatedTime" : 295862229
+      "accumulatedTime" : 1241062
     }, {
       "name" : "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 826858
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 828406
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor",
-      "accumulatedTime" : 197241486
+      "accumulatedTime" : 826856
     } ],
-    "recordCount" : 0,
-    "version" : "1.0"
+    "recordCount" : 114,
+    "errorCodes" : { },
+    "createToPreview" : { },
+    "createToRun" : { },
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    },
+    "pipelines" : [ ]
   },
   "collectedStats" : [ {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : null,
     "version" : "1.0",
     "dataCollectorVersion" : "3.7.1",
+    "buildRepoSha" : null,
+    "extraInfo" : null,
     "dpmEnabled" : false,
-    "startTime" : 1615729041333,
-    "endTime" : 1616403127695,
-    "upTime" : 674086363,
+    "startTime" : 1616403127695,
+    "endTime" : 1655995087048,
+    "upTime" : 98620763,
     "activePipelines" : 3,
-    "pipelineMilliseconds" : 2021956444,
+    "pipelineMilliseconds" : 295862250,
+    "pipelineRunReports" : [ ],
     "stageMilliseconds" : {
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 1347870079,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 1348172762,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 673783699,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 1348172764,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 1347870080,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 1347870081,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 2021956465,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 1348172766,
-      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 1348172764,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 2021956463,
-      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 1348172764,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 1347567397,
-      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 1348172764
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 197241488,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 197241488,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 98620743,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 295862229,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 197241486,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 295862229,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 197241486,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 197241486
     },
-    "recordsOM" : 4
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : null,
+      "sdcId" : null,
+      "firstUseOn" : 0,
+      "expiration" : 0,
+      "validSdcIds" : null,
+      "additionalInfo" : null,
+      "valid" : false
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 37743120
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1655995087048,
+    "endTime" : 1655995209869,
+    "upTime" : 119923,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 342571,
+    "pipelineRunReports" : [ {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 114222,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 114865,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995096386,
+      "runMillis" : 113484,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 229085,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 114864,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 227705,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 227705,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 229085,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 229085,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 342569,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 227705,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 227705,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 342569,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 227705,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 229728,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 227705
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : 0,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : { },
+      "valid" : false
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1655995209869,
+    "endTime" : 1655995561927,
+    "upTime" : 352057,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 901873,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 352057,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 352057,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995096386,
+      "runMillis" : 31585,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : "STOPPED"
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 166174,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 704116,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 352058,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 549819,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 549819,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 704116,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 704116,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 901876,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 549819,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 549819,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 901877,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 549819,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 704116,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 549819
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1655995561927,
+    "endTime" : 1655995651125,
+    "upTime" : 0,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 7982,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 2661,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 2661,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 2660,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 2660,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 7980,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 5320,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 7980,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 5320,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 5320
+    },
+    "recordsOM" : -1,
+    "errorCodes" : {
+      "MQTT_04" : 1
+    },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1655995651125,
+    "endTime" : 1655995797458,
+    "upTime" : 143278,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 383297,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 128560,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 127802,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 126935,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 256341,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 128560,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 254710,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 254678,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 256338,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 256336,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 383288,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 254671,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 254651,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 383283,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 254720,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 257120,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 254713
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1655995797458,
+    "endTime" : 1656000374484,
+    "upTime" : 0,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 7055,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 2352,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 2352,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 2351,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 2351,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 7053,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 4702,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 7053,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 4702,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 4702
+    },
+    "recordsOM" : -1,
+    "errorCodes" : {
+      "MQTT_04" : 2
+    },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1656000374484,
+    "endTime" : 1656000426314,
+    "upTime" : 48787,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 129654,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 43675,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 43186,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 42793,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 86851,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 43675,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 85970,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 85969,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 86850,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 86846,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 129651,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 85968,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 85959,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 129649,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 85973,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 87348,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 85971
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1656000426314,
+    "endTime" : 1656000608034,
+    "upTime" : 0,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 5670,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 1890,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 1890,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 1890,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 1889,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 5667,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 3778,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 5667,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 3778,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 3778
+    },
+    "recordsOM" : -1,
+    "errorCodes" : {
+      "MQTT_04" : 2
+    },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1656000608034,
+    "endTime" : 1656000807317,
+    "upTime" : 196365,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 541956,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 181682,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 180628,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 179646,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 362288,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 181674,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 360247,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 360244,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 362281,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 362280,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 541946,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 360238,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 360222,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 541940,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 360263,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 363349,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 360260
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1656000807317,
+    "endTime" : 1656001224113,
+    "upTime" : 0,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 6123,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 2041,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 2041,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 2041,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 4082,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 2041,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 4082,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 4082,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 4080,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 4080,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 6120,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 4080,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 4080,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 6120,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 4082,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 4082,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 4082
+    },
+    "recordsOM" : -1,
+    "errorCodes" : {
+      "MQTT_04" : 2
+    },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
   } ]
 }
