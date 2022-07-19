@@ -2,7 +2,7 @@
   "activeStats" : {
     "extensions" : [ ],
     "version" : "1.3",
-    "startTime" : 1656001224113,
+    "startTime" : 1656001727158,
     "endTime" : 0,
     "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
     "productName" : "sdc",
@@ -22,7 +22,7 @@
     "dpmEnabled" : false,
     "upTime" : {
       "name" : "upTime",
-      "accumulatedTime" : 419727
+      "accumulatedTime" : 0
     },
     "pipelineStats" : {
       "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17" : {
@@ -30,7 +30,7 @@
           "startTime" : 1655995095005,
           "timer" : {
             "name" : "WebsocketProbespipelinead55610c-7539-4356-af95-b6d5bbc9cb17",
-            "accumulatedTime" : 414204
+            "accumulatedTime" : 2274
           },
           "runnerCount" : 1,
           "executionMode" : "STANDALONE",
@@ -42,7 +42,7 @@
           "startTime" : 1655995095648,
           "timer" : {
             "name" : "Telemetrypipelinefc3dc4b5-c0c4-4c2d-9f67-b1637c58bb52",
-            "accumulatedTime" : 413667
+            "accumulatedTime" : 2274
           },
           "runnerCount" : 1,
           "executionMode" : "STANDALONE",
@@ -54,7 +54,7 @@
           "startTime" : 1655995395754,
           "timer" : {
             "name" : "Probespipelinee55bad19-7d7a-4055-b605-17b3d0ee940c",
-            "accumulatedTime" : 413198
+            "accumulatedTime" : 2274
           },
           "runnerCount" : 1,
           "executionMode" : "STANDALONE",
@@ -64,46 +64,48 @@
     },
     "stages" : [ {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor",
-      "accumulatedTime" : 827867
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor",
-      "accumulatedTime" : 414203
+      "accumulatedTime" : 2274
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor",
-      "accumulatedTime" : 826855
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor",
-      "accumulatedTime" : 826854
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor",
-      "accumulatedTime" : 827866
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget",
-      "accumulatedTime" : 827865
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource",
-      "accumulatedTime" : 1241067
+      "accumulatedTime" : 6822
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor",
-      "accumulatedTime" : 826852
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget",
-      "accumulatedTime" : 826848
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor",
-      "accumulatedTime" : 1241062
+      "accumulatedTime" : 6822
     }, {
       "name" : "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor",
-      "accumulatedTime" : 826858
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
-      "accumulatedTime" : 828406
+      "accumulatedTime" : 4548
     }, {
       "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor",
-      "accumulatedTime" : 826856
+      "accumulatedTime" : 4548
     } ],
-    "recordCount" : 114,
-    "errorCodes" : { },
+    "recordCount" : 0,
+    "errorCodes" : {
+      "MQTT_04" : 2
+    },
     "createToPreview" : { },
     "createToRun" : { },
     "activationInfo" : {
@@ -894,6 +896,88 @@
     "errorCodes" : {
       "MQTT_04" : 2
     },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+      "firstUseOn" : 1538259360792,
+      "expiration" : -1,
+      "validSdcIds" : [ "3f3aa98f-c435-11e8-a839-1f3aa792b91a" ],
+      "additionalInfo" : {
+        "licenseType" : "REGISTRATION",
+        "productVersion" : "3.21.0",
+        "createdBy" : "system",
+        "createdOn" : "1655995161980",
+        "productName" : "DATA_COLLECTOR",
+        "aster.url" : "https://accounts.streamsets.com"
+      },
+      "valid" : true
+    }
+  }, {
+    "reported" : true,
+    "sdcId" : "3f3aa98f-c435-11e8-a839-1f3aa792b91a",
+    "productName" : "sdc",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.21.0",
+    "buildRepoSha" : "666f63ad8640a8cfbc91f55829a65488702daebe",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 8048488,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_202",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 6,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 73264584
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1656001224113,
+    "endTime" : 1656001727158,
+    "upTime" : 499973,
+    "activePipelines" : 3,
+    "pipelineMilliseconds" : 1481810,
+    "pipelineRunReports" : [ {
+      "hashedId" : "69c7dc7d0e165d131ce7862b8c29d1741a646bdca8a0cab40a18e7641aeb2de9",
+      "startTime" : 1655995095005,
+      "runMillis" : 494451,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "d25a9b23044928da8151c617e298293370b061948f509c622a60ca4b621f399c",
+      "startTime" : 1655995095648,
+      "runMillis" : 493914,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    }, {
+      "hashedId" : "bf5d7ca5df9b12d08067bcf7901e7a9bf775b5ad73fca2e92b2b31ef83a3c9e3",
+      "startTime" : 1655995395754,
+      "runMillis" : 493445,
+      "runnerCount" : 1,
+      "executionMode" : "STANDALONE",
+      "finalState" : null
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_aggregation_AggregationDProcessor" : 988361,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_dedup_DeDupDProcessor" : 494450,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldrenamer_FieldRenamerDProcessor" : 987349,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor" : 987348,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_javascript_JavaScriptDProcessor" : 988360,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_http_HttpClientDTarget" : 988359,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_origin_mqtt_MqttClientDSource" : 1481808,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_fieldtypeconverter_FieldTypeConverterDProcessor" : 987346,
+      "streamsets-datacollector-influxdb_0_9-lib::com_streamsets_pipeline_stage_destination_influxdb_InfluxDTarget" : 987342,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_expression_ExpressionDProcessor" : 1481803,
+      "streamsets-datacollector-redis-lib::com_streamsets_pipeline_stage_processor_kv_redis_RedisLookupDProcessor" : 987352,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget" : 988900,
+      "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_processor_kv_local_LocalLookupDProcessor" : 987350
+    },
+    "recordsOM" : 2,
+    "errorCodes" : { },
     "createToPreview" : [ ],
     "createToRun" : [ ],
     "extensions" : [ ],
