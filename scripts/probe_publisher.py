@@ -1,23 +1,28 @@
 from random import randint
+from random import shuffle
 import paho.mqtt.client as mqtt
 import time
 import json
 
 QOS = 1
-N = 100
+MAX_SENSORS = 500
+MAX_NEARBY_DEVICES = 100
+
 sensors_file = open("sensors.txt", "r")
 SENSORS = sensors_file.read().splitlines()
 
-NEARBY_DEVICES = [
-    '11:11:11:11:11:11',
-    '22:22:22:22:22:21',
-    '22:22:22:22:22:25',
-    '22:22:22:22:22:26',
-    '22:22:22:22:22:28',
-    '22:22:22:22:22:29',
-    '22:22:22:22:22:30',
-    '22:22:22:22:22:31',
-]
+def generate_mac_address():
+    return "02:00:00:%02X:%02X:%02X" % (randint(0, 255),
+                                        randint(0, 255),
+                                        randint(0, 255))
+
+def generate_nearby_devices(n):
+    devices = list()
+
+    for _ in range(n):
+        devices.append(generate_mac_address())
+    
+    return devices
 
 # The "random" message creation, in json format
 def create_json_message(srcMac, sensor): 
@@ -28,9 +33,9 @@ def create_json_message(srcMac, sensor):
     message['createdAt'] = int(time.time() * 1000)
     return json.dumps(message)
 
-def publish(client):
-    for sensor in SENSORS[0:N]:
-        for srcMac in NEARBY_DEVICES:
+def publish(client, sensors, nearby_devices):
+    for sensor in sensors:
+        for srcMac in nearby_devices:
             jsonMessage = create_json_message(srcMac, sensor)
             print(jsonMessage)
             client.publish('telemetry/probes', jsonMessage, QOS)
@@ -39,7 +44,22 @@ client = mqtt.Client()
 client.connect("localhost", 1883, 60)
 client.loop_start()
 
+i = 1
+sensors_count        = 10
+curr_sensors         = SENSORS[0:sensors_count]
+nearby_devices_count = 10
+nearby_devices       = generate_nearby_devices(nearby_devices_count)
 while True:
-    publish(client)
-    time.sleep(1)
+    if i % 60 == 0:
+        if sensors_count < MAX_SENSORS:
+            sensors_count += 10
 
+        if nearby_devices_count < MAX_NEARBY_DEVICES:
+            nearby_devices_count += 10
+
+        shuffle(SENSORS)
+        curr_sensors = SENSORS[0:sensors_count]
+    
+    publish(client, curr_sensors, nearby_devices)
+    time.sleep(1)
+    i += 1
