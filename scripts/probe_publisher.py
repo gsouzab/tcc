@@ -37,7 +37,7 @@ def publish(client, sensors, nearby_devices):
     for sensor in sensors:
         for srcMac in nearby_devices:
             jsonMessage = create_json_message(srcMac, sensor)
-            print(jsonMessage)
+            # print(jsonMessage)
             client.publish('telemetry/probes', jsonMessage, QOS)
 
 client = mqtt.Client()
@@ -45,20 +45,26 @@ client.connect("localhost", 1883, 60)
 client.loop_start()
 
 i = 1
+j = 1
 sensors_count        = 10
 curr_sensors         = SENSORS[0:sensors_count]
-nearby_devices_count = 10
+nearby_devices_count = 1
 nearby_devices       = generate_nearby_devices(nearby_devices_count)
+
+print("[Iteração %d] Número de sensores: %d, número de dispositivos na proximidade: %d" % (j, sensors_count, nearby_devices_count))
 while True:
-    if i % 60 == 0:
+    if i % 10 == 0:
+        j += 1
         if sensors_count < MAX_SENSORS:
             sensors_count += 10
 
         if nearby_devices_count < MAX_NEARBY_DEVICES:
-            nearby_devices_count += 10
+            nearby_devices_count += 1
 
         shuffle(SENSORS)
-        curr_sensors = SENSORS[0:sensors_count]
+        print("[Iteração %d] Número de sensores: %d, número de dispositivos na proximidade: %d" % (j, sensors_count, nearby_devices_count))
+        curr_sensors   = SENSORS[0:sensors_count]
+        nearby_devices = generate_nearby_devices(nearby_devices_count)
     
     publish(client, curr_sensors, nearby_devices)
     time.sleep(1)
