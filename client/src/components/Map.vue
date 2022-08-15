@@ -119,13 +119,14 @@
 <script>
 
 import axios from 'axios';
-import { loaded, gmapApi } from 'vue2-google-maps';
+import { gmapApi } from 'vue2-google-maps';
 import SensorForm from '@/components/forms/SensorForm';
 import Heatmap from '@/components/Heatmap';
 import GroundOverlay from '@/components/GroundOverlay';
 import DatetimeFieldPicker from '@/components/DatetimeFieldPicker';
 import _ from 'lodash';
 import * as d3 from 'd3';
+import * as moment from 'moment';
 
 const sensorsConfig = {};
 
@@ -135,6 +136,9 @@ export default {
     await this.getLastTelemetry();
     this.connectWS();
     this.setLegend();
+    setInterval(() => {
+      this.clearOldProbes();
+    }, 5000);
   },
   data() {
     return {
@@ -290,17 +294,33 @@ export default {
     },
     addProbeData(data) {
       const i = _.findIndex(this.sensors, { mac: data.sensor });
-      this.sensors[i].probes = data;
-
-      if (this.infoWinOpen && this.infoWindowSensorMac === data.sensor) {
-        this.updateInfoContent(this.sensors[i]);
-      }
       const heatmapData = {
         location: new google.maps.LatLng(this.sensors[i].latitude, this.sensors[i].longitude),
         weight: data.count,
       };
 
+      this.sensors[i].probes = data;
+
+      if (this.infoWinOpen && this.infoWindowSensorMac === data.sensor) {
+        this.updateInfoContent(this.sensors[i]);
+      }
+
       this.probes.set(data.sensor, heatmapData);
+      this.probesTracker += 1;
+    },
+    clearOldProbes() {
+      const currentTs = moment();
+      _.forEach(this.sensors, (sensor) => {
+        if ((sensor.probes && sensor.probes.count > 0) && currentTs.diff(moment(sensor.probes.createdAt), 'seconds') > 30) {
+          sensor.probes.count = 0;
+          sensor.probes.createdAt = currentTs.toDate();
+          this.probes.delete(sensor.mac)
+
+          if (this.infoWinOpen && this.infoWindowSensorMac === sensor.mac) {
+            this.updateInfoContent(sensor);
+          }
+        }
+      });
       this.probesTracker += 1;
     },
     openMenu(e) {
