@@ -311,7 +311,7 @@ export default {
     clearOldProbes() {
       const currentTs = moment();
       _.forEach(this.sensors, (sensor) => {
-        if ((sensor.probes && sensor.probes.count > 0) && currentTs.diff(moment(sensor.probes.createdAt), 'seconds') > 30) {
+        if ((sensor.probes && sensor.probes.count > 0) && currentTs.diff(moment(sensor.probes.createdAt), 'seconds') > 10) {
           sensor.probes.count = 0;
           sensor.probes.createdAt = currentTs.toDate();
           this.probes.delete(sensor.mac)
