@@ -27,8 +27,9 @@ jobs:
           touch ./client/.env
           {
             echo NODE_ENV="production"
-            echo API_HOST="api.sensein.tech"
-            echo INFLUX_HOST="influx.sensein.tech"
+            echo API_HOST="https://api.sensein.tech"
+            echo INFLUX_HOST="https://influx.sensein.tech"
+            echo API_WS_HOST="wss://api.sensein.tech"
             echo MAPS_API_KEY=${{ secrets.MAPS_API_KEY }}
           } >> ./client/.env
       -
