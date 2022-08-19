@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
@@ -16,6 +16,9 @@ spec:
     spec:
       containers:
         - image: gsouzab/tcc-api:latest
+          env:
+            - name: APP_ENV
+              value: production
           name: api
           imagePullPolicy: Always
           ports:
@@ -29,7 +32,6 @@ metadata:
     app: api
   name: api
 spec:
-  type: NodePort
   ports:
     - port: 8000
       targetPort: 8000

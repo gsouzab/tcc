@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: influx
@@ -49,7 +49,6 @@ metadata:
     app: influx
   name: influx
 spec:
-  type: NodePort
   ports:
     - port: 8086
       targetPort: 8086

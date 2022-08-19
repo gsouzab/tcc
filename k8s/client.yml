@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: client
@@ -29,7 +29,6 @@ metadata:
     app: client
   name: client
 spec:
-  type: NodePort
   ports:
     - port: 80
       targetPort: 80
