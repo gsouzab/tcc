@@ -5,8 +5,8 @@ import time
 import json
 
 QOS = 1
-MAX_SENSORS = 500
-MAX_NEARBY_DEVICES = 100
+MAX_SENSORS = 100
+MAX_NEARBY_DEVICES = 20
 
 sensors_file = open("sensors.txt", "r")
 SENSORS = sensors_file.read().splitlines()
@@ -38,15 +38,15 @@ def publish(client, sensors, nearby_devices):
         for srcMac in nearby_devices:
             jsonMessage = create_json_message(srcMac, sensor)
             # print(jsonMessage)
-            client.publish('telemetry/probes', jsonMessage, QOS)
+            client.publish('probes', jsonMessage, QOS)
 
-client = mqtt.Client()
-client.connect("localhost", 1883, 60)
+client = mqtt.Client(client_id="python-script", transport="websockets")
+client.connect("mqtt.sensein.tech", 9001, 10)
 client.loop_start()
 
 i = 1
 j = 1
-sensors_count        = 10
+sensors_count        = 1
 curr_sensors         = SENSORS[0:sensors_count]
 nearby_devices_count = 1
 nearby_devices       = generate_nearby_devices(nearby_devices_count)

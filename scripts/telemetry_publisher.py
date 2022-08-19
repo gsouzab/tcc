@@ -24,8 +24,8 @@ def publish(client):
         print("enviando mensagem"+ jsonMessage)
         client.publish('telemetry', jsonMessage, QOS)
 
-client = mqtt.Client()
-client.connect("localhost", 1883, 60)
+client = mqtt.Client(client_id="python-script", transport="websockets")
+client.connect("mqtt.sensein.tech", 9001, 10)
 client.loop_start()
 
 while True:
