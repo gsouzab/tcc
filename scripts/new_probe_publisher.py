@@ -3,16 +3,18 @@ import paho.mqtt.client as mqtt
 import json
 import time
 
-MAX_NEW_NEARBY = 5
-MIN_PRESENCE_TIME = 3
-
-QOS = 1
 sensors_file = open("sensors.txt", "r")
+
+T = 5
+MAX_NEW_NEARBY = 2
+MIN_PRESENCE_TIME = 3
+QOS = 1
 SENSORS = sensors_file.read().splitlines()
 
 
 def random_new_nearby():
-    new_nearby_count = max(0, randint(-MAX_NEW_NEARBY, MAX_NEW_NEARBY))
+    new_nearby_count = max(0, randint(-MAX_NEW_NEARBY, 
+                                      MAX_NEW_NEARBY))
 
     return generate_devices(new_nearby_count)
 
@@ -47,7 +49,8 @@ def create_json_message(srcMac, sensor):
 def publish(client, sensors):
     for sensor in sensors:
         for device in sensors[sensor]:
-            jsonMessage = create_json_message(device['mac'], sensor)
+            jsonMessage = create_json_message(device['mac'], 
+                                              sensor)
             client.publish('probes', jsonMessage, QOS)
 
 
@@ -63,8 +66,8 @@ def refresh_sensors(sensors):
 
         sensors[sensor] = devices_refreshed
 
-client = mqtt.Client(client_id="python-script", transport="websockets")
-client.connect("mqtt.sensein.tech", 9001, 10)
+client = mqtt.Client()
+client.connect("localhost", 1883, 60)
 client.loop_start()
 
 sensors = {}
@@ -80,4 +83,4 @@ while True:
     for sensor in sensors:
         sensors[sensor] += random_new_nearby()
 
-    time.sleep(5)
+    time.sleep(T)
